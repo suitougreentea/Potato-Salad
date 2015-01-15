@@ -5,11 +5,19 @@ node_js:
 
 script:
   - gulp build
-  - gulp deploy
 
 before_script:
   - npm install
   - ./node_modules/bower/bin/bower install
+  - pushd deploy
+  - git checkout -b gh-pages
+  - popd
+
+after_success:
+  - cd deploy
+  - git add -A
+  - git commit -m 'Update'
+  - '[ "$TRAVIS_BRANCH" == "master" ] && [ $GH_TOKEN ] && git push --quiet https://$GH_TOKEN@github.com/suitougreentea/Potato-Salad.git gh-pages 2> /dev/null'
 
 env:
   global:
@@ -18,4 +26,3 @@ env:
     - GIT_AUTHOR_NAME='suitougreentea'
     - GIT_AUTHOR_EMAIL='suitougreentea@users.noreply.github.com'
     - secure: "VkdMs4/vUF7c2qQtsfcqGwb04RPlqulqQ2k0apegUgTtJQQXmgtKKs7GEPp7pNA0oPNBZwxp20OkmAihe/kjGo0IKGezajw++PpA7WLn61t2TErqo2bo3558qy227criVH3kzukvIxAI9tv2Dk7Auh9Z2MjJdBco6AJk41m07c4="
-
