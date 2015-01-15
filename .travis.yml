@@ -7,7 +7,6 @@ script:
   - gulp build
 
 before_script:
-  - npm install
   - ./node_modules/bower/bin/bower install
   - git clone --quiet https://github.com/suitougreentea/Potato-Salad.git deploy
   - pushd deploy
