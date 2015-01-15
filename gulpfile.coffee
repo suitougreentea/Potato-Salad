@@ -7,5 +7,5 @@ g.task('build', ->
 
 # Only for travis ci
 g.task('deploy', ->
-  return g.src('deploy/**/*').pipe($.ghPages(origin: 'travis'))
+  return g.src('deploy/**/*').pipe($.ghPages(remoteUrl: "https://#{process.env.GH_TOKEN}@github.com/suitougreentea/Potato-Salad.git"))
 )

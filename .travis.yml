@@ -8,16 +8,9 @@ script:
 
 before_script:
   - ./node_modules/bower/bin/bower install
-  - git clone --quiet https://github.com/suitougreentea/Potato-Salad.git deploy
-  - pushd deploy
-  - git checkout -b gh-pages
-  - popd
 
 after_success:
-  - cd deploy
-  - git add -A
-  - git commit -m 'Update'
-  - '[ "$TRAVIS_BRANCH" == "master" ] && [ $GH_TOKEN ] && git push --quiet https://$GH_TOKEN@github.com/suitougreentea/Potato-Salad.git gh-pages 2> /dev/null'
+  - gulp deploy 2> /dev/null
 
 env:
   global:
