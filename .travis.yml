@@ -1,0 +1,19 @@
+language: node_js
+
+node_js:
+  - "0.10"
+
+script:
+  - gulp build
+  - gulp deploy
+
+before_script:
+  - npm install
+  - ./node_modules/bower/bin/bower install
+
+env:
+  global:
+    - GIT_COMMITTER_NAME='suitougreentea'
+    - GIT_COMMITTER_EMAIL='suitougreentea@users.noreply.github.com'
+    - GIT_AUTHOR_NAME='suitougreentea'
+    - GIT_AUTHOR_EMAIL='suitougreentea@users.noreply.github.com'
