@@ -17,3 +17,5 @@ env:
     - GIT_COMMITTER_EMAIL='suitougreentea@users.noreply.github.com'
     - GIT_AUTHOR_NAME='suitougreentea'
     - GIT_AUTHOR_EMAIL='suitougreentea@users.noreply.github.com'
+    - secure: "VkdMs4/vUF7c2qQtsfcqGwb04RPlqulqQ2k0apegUgTtJQQXmgtKKs7GEPp7pNA0oPNBZwxp20OkmAihe/kjGo0IKGezajw++PpA7WLn61t2TErqo2bo3558qy227criVH3kzukvIxAI9tv2Dk7Auh9Z2MjJdBco6AJk41m07c4="
+
