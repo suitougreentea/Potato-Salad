@@ -1,4 +1,4 @@
 class Material
-  constructor: (@fullName, @materialName) ->
+  constructor: (@fullName, @materialName, @processing) ->
 
 module.exports = Material

@@ -2,6 +2,19 @@ Material = require('./Material.coffee')
 MaterialOre = require('./MaterialOre.coffee')
 MaterialRaw = require('./MaterialRaw.coffee')
 MaterialNormal = require('./MaterialNormal.coffee')
+Processing = require('./Processing.coffee')
+
+class MineProcessing
+  @init: ->
+    @coal      = new Processing([[Game.materialList.id.oreCoal,     15]])
+    @iron      = new Processing([[Game.materialList.id.oreIron,     15]])
+    @copper    = new Processing([[Game.materialList.id.oreCopper,   15]])
+    @tin       = new Processing([[Game.materialList.id.oreTin,      15]])
+    @aluminium = new Processing([[Game.materialList.id.oreBauxite,  15]])
+    @nickel    = new Processing([[Game.materialList.id.oreNickel,   15]])
+    @gold      = new Processing([[Game.materialList.id.oreGold,     15]])
+    @platinum  = new Processing([[Game.materialList.id.orePlatinum, 15]])
+    @diamond   = new Processing([[Game.materialList.id.oreDiamond,  15]])
 
 class MaterialList
   @id:
@@ -18,7 +31,7 @@ class MaterialList
     rawIron: 10
     rawCopper: 11
     rawTin: 12
-    rawBauxite: 13
+    rawAluminium: 13
     rawNickel: 14
     rawGold: 15
     rawPlatinum: 16
@@ -29,6 +42,7 @@ class MaterialList
   @material: []
 
   @init: ->
+    MineProcessing.init()
     @register @id.oreCoal,     new MaterialOre('Coal')
     @register @id.oreIron,     new MaterialOre('Iron')
     @register @id.oreCopper,   new MaterialOre('Copper')
@@ -38,15 +52,15 @@ class MaterialList
     @register @id.oreGold,     new MaterialOre('Gold')
     @register @id.orePlatinum, new MaterialOre('Platinum')
     @register @id.oreDiamond,  new MaterialOre('Diamond')
-    @register @id.rawCoal,     new MaterialRaw('Coal')
-    @register @id.rawIron,     new MaterialRaw('Iron')
-    @register @id.rawCopper,   new MaterialRaw('Copper')
-    @register @id.rawTin,      new MaterialRaw('Tin')
-    @register @id.rawBauxite,  new MaterialRaw('Bauxite')
-    @register @id.rawNickel,   new MaterialRaw('Nickel')
-    @register @id.rawGold,     new MaterialRaw('Gold')
-    @register @id.rawPlatinum, new MaterialRaw('Platinum')
-    @register @id.rawDiamond,  new MaterialRaw('Diamond')
+    @register @id.rawCoal,     new MaterialRaw('Coal', MineProcessing.coal)
+    @register @id.rawIron,     new MaterialRaw('Iron', MineProcessing.iron)
+    @register @id.rawCopper,   new MaterialRaw('Copper', MineProcessing.copper)
+    @register @id.rawTin,      new MaterialRaw('Tin', MineProcessing.tin)
+    @register @id.rawAluminium,new MaterialRaw('Aluminium', MineProcessing.aluminium)
+    @register @id.rawNickel,   new MaterialRaw('Nickel', MineProcessing.nickel)
+    @register @id.rawGold,     new MaterialRaw('Gold', MineProcessing.gold)
+    @register @id.rawPlatinum, new MaterialRaw('Platinum', MineProcessing.platinum)
+    @register @id.rawDiamond,  new MaterialRaw('Diamond', MineProcessing.diamond)
     @register @id.woodStick,   new MaterialNormal('Wood stick')
     @register @id.stone,       new MaterialNormal('Stone')
 

@@ -35,7 +35,7 @@ class Game
     @materialList.id.rawIron
     @materialList.id.rawCopper
     @materialList.id.rawTin
-    @materialList.id.rawBauxite
+    @materialList.id.rawAluminium
     @materialList.id.rawNickel
     @materialList.id.rawGold
     @materialList.id.rawPlatinum
@@ -121,15 +121,32 @@ class Game
 
     $('#materialOre').html('')
     for e in @materialOreViewList
-      material = @materialList.material[e]
-      num = @material[e]
-      $('#materialOre').append("#{material.materialName}: #{num}<br />")
+      ((e) =>
+        material = @materialList.material[e]
+        num = @material[e]
+        $('#materialOre').append("#{material.materialName}: #{num}<br />")
+      )(e)
 
     $('#materialRaw').html('')
     for e in @materialRawViewList
-      material = @materialList.material[e]
-      num = @material[e]
-      $('#materialRaw').append("#{material.materialName}: #{num}<br />")
+      ((e) =>
+        material = @materialList.material[e]
+        num = @material[e]
+        $('#materialRaw').append("<button>10</button>#{material.materialName}: #{num}<br />")
+        $('#materialRaw button:last').click( =>
+          p = material.processing
+          for source in p.requiredMaterial
+            [id, amount] = source
+            if @material[id] < amount
+              @logger.log('Not enough material')
+              return
+          for source in p.requiredMaterial
+            [id, amount] = source
+            @material[id] -= amount
+          @material[e] += 10
+          @refreshMaterialList()
+        )
+      )(e)
 
   @refreshOreVeinList: ->
     $('#oreVein').html('')
