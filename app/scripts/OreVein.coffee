@@ -1,5 +1,5 @@
 class OreVein
-  constructor: (@material, @size) ->
+  constructor: (@materialId, @size) ->
     @amount = @size * 1000
     @remain = @amount
 
