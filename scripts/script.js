@@ -46,7 +46,7 @@
 
 	var $;
 
-	$ = __webpack_require__(6);
+	$ = __webpack_require__(7);
 
 	$(function() {
 	  var actionIntervalId;
@@ -64,7 +64,7 @@
 
 	var $, Game, Material, OreVein;
 
-	$ = __webpack_require__(6);
+	$ = __webpack_require__(7);
 
 	Material = __webpack_require__(2);
 
@@ -75,13 +75,17 @@
 
 	  Game.logger = __webpack_require__(4);
 
-	  Game.material = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+	  Game.material = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-	  Game.materialList = [new Material('Coal'), new Material('Iron'), new Material('Copper'), new Material('Tin'), new Material('Bauxite'), new Material('Nickel'), new Material('Gold'), new Material('Platinum'), new Material('Diamond')];
+	  Game.materialList = __webpack_require__(5);
+
+	  Game.materialOreViewList = [Game.materialList.id.oreCoal, Game.materialList.id.oreIron, Game.materialList.id.oreCopper, Game.materialList.id.oreTin, Game.materialList.id.oreBauxite, Game.materialList.id.oreNickel, Game.materialList.id.oreGold, Game.materialList.id.orePlatinum, Game.materialList.id.oreDiamond];
+
+	  Game.materialRawViewList = [];
 
 	  Game.oreVein = [new OreVein(0, 10)];
 
-	  Game.oreVeinFinder = __webpack_require__(5);
+	  Game.oreVeinFinder = __webpack_require__(6);
 
 	  Game.MODE_SEARCHING_OVERWORLD = 1;
 
@@ -115,7 +119,7 @@
 	  };
 
 	  Game.action = function() {
-	    var e, i, mineAmount, _i, _len, _ref, _results;
+	    var e, i, material, mineAmount, num, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
 	    Game.time++;
 	    $('#time').text("Time: " + Game.time + " Mode: " + Game.mode + " Target: " + Game.miningTarget);
 	    switch (Game.mode) {
@@ -128,16 +132,29 @@
 	        e.remain -= mineAmount;
 	        Game.material[e.materialId] += mineAmount;
 	    }
-	    $('#material').html(Game.material.reduce((function(base, e, i) {
-	      return base + ("" + Game.materialList[i].name + ": " + e + "<br />");
-	    }), ''));
+	    $('#materialOre').html('');
+	    _ref = Game.materialOreViewList;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      material = Game.materialList.material[e];
+	      num = Game.material[e];
+	      $('#materialOre').append("" + material.materialName + ": " + num + "<br />");
+	    }
+	    $('#materialRaw').html('');
+	    _ref1 = Game.materialRawViewList;
+	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	      e = _ref1[_j];
+	      material = Game.materialList.material[e];
+	      num = Game.material[e];
+	      $('#materialRaw').append("" + material.materialName + ": " + num + "<br />");
+	    }
 	    $('#oreVein').html('');
-	    _ref = Game.oreVein;
+	    _ref2 = Game.oreVein;
 	    _results = [];
-	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-	      e = _ref[i];
+	    for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
+	      e = _ref2[i];
 	      _results.push((function(e, i) {
-	        $('#oreVein').append("<div><button>Mine this vein</button> " + Game.materialList[e.materialId].name + ": " + e.remain + " / " + e.amount + "</div>");
+	        $('#oreVein').append("<div><button>Mine this vein</button> " + Game.materialList.material[e.materialId].materialName + ": " + e.remain + " / " + e.amount + "</div>");
 	        return $('#oreVein button:last').click(function() {
 	          Game.miningTarget = i;
 	          return Game.mode = Game.MODE_MINING;
@@ -161,20 +178,9 @@
 	var Material;
 
 	Material = (function() {
-	  Material.id = {
-	    coal: 0,
-	    iron: 1,
-	    copper: 2,
-	    tin: 3,
-	    bauxite: 4,
-	    nickel: 5,
-	    gold: 6,
-	    platinum: 7,
-	    diamond: 8
-	  };
-
-	  function Material(name) {
-	    this.name = name;
+	  function Material(fullName, materialName) {
+	    this.fullName = fullName;
+	    this.materialName = materialName;
 	  }
 
 	  return Material;
@@ -229,9 +235,41 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Material, OreVein, OreVeinFinder;
+	var Material, MaterialList, MaterialOre;
 
 	Material = __webpack_require__(2);
+
+	MaterialOre = __webpack_require__(8);
+
+	MaterialList = (function() {
+	  function MaterialList() {}
+
+	  MaterialList.id = {
+	    oreCoal: 0,
+	    oreIron: 1,
+	    oreCopper: 2,
+	    oreTin: 3,
+	    oreBauxite: 4,
+	    oreNickel: 5,
+	    oreGold: 6,
+	    orePlatinum: 7,
+	    oreDiamond: 8
+	  };
+
+	  MaterialList.material = [new MaterialOre('Coal'), new MaterialOre('Iron'), new MaterialOre('Copper'), new MaterialOre('Tin'), new MaterialOre('Bauxite'), new MaterialOre('Nickel'), new MaterialOre('Gold'), new MaterialOre('Platinum'), new MaterialOre('Diamond')];
+
+	  return MaterialList;
+
+	})();
+
+	module.exports = MaterialList;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var OreVein, OreVeinFinder;
 
 	OreVein = __webpack_require__(3);
 
@@ -239,7 +277,9 @@
 	  function OreVeinFinder() {}
 
 	  OreVeinFinder.init = function() {
-	    return this.data = [[Material.id.coal, 0.005, 10, 2], [Material.id.iron, 0.002, 10, 2], [Material.id.copper, 0.003, 10, 2], [Material.id.tin, 0.002, 10, 2], [Material.id.bauxite, 0.004, 10, 2], [Material.id.nickel, 0.001, 10, 2], [Material.id.gold, 0.0001, 10, 2], [Material.id.platinum, 0.00005, 10, 2], [Material.id.diamond, 0.00005, 10, 2]];
+	    var list;
+	    list = Game.materialList;
+	    return this.data = [[list.id.oreCoal, 0.005, 10, 2], [list.id.oreIron, 0.002, 10, 2], [list.id.oreCopper, 0.003, 10, 2], [list.id.oreTin, 0.002, 10, 2], [list.id.oreBauxite, 0.004, 10, 2], [list.id.oreNickel, 0.001, 10, 2], [list.id.oreGold, 0.0001, 10, 2], [list.id.orePlatinum, 0.00005, 10, 2], [list.id.oreDiamond, 0.00005, 10, 2]];
 	  };
 
 	  OreVeinFinder["try"] = function() {
@@ -268,7 +308,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9476,6 +9516,30 @@
 	return jQuery;
 
 	}));
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialOre,
+	  __hasProp = {}.hasOwnProperty,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+	Material = __webpack_require__(2);
+
+	MaterialOre = (function(_super) {
+	  __extends(MaterialOre, _super);
+
+	  function MaterialOre(materialName) {
+	    MaterialOre.__super__.constructor.call(this, "" + materialName + " Ore", materialName);
+	  }
+
+	  return MaterialOre;
+
+	})(Material);
+
+	module.exports = MaterialOre;
 
 
 /***/ }
