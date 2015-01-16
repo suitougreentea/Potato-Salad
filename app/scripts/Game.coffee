@@ -6,26 +6,7 @@ OreVein = require('./OreVein.coffee')
 class Game
   @logger: require('./Logger.coffee')
 
-  @material = [
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-    0
-  ]
+  @material = []
   @materialList = require('./MaterialList.coffee')
 
   @materialOreViewList = [
@@ -68,6 +49,10 @@ class Game
   @time: 0
 
   @init: ->
+    @materialList.init()
+    for e, i in @materialList.material
+      @material[i] = 0
+
     @oreVeinFinder.init()
 
     $('#modeChange1').click(=> @mode = 1)

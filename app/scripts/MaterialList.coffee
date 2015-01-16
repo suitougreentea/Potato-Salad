@@ -22,27 +22,29 @@ class MaterialList
     rawGold: 15
     rawPlatinum: 16
     rawDiamond: 17
-  #  @init: ->
-  #  new Game.class.Material('Iron')
-  @material: [
-    new MaterialOre('Coal')
-    new MaterialOre('Iron')
-    new MaterialOre('Copper')
-    new MaterialOre('Tin')
-    new MaterialOre('Bauxite')
-    new MaterialOre('Nickel')
-    new MaterialOre('Gold')
-    new MaterialOre('Platinum')
-    new MaterialOre('Diamond')
-    new MaterialRaw('Coal')
-    new MaterialRaw('Iron')
-    new MaterialRaw('Copper')
-    new MaterialRaw('Tin')
-    new MaterialRaw('Bauxite')
-    new MaterialRaw('Nickel')
-    new MaterialRaw('Gold')
-    new MaterialRaw('Platinum')
-    new MaterialRaw('Diamond')
-  ]
+
+  @material: []
+
+  @init: ->
+    @register @id.oreCoal,     new MaterialOre('Coal')
+    @register @id.oreIron,     new MaterialOre('Iron')
+    @register @id.oreCopper,   new MaterialOre('Copper')
+    @register @id.oreTin,      new MaterialOre('Tin')
+    @register @id.oreBauxite,  new MaterialOre('Bauxite')
+    @register @id.oreNickel,   new MaterialOre('Nickel')
+    @register @id.oreGold,     new MaterialOre('Gold')
+    @register @id.orePlatinum, new MaterialOre('Platinum')
+    @register @id.oreDiamond,  new MaterialOre('Diamond')
+    @register @id.rawCoal,     new MaterialRaw('Coal')
+    @register @id.rawIron,     new MaterialRaw('Iron')
+    @register @id.rawCopper,   new MaterialRaw('Copper')
+    @register @id.rawTin,      new MaterialRaw('Tin')
+    @register @id.rawBauxite,  new MaterialRaw('Bauxite')
+    @register @id.rawNickel,   new MaterialRaw('Nickel')
+    @register @id.rawGold,     new MaterialRaw('Gold')
+    @register @id.rawPlatinum, new MaterialRaw('Platinum')
+    @register @id.rawDiamond,  new MaterialRaw('Diamond')
+
+  @register: (id, material) -> @material[id] = material
 
 module.exports = MaterialList

@@ -19,7 +19,7 @@ class OreVeinFinder
     for e in @data
       [id, chance, size, size_modifier] = e
       if Math.random() < chance
-        Game.logger.log("Found #{Game.materialList[id].name} vein!")
+        Game.logger.log("Found #{Game.materialList.material[id].materialName} vein!")
         Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)))
         break
 
