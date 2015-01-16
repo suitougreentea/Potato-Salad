@@ -1,28 +1,29 @@
 Material = require('./Material.coffee')
+MaterialOre = require('./MaterialOre.coffee')
 
 class MaterialList
   @id:
-    coal: 0
-    iron: 1
-    copper: 2
-    tin: 3
-    bauxite: 4
-    nickel: 5
-    gold: 6
-    platinum: 7
-    diamond: 8
+    oreCoal: 0
+    oreIron: 1
+    oreCopper: 2
+    oreTin: 3
+    oreBauxite: 4
+    oreNickel: 5
+    oreGold: 6
+    orePlatinum: 7
+    oreDiamond: 8
   #  @init: ->
   #  new Game.class.Material('Iron')
   @material: [
-    new Material('Coal')
-    new Material('Iron')
-    new Material('Copper')
-    new Material('Tin')
-    new Material('Bauxite')
-    new Material('Nickel')
-    new Material('Gold')
-    new Material('Platinum')
-    new Material('Diamond')
+    new MaterialOre('Coal')
+    new MaterialOre('Iron')
+    new MaterialOre('Copper')
+    new MaterialOre('Tin')
+    new MaterialOre('Bauxite')
+    new MaterialOre('Nickel')
+    new MaterialOre('Gold')
+    new MaterialOre('Platinum')
+    new MaterialOre('Diamond')
   ]
 
 module.exports = MaterialList
