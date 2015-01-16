@@ -4,7 +4,7 @@ node_js:
   - "0.10"
 
 script:
-  - gulp build
+  - gulp all
 
 before_script:
   - ./node_modules/bower/bin/bower install
