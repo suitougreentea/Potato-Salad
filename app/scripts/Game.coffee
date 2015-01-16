@@ -38,9 +38,18 @@ class Game
     @materialList.id.oreGold
     @materialList.id.orePlatinum
     @materialList.id.oreDiamond
- ]
+  ]
 
   @materialRawViewList = [
+    @materialList.id.rawCoal
+    @materialList.id.rawIron
+    @materialList.id.rawCopper
+    @materialList.id.rawTin
+    @materialList.id.rawBauxite
+    @materialList.id.rawNickel
+    @materialList.id.rawGold
+    @materialList.id.rawPlatinum
+    @materialList.id.rawDiamond
   ]
 
   @oreVein = [
