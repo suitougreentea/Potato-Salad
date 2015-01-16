@@ -16,18 +16,33 @@ class Game
     0
     0
     0
+    0
+    0
+    0
+    0
+    0
+    0
+    0
+    0
+    0
   ]
-  @materialList = [
-    new Material('Coal')
-    new Material('Iron')
-    new Material('Copper')
-    new Material('Tin')
-    new Material('Bauxite')
-    new Material('Nickel')
-    new Material('Gold')
-    new Material('Platinum')
-    new Material('Diamond')
+  @materialList = require('./MaterialList.coffee')
+
+  @materialOreViewList = [
+    @materialList.id.coal
+    @materialList.id.iron
+    @materialList.id.copper
+    @materialList.id.tin
+    @materialList.id.bauxite
+    @materialList.id.nickel
+    @materialList.id.gold
+    @materialList.id.platinum
+    @materialList.id.diamond
+ ]
+
+  @materialRawViewList = [
   ]
+
   @oreVein = [
     new OreVein(0, 10)
   ]
@@ -63,13 +78,22 @@ class Game
         e.remain -= mineAmount
         @material[e.materialId] += mineAmount
 
-    $('#material').html(@material.reduce( ((base, e, i) =>
-      return base + "#{@materialList[i].name}: #{e}<br />"
-    ), ''))
+    $('#materialOre').html('')
+    for e in @materialOreViewList
+      material = @materialList.material[e]
+      num = @material[e]
+      $('#materialOre').append("#{material.name}: #{num}<br />")
+
+    $('#materialRaw').html('')
+    for e in @materialRawViewList
+      material = @materialList.material[e]
+      num = @material[e]
+      $('#materialRaw').append("#{material.name}: #{num}<br />")
+
     $('#oreVein').html('')
     for e, i in @oreVein
       ((e, i) =>
-        $('#oreVein').append("<div><button>Mine this vein</button> #{@materialList[e.materialId].name}: #{e.remain} / #{e.amount}</div>")
+        $('#oreVein').append("<div><button>Mine this vein</button> #{@materialList.material[e.materialId].name}: #{e.remain} / #{e.amount}</div>")
         $('#oreVein button:last').click( =>
           @miningTarget = i
           @mode = @MODE_MINING
