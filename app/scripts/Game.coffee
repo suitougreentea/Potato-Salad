@@ -8,6 +8,8 @@ class Game
 
   @material = []
   @materialList = require('./MaterialList.coffee')
+  @item = []
+  @itemList = require('./ItemList.coffee')
 
   @materialOverworldViewList = [
     @materialList.id.stone
@@ -44,6 +46,8 @@ class Game
     new OreVein(0, 10)
   ]
 
+  @recipeList = require('./RecipeList.coffee')
+
   @overworldStuffFinder = require('./OverworldStuffFinder.coffee')
   @oreVeinFinder = require('./OreVeinFinder.coffee')
   
@@ -60,6 +64,8 @@ class Game
     @materialList.init()
     for e, i in @materialList.material
       @material[i] = 0
+    @itemList.init()
+    @recipeList.init()
 
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
@@ -68,6 +74,11 @@ class Game
     $('#modeChange2').click(=> @mode = 2)
     $('#modeChange3').click(=> @mode = 3)
 
+    @refreshRecipeList()
+    @refreshMaterialList()
+    @refreshOreVeinList()
+    @refreshItemList()
+
   @action: =>
     @time++
     $('#time').text("Time: #{@time} Mode: #{@mode} Target: #{@miningTarget}")
@@ -75,14 +86,20 @@ class Game
     switch @mode
       when @MODE_SEARCHING_OVERWORLD
         @overworldStuffFinder.try()
+        @refreshMaterialList()
       when @MODE_SEARCHING_UNDERGROUND
         @oreVeinFinder.try()
+        @refreshOreVeinList()
       when @MODE_MINING
         e = @oreVein[@miningTarget]
         mineAmount = 1
         e.remain -= mineAmount
         @material[e.materialId] += mineAmount
+        @refreshMaterialList()
+        @refreshOreVeinList()
+        @refreshItemList()
 
+  @refreshMaterialList: ->
     $('#materialOverworld').html('')
     for e in @materialOverworldViewList
       ((e) =>
@@ -114,6 +131,7 @@ class Game
       num = @material[e]
       $('#materialRaw').append("#{material.materialName}: #{num}<br />")
 
+  @refreshOreVeinList: ->
     $('#oreVein').html('')
     for e, i in @oreVein
       ((e, i) =>
@@ -123,5 +141,20 @@ class Game
           @mode = @MODE_MINING
         )
       )(e, i)
+
+  @refreshRecipeList: ->
+    $('#recipe').html('')
+    for e in @recipeList.normal
+      ((e) =>
+        $('#recipe').append("<button>#{e.output.name}</button>")
+        $('#recipe button:last').click(=>
+          e.craft()
+        )
+      )(e)
+
+  @refreshItemList: ->
+    $('#item').html('')
+    for e in @item
+      $('#item').append("#{e.name}<br />")
 
 module.exports = Game
