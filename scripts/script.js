@@ -89,7 +89,7 @@
 
 	  Game.materialOreViewList = [Game.materialList.id.oreCoal, Game.materialList.id.oreIron, Game.materialList.id.oreCopper, Game.materialList.id.oreTin, Game.materialList.id.oreBauxite, Game.materialList.id.oreNickel, Game.materialList.id.oreGold, Game.materialList.id.orePlatinum, Game.materialList.id.oreDiamond];
 
-	  Game.materialRawViewList = [Game.materialList.id.rawCoal, Game.materialList.id.rawIron, Game.materialList.id.rawCopper, Game.materialList.id.rawTin, Game.materialList.id.rawBauxite, Game.materialList.id.rawNickel, Game.materialList.id.rawGold, Game.materialList.id.rawPlatinum, Game.materialList.id.rawDiamond];
+	  Game.materialRawViewList = [Game.materialList.id.rawCoal, Game.materialList.id.rawIron, Game.materialList.id.rawCopper, Game.materialList.id.rawTin, Game.materialList.id.rawAluminium, Game.materialList.id.rawNickel, Game.materialList.id.rawGold, Game.materialList.id.rawPlatinum, Game.materialList.id.rawDiamond];
 
 	  Game.oreVein = [new OreVein(0, 10)];
 
@@ -167,7 +167,7 @@
 	  };
 
 	  Game.refreshMaterialList = function() {
-	    var e, material, num, _fn, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+	    var e, _fn, _fn1, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
 	    $('#materialOverworld').html('');
 	    _ref = this.materialOverworldViewList;
 	    _fn = (function(_this) {
@@ -204,20 +204,52 @@
 	    }
 	    $('#materialOre').html('');
 	    _ref1 = this.materialOreViewList;
+	    _fn1 = (function(_this) {
+	      return function(e) {
+	        var material, num;
+	        material = _this.materialList.material[e];
+	        num = _this.material[e];
+	        return $('#materialOre').append("" + material.materialName + ": " + num + "<br />");
+	      };
+	    })(this);
 	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
 	      e = _ref1[_j];
-	      material = this.materialList.material[e];
-	      num = this.material[e];
-	      $('#materialOre').append("" + material.materialName + ": " + num + "<br />");
+	      _fn1(e);
 	    }
 	    $('#materialRaw').html('');
 	    _ref2 = this.materialRawViewList;
 	    _results = [];
 	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
 	      e = _ref2[_k];
-	      material = this.materialList.material[e];
-	      num = this.material[e];
-	      _results.push($('#materialRaw').append("" + material.materialName + ": " + num + "<br />"));
+	      _results.push(((function(_this) {
+	        return function(e) {
+	          var material, num;
+	          material = _this.materialList.material[e];
+	          num = _this.material[e];
+	          $('#materialRaw').append("<button>10</button>" + material.materialName + ": " + num + "<br />");
+	          return $('#materialRaw button:last').click(function() {
+	            var amount, id, p, source, _l, _len3, _len4, _m, _ref3, _ref4;
+	            p = material.processing;
+	            _ref3 = p.requiredMaterial;
+	            for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+	              source = _ref3[_l];
+	              id = source[0], amount = source[1];
+	              if (_this.material[id] < amount) {
+	                _this.logger.log('Not enough material');
+	                return;
+	              }
+	            }
+	            _ref4 = p.requiredMaterial;
+	            for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+	              source = _ref4[_m];
+	              id = source[0], amount = source[1];
+	              _this.material[id] -= amount;
+	            }
+	            _this.material[e] += 10;
+	            return _this.refreshMaterialList();
+	          });
+	        };
+	      })(this))(e));
 	    }
 	    return _results;
 	  };
@@ -287,9 +319,10 @@
 	var Material;
 
 	Material = (function() {
-	  function Material(fullName, materialName) {
+	  function Material(fullName, materialName, processing) {
 	    this.fullName = fullName;
 	    this.materialName = materialName;
+	    this.processing = processing;
 	  }
 
 	  return Material;
@@ -344,7 +377,7 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw;
+	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw, MineProcessing, Processing;
 
 	Material = __webpack_require__(2);
 
@@ -353,6 +386,27 @@
 	MaterialRaw = __webpack_require__(12);
 
 	MaterialNormal = __webpack_require__(13);
+
+	Processing = __webpack_require__(14);
+
+	MineProcessing = (function() {
+	  function MineProcessing() {}
+
+	  MineProcessing.init = function() {
+	    this.coal = new Processing([[Game.materialList.id.oreCoal, 15]]);
+	    this.iron = new Processing([[Game.materialList.id.oreIron, 15]]);
+	    this.copper = new Processing([[Game.materialList.id.oreCopper, 15]]);
+	    this.tin = new Processing([[Game.materialList.id.oreTin, 15]]);
+	    this.aluminium = new Processing([[Game.materialList.id.oreBauxite, 15]]);
+	    this.nickel = new Processing([[Game.materialList.id.oreNickel, 15]]);
+	    this.gold = new Processing([[Game.materialList.id.oreGold, 15]]);
+	    this.platinum = new Processing([[Game.materialList.id.orePlatinum, 15]]);
+	    return this.diamond = new Processing([[Game.materialList.id.oreDiamond, 15]]);
+	  };
+
+	  return MineProcessing;
+
+	})();
 
 	MaterialList = (function() {
 	  function MaterialList() {}
@@ -371,7 +425,7 @@
 	    rawIron: 10,
 	    rawCopper: 11,
 	    rawTin: 12,
-	    rawBauxite: 13,
+	    rawAluminium: 13,
 	    rawNickel: 14,
 	    rawGold: 15,
 	    rawPlatinum: 16,
@@ -383,6 +437,7 @@
 	  MaterialList.material = [];
 
 	  MaterialList.init = function() {
+	    MineProcessing.init();
 	    this.register(this.id.oreCoal, new MaterialOre('Coal'));
 	    this.register(this.id.oreIron, new MaterialOre('Iron'));
 	    this.register(this.id.oreCopper, new MaterialOre('Copper'));
@@ -392,15 +447,15 @@
 	    this.register(this.id.oreGold, new MaterialOre('Gold'));
 	    this.register(this.id.orePlatinum, new MaterialOre('Platinum'));
 	    this.register(this.id.oreDiamond, new MaterialOre('Diamond'));
-	    this.register(this.id.rawCoal, new MaterialRaw('Coal'));
-	    this.register(this.id.rawIron, new MaterialRaw('Iron'));
-	    this.register(this.id.rawCopper, new MaterialRaw('Copper'));
-	    this.register(this.id.rawTin, new MaterialRaw('Tin'));
-	    this.register(this.id.rawBauxite, new MaterialRaw('Bauxite'));
-	    this.register(this.id.rawNickel, new MaterialRaw('Nickel'));
-	    this.register(this.id.rawGold, new MaterialRaw('Gold'));
-	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum'));
-	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond'));
+	    this.register(this.id.rawCoal, new MaterialRaw('Coal', MineProcessing.coal));
+	    this.register(this.id.rawIron, new MaterialRaw('Iron', MineProcessing.iron));
+	    this.register(this.id.rawCopper, new MaterialRaw('Copper', MineProcessing.copper));
+	    this.register(this.id.rawTin, new MaterialRaw('Tin', MineProcessing.tin));
+	    this.register(this.id.rawAluminium, new MaterialRaw('Aluminium', MineProcessing.aluminium));
+	    this.register(this.id.rawNickel, new MaterialRaw('Nickel', MineProcessing.nickel));
+	    this.register(this.id.rawGold, new MaterialRaw('Gold', MineProcessing.gold));
+	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum', MineProcessing.platinum));
+	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond', MineProcessing.diamond));
 	    this.register(this.id.woodStick, new MaterialNormal('Wood stick'));
 	    return this.register(this.id.stone, new MaterialNormal('Stone'));
 	  };
@@ -422,7 +477,7 @@
 
 	var ItemList, ItemPickaxe;
 
-	ItemPickaxe = __webpack_require__(14);
+	ItemPickaxe = __webpack_require__(15);
 
 	ItemList = (function() {
 	  function ItemList() {}
@@ -456,7 +511,7 @@
 
 	var Recipe, RecipeList;
 
-	Recipe = __webpack_require__(15);
+	Recipe = __webpack_require__(16);
 
 	RecipeList = (function() {
 	  function RecipeList() {}
@@ -9790,7 +9845,7 @@
 	  __extends(MaterialOre, _super);
 
 	  function MaterialOre(materialName) {
-	    MaterialOre.__super__.constructor.call(this, "" + materialName + " Ore", materialName);
+	    MaterialOre.__super__.constructor.call(this, "" + materialName + " Ore", materialName, null);
 	  }
 
 	  return MaterialOre;
@@ -9813,8 +9868,8 @@
 	MaterialRaw = (function(_super) {
 	  __extends(MaterialRaw, _super);
 
-	  function MaterialRaw(materialName) {
-	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName);
+	  function MaterialRaw(materialName, processing) {
+	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, processing);
 	  }
 
 	  return MaterialRaw;
@@ -9837,8 +9892,8 @@
 	MaterialNormal = (function(_super) {
 	  __extends(MaterialNormal, _super);
 
-	  function MaterialNormal(materialName) {
-	    MaterialNormal.__super__.constructor.call(this, materialName, materialName);
+	  function MaterialNormal(materialName, processing) {
+	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
 	  }
 
 	  return MaterialNormal;
@@ -9852,11 +9907,29 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Processing;
+
+	Processing = (function() {
+	  function Processing(requiredMaterial) {
+	    this.requiredMaterial = requiredMaterial;
+	  }
+
+	  return Processing;
+
+	})();
+
+	module.exports = Processing;
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var Item, ItemPickaxe,
 	  __hasProp = {}.hasOwnProperty,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-	Item = __webpack_require__(16);
+	Item = __webpack_require__(17);
 
 	ItemPickaxe = (function(_super) {
 	  __extends(ItemPickaxe, _super);
@@ -9875,7 +9948,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Recipe;
@@ -9917,7 +9990,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Item;
