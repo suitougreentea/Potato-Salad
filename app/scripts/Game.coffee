@@ -9,6 +9,13 @@ class Game
   @material = []
   @materialList = require('./MaterialList.coffee')
 
+  @materialOverworldViewList = [
+    @materialList.id.stone
+    @materialList.id.woodStick
+  ]
+
+  @materialOverworldIgnoreList = []
+
   @materialOreViewList = [
     @materialList.id.oreCoal
     @materialList.id.oreIron
@@ -37,6 +44,7 @@ class Game
     new OreVein(0, 10)
   ]
 
+  @overworldStuffFinder = require('./OverworldStuffFinder.coffee')
   @oreVeinFinder = require('./OreVeinFinder.coffee')
   
   @MODE_SEARCHING_OVERWORLD = 1
@@ -53,6 +61,7 @@ class Game
     for e, i in @materialList.material
       @material[i] = 0
 
+    @overworldStuffFinder.init()
     @oreVeinFinder.init()
 
     $('#modeChange1').click(=> @mode = 1)
@@ -64,6 +73,8 @@ class Game
     $('#time').text("Time: #{@time} Mode: #{@mode} Target: #{@miningTarget}")
     
     switch @mode
+      when @MODE_SEARCHING_OVERWORLD
+        @overworldStuffFinder.try()
       when @MODE_SEARCHING_UNDERGROUND
         @oreVeinFinder.try()
       when @MODE_MINING
@@ -71,6 +82,25 @@ class Game
         mineAmount = 1
         e.remain -= mineAmount
         @material[e.materialId] += mineAmount
+
+    $('#materialOverworld').html('')
+    for e in @materialOverworldViewList
+      ((e) =>
+        material = @materialList.material[e]
+        num = @material[e]
+        $('#materialOverworld').append("<input type=\"checkbox\">#{material.materialName}: #{num}<br />")
+
+        # Check state
+        $('#materialOverworld input:last').attr('checked', @materialOverworldIgnoreList.indexOf(e) != -1)
+        that = @
+        $('#materialOverworld input:last').change(->
+          if $(@).is(':checked')
+            that.materialOverworldIgnoreList.push(e)
+          else
+            for e2, i in that.materialOverworldIgnoreList
+              if e2 == e then that.materialOverworldIgnoreList.splice(i, 1)
+        )
+      )(e)
 
     $('#materialOre').html('')
     for e in @materialOreViewList

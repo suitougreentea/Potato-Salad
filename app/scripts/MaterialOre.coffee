@@ -1,6 +1,6 @@
 Material = require('./Material.coffee')
 
-class MaterialRaw extends Material
-  constructor: (materialName) -> super(materialName, materialName)
+class MaterialOre extends Material
+  constructor: (materialName) -> super("#{materialName} Ore", materialName)
 
-module.exports = MaterialRaw
+module.exports = MaterialOre

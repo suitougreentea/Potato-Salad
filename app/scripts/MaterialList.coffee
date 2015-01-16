@@ -1,6 +1,7 @@
 Material = require('./Material.coffee')
 MaterialOre = require('./MaterialOre.coffee')
 MaterialRaw = require('./MaterialRaw.coffee')
+MaterialNormal = require('./MaterialNormal.coffee')
 
 class MaterialList
   @id:
@@ -22,6 +23,8 @@ class MaterialList
     rawGold: 15
     rawPlatinum: 16
     rawDiamond: 17
+    woodStick: 18
+    stone: 19
 
   @material: []
 
@@ -44,6 +47,8 @@ class MaterialList
     @register @id.rawGold,     new MaterialRaw('Gold')
     @register @id.rawPlatinum, new MaterialRaw('Platinum')
     @register @id.rawDiamond,  new MaterialRaw('Diamond')
+    @register @id.woodStick,   new MaterialNormal('Wood stick')
+    @register @id.stone,       new MaterialNormal('Stone')
 
   @register: (id, material) -> @material[id] = material
 

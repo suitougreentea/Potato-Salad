@@ -16,12 +16,17 @@ class OreVeinFinder
     ]
 
   @try: ->
+    target = []
     for e in @data
       [id, chance, size, size_modifier] = e
       if Math.random() < chance
-        Game.logger.log("Found #{Game.materialList.material[id].materialName} vein!")
-        Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)))
-        break
+        target.push(e)
+
+    if target.length > 0
+      result = target[Math.floor(Math.random() * target.length)]
+      [id, change] = result
+      Game.logger.log("Found #{Game.materialList.material[id].materialName} vein!")
+      Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)))
 
 
 module.exports = OreVeinFinder
