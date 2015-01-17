@@ -22,9 +22,15 @@ class Game
   @USING_PICKAXE = 3
   @using = 0
 
-  @materialOverworldViewList = [
+  @materialOverworldPickViewList = [
     @materialList.id.stone
     @materialList.id.woodStick
+  ]
+  @materialOverworldDigViewList = [
+    @materialList.id.dirt
+  ]
+  @materialOverworldCutViewList = [
+    @materialList.id.wood
   ]
 
   @materialOverworldIgnoreList = []
@@ -87,10 +93,6 @@ class Game
     @material[@materialList.id.woodStick] = 1000
     @material[@materialList.id.stone] = 1000
 
-    $('#modeChange1').click(=> @mode = 1)
-    $('#modeChange2').click(=> @mode = 2)
-    $('#modeChange3').click(=> @mode = 3)
-
     @view.refreshStatus()
     @view.refreshRecipeList()
     @view.refreshMaterialList()
@@ -103,7 +105,13 @@ class Game
     
     switch @mode
       when @MODE_SEARCHING_OVERWORLD
-        @overworldStuffFinder.try()
+        switch @using
+          when @USING_NONE
+            @overworldStuffFinder.tryToPick()
+          when @USING_SHOVEL
+            @overworldStuffFinder.tryToDig()
+          when @USING_AXE
+            @overworldStuffFinder.tryToCut()
         @view.refreshMaterialList()
       when @MODE_SEARCHING_UNDERGROUND
         @oreVeinFinder.try()
@@ -148,11 +156,41 @@ class Game
     @view.refreshItemList()
 
   @tryToStartMining: (target) ->
-    if false # do not have pickaxe
+    if !@have.pickaxe
       @logger.log('No pickaxe')
       return
+    @using = @USING_PICKAXE
     @miningTarget = target
     @mode = Game.MODE_MINING
+    @view.refreshStatus()
+
+  @tryToGoUnderground: ->
+    if !@have.pickaxe
+      @logger.log('No pickaxe')
+      return
+    @using = @USING_PICKAXE
+    @mode = Game.MODE_SEARCHING_UNDERGROUND
+    @view.refreshStatus()
+
+  @tryToPick: ->
+    @using = @USING_NONE
+    @mode = Game.MODE_SEARCHING_OVERWORLD
+    @view.refreshStatus()
+
+  @tryToDig: ->
+    if !@have.shovel
+      @logger.log('No shovel')
+      return
+    @using = @USING_SHOVEL
+    @mode = Game.MODE_SEARCHING_OVERWORLD
+    @view.refreshStatus()
+
+  @tryToCut: ->
+    if !@have.axe
+      @logger.log('No axe')
+      return
+    @using = @USING_AXE
+    @mode = Game.MODE_SEARCHING_OVERWORLD
     @view.refreshStatus()
 
   @changeIgnoreCheckbox: (checked, materialId) ->

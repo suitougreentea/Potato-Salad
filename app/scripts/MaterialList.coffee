@@ -38,6 +38,8 @@ class MaterialList
     rawDiamond: 17
     woodStick: 18
     stone: 19
+    dirt: 20
+    wood: 21
 
   @material: []
 
@@ -63,6 +65,8 @@ class MaterialList
     @register @id.rawDiamond,  new MaterialRaw('Diamond', MineProcessing.diamond)
     @register @id.woodStick,   new MaterialNormal('Wood stick')
     @register @id.stone,       new MaterialNormal('Stone')
+    @register @id.dirt,       new MaterialNormal('Dirt')
+    @register @id.wood,       new MaterialNormal('Wood')
 
   @register: (id, material) -> @material[id] = material
 

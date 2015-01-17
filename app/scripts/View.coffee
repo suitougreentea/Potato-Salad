@@ -6,7 +6,7 @@ class View
     
   @refreshMaterialList: ->
     $('#materialOverworldPick').html('')
-    for e in Game.materialOverworldViewList
+    for e in Game.materialOverworldPickViewList
       ((e) =>
         material = Game.materialList.material[e]
         num = Game.material[e]
@@ -15,6 +15,22 @@ class View
         # Check state
         $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) != -1)
         $('#materialOverworldPick input:last').change(-> Game.changeIgnoreCheckbox($(@).is(':checked'), e))
+      )(e)
+
+    $('#materialOverworldDig').html('')
+    for e in Game.materialOverworldDigViewList
+      ((e) =>
+        material = Game.materialList.material[e]
+        num = Game.material[e]
+        $('#materialOverworldDig').append("#{material.materialName}: #{num}<br />")
+      )(e)
+
+    $('#materialOverworldCut').html('')
+    for e in Game.materialOverworldCutViewList
+      ((e) =>
+        material = Game.materialList.material[e]
+        num = Game.material[e]
+        $('#materialOverworldCut').append("#{material.materialName}: #{num}<br />")
       )(e)
 
     $('#materialOre').html('')
@@ -56,16 +72,16 @@ class View
   @refreshItemList: ->
     $('#itemHave').html('')
     $('#itemHave').append("<button>Pick</button>")
-    $('#itemHave button:last').click(-> Game.using = Game.USING_NONE)
+    $('#itemHave button:last').click(-> Game.tryToPick())
     if Game.have.shovel
       $('#itemHave').append("Shovel:<button>#{Game.have.shovel.name}</button>")
-      $('#itemHave button:last').click(-> Game.using = Game.USING_SHOVEL)
+      $('#itemHave button:last').click(-> Game.tryToDig())
     if Game.have.axe
       $('#itemHave').append("Axe:<button>#{Game.have.axe.name}</button>")
-      $('#itemHave button:last').click(-> Game.using = Game.USING_AXE)
+      $('#itemHave button:last').click(-> Game.tryToCut())
     if Game.have.pickaxe
       $('#itemHave').append("Pickaxe:<button>#{Game.have.pickaxe.name}</button>")
-      $('#itemHave button:last').click(-> Game.using = Game.USING_PICKAXE)
+      $('#itemHave button:last').click(-> Game.tryToGoUnderground())
 
     $('#itemStock').html('')
     for e, i in Game.item

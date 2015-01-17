@@ -6,7 +6,7 @@ class OverworldStuffFinder
       [list.id.woodStick, 0.2]
     ]
 
-  @try: ->
+  @tryToPick: ->
     target = []
     for e in @data
       [id, chance] = e
@@ -19,5 +19,13 @@ class OverworldStuffFinder
       if Game.materialOverworldIgnoreList.indexOf(id) == -1
         Game.logger.log("Picked up #{Game.materialList.material[id].fullName}!")
         Game.material[id] += 1
+
+  @tryToDig: ->
+    Game.material[Game.materialList.id.dirt] += 1
+
+  @tryToCut: ->
+    if Math.random() < 0.1
+      Game.logger.log("Cut down a wood!")
+      Game.material[Game.materialList.id.wood] += 20
 
 module.exports = OverworldStuffFinder
