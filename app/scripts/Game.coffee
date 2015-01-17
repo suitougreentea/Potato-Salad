@@ -11,6 +11,17 @@ class Game
   @item = []
   @itemList = require('./ItemList.coffee')
 
+  @have = {
+    shovel: null
+    axe: null
+    pickaxe: null
+  }
+  @USING_NONE = 0
+  @USING_SHOVEL = 1
+  @USING_AXE = 2
+  @USING_PICKAXE = 3
+  @using = 0
+
   @materialOverworldViewList = [
     @materialList.id.stone
     @materialList.id.woodStick
@@ -72,7 +83,9 @@ class Game
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
 
-    @material[@materialList.id.oreCoal] = 100
+    @material[@materialList.id.oreCoal] = 1000
+    @material[@materialList.id.woodStick] = 1000
+    @material[@materialList.id.stone] = 1000
 
     $('#modeChange1').click(=> @mode = 1)
     $('#modeChange2').click(=> @mode = 2)
@@ -109,13 +122,13 @@ class Game
     processing = material.processing
     for source in processing.requiredMaterial
       [id, amount] = source
-      if @material[id] < amount
+      if @material[id] < amount * times
         @logger.log('Not enough material')
         return
       for source in processing.requiredMaterial
         [id, amount] = source
-        @material[id] -= amount
-        @material[materialId] += 10
+        @material[id] -= amount * times
+        @material[materialId] += 10 * times
         @view.refreshMaterialList()
 
   @tryToCraft: (recipe) ->
@@ -149,5 +162,17 @@ class Game
     else
       for e, i in Game.materialOverworldIgnoreList
         if e == materialId then Game.materialOverworldIgnoreList.splice(i, 1)
+
+  @useItem: (index) ->
+    item = @item[index]
+    switch item.type
+      when @itemList.TYPE_SHOVEL
+        @have.shovel = item
+      when @itemList.TYPE_AXE
+        @have.axe = item
+      when @itemList.TYPE_PICKAXE
+        @have.pickaxe = item
+    @item.splice(index, 1)
+    @view.refreshItemList()
 
 module.exports = Game

@@ -2,19 +2,19 @@ $ = require('jquery')
 
 class View
   @refreshStatus: ->
-    $('#time').text("Time: #{Game.time} Mode: #{Game.mode} Target: #{Game.miningTarget}")
+    $('#time').text("Time: #{Game.time} Mode: #{Game.mode} Target: #{Game.miningTarget} Using: #{Game.using}")
     
   @refreshMaterialList: ->
-    $('#materialOverworld').html('')
+    $('#materialOverworldPick').html('')
     for e in Game.materialOverworldViewList
       ((e) =>
         material = Game.materialList.material[e]
         num = Game.material[e]
-        $('#materialOverworld').append("<input type=\"checkbox\">#{material.materialName}: #{num}<br />")
+        $('#materialOverworldPick').append("<input type=\"checkbox\">#{material.materialName}: #{num}<br />")
 
         # Check state
-        $('#materialOverworld input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) != -1)
-        $('#materialOverworld input:last').change(-> Game.changeIgnoreCheckbox($(@).is(':checked'), e))
+        $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) != -1)
+        $('#materialOverworldPick input:last').change(-> Game.changeIgnoreCheckbox($(@).is(':checked'), e))
       )(e)
 
     $('#materialOre').html('')
@@ -30,8 +30,11 @@ class View
       ((e) =>
         material = Game.materialList.material[e]
         num = Game.material[e]
-        $('#materialRaw').append("<button>10</button>#{material.materialName}: #{num}<br />")
+        $('#materialRaw').append("<button>-&gt;10</button>")
         $('#materialRaw button:last').click(-> Game.tryToProcessMaterial(e, 1))
+        $('#materialRaw').append("<button>-&gt;100</button>")
+        $('#materialRaw button:last').click(-> Game.tryToProcessMaterial(e, 10))
+        $('#materialRaw').append("#{material.materialName}: #{num}<br />")
       )(e)
 
   @refreshOreVeinList: ->
@@ -51,8 +54,24 @@ class View
       )(e)
 
   @refreshItemList: ->
-    $('#item').html('')
-    for e in Game.item
-      $('#item').append("#{e.name}<br />")
+    $('#itemHave').html('')
+    $('#itemHave').append("<button>Pick</button>")
+    $('#itemHave button:last').click(-> Game.using = Game.USING_NONE)
+    if Game.have.shovel
+      $('#itemHave').append("Shovel:<button>#{Game.have.shovel.name}</button>")
+      $('#itemHave button:last').click(-> Game.using = Game.USING_SHOVEL)
+    if Game.have.axe
+      $('#itemHave').append("Axe:<button>#{Game.have.axe.name}</button>")
+      $('#itemHave button:last').click(-> Game.using = Game.USING_AXE)
+    if Game.have.pickaxe
+      $('#itemHave').append("Pickaxe:<button>#{Game.have.pickaxe.name}</button>")
+      $('#itemHave button:last').click(-> Game.using = Game.USING_PICKAXE)
+
+    $('#itemStock').html('')
+    for e, i in Game.item
+      ((e, i) ->
+        $('#itemStock').append("<button>#{e.name}</button>")
+        $('#itemStock button:last').click(-> Game.useItem(i))
+      )(e, i)
 
 module.exports = View
