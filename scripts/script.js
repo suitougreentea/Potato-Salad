@@ -46,7 +46,7 @@
 
 	var $;
 
-	$ = __webpack_require__(10);
+	$ = __webpack_require__(18);
 
 	$(function() {
 	  var actionIntervalId;
@@ -64,7 +64,7 @@
 
 	var $, Game, Material, OreVein;
 
-	$ = __webpack_require__(10);
+	$ = __webpack_require__(18);
 
 	Material = __webpack_require__(2);
 
@@ -83,7 +83,27 @@
 
 	  Game.itemList = __webpack_require__(6);
 
-	  Game.materialOverworldViewList = [Game.materialList.id.stone, Game.materialList.id.woodStick];
+	  Game.have = {
+	    shovel: null,
+	    axe: null,
+	    pickaxe: null
+	  };
+
+	  Game.USING_NONE = 0;
+
+	  Game.USING_SHOVEL = 1;
+
+	  Game.USING_AXE = 2;
+
+	  Game.USING_PICKAXE = 3;
+
+	  Game.using = 0;
+
+	  Game.materialOverworldPickViewList = [Game.materialList.id.stone, Game.materialList.id.woodStick];
+
+	  Game.materialOverworldDigViewList = [Game.materialList.id.dirt];
+
+	  Game.materialOverworldCutViewList = [Game.materialList.id.wood];
 
 	  Game.materialOverworldIgnoreList = [];
 
@@ -111,6 +131,8 @@
 
 	  Game.time = 0;
 
+	  Game.view = __webpack_require__(10);
+
 	  Game.init = function() {
 	    var e, i, _i, _len, _ref;
 	    this.materialList.init();
@@ -123,186 +145,176 @@
 	    this.recipeList.init();
 	    this.overworldStuffFinder.init();
 	    this.oreVeinFinder.init();
-	    $('#modeChange1').click((function(_this) {
-	      return function() {
-	        return _this.mode = 1;
-	      };
-	    })(this));
-	    $('#modeChange2').click((function(_this) {
-	      return function() {
-	        return _this.mode = 2;
-	      };
-	    })(this));
-	    $('#modeChange3').click((function(_this) {
-	      return function() {
-	        return _this.mode = 3;
-	      };
-	    })(this));
-	    this.refreshRecipeList();
-	    this.refreshMaterialList();
-	    this.refreshOreVeinList();
-	    return this.refreshItemList();
+	    this.material[this.materialList.id.oreCoal] = 1000;
+	    this.material[this.materialList.id.woodStick] = 1000;
+	    this.material[this.materialList.id.stone] = 1000;
+	    this.view.refreshStatus();
+	    this.view.refreshRecipeList();
+	    this.view.refreshMaterialList();
+	    this.view.refreshOreVeinList();
+	    return this.view.refreshItemList();
 	  };
 
 	  Game.action = function() {
 	    var e, mineAmount;
 	    Game.time++;
-	    $('#time').text("Time: " + Game.time + " Mode: " + Game.mode + " Target: " + Game.miningTarget);
+	    Game.view.refreshStatus();
 	    switch (Game.mode) {
 	      case Game.MODE_SEARCHING_OVERWORLD:
-	        Game.overworldStuffFinder["try"]();
-	        return Game.refreshMaterialList();
+	        switch (Game.using) {
+	          case Game.USING_NONE:
+	            Game.overworldStuffFinder.tryToPick();
+	            break;
+	          case Game.USING_SHOVEL:
+	            Game.overworldStuffFinder.tryToDig();
+	            break;
+	          case Game.USING_AXE:
+	            Game.overworldStuffFinder.tryToCut();
+	        }
+	        return Game.view.refreshMaterialList();
 	      case Game.MODE_SEARCHING_UNDERGROUND:
 	        Game.oreVeinFinder["try"]();
-	        return Game.refreshOreVeinList();
+	        return Game.view.refreshOreVeinList();
 	      case Game.MODE_MINING:
 	        e = Game.oreVein[Game.miningTarget];
 	        mineAmount = 1;
 	        e.remain -= mineAmount;
 	        Game.material[e.materialId] += mineAmount;
-	        Game.refreshMaterialList();
-	        Game.refreshOreVeinList();
-	        return Game.refreshItemList();
+	        Game.view.refreshMaterialList();
+	        Game.view.refreshOreVeinList();
+	        return Game.view.refreshItemList();
 	    }
 	  };
 
-	  Game.refreshMaterialList = function() {
-	    var e, _fn, _fn1, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
-	    $('#materialOverworld').html('');
-	    _ref = this.materialOverworldViewList;
-	    _fn = (function(_this) {
-	      return function(e) {
-	        var material, num, that;
-	        material = _this.materialList.material[e];
-	        num = _this.material[e];
-	        $('#materialOverworld').append("<input type=\"checkbox\">" + material.materialName + ": " + num + "<br />");
-	        $('#materialOverworld input:last').attr('checked', _this.materialOverworldIgnoreList.indexOf(e) !== -1);
-	        that = _this;
-	        return $('#materialOverworld input:last').change(function() {
-	          var e2, i, _j, _len1, _ref1, _results;
-	          if ($(this).is(':checked')) {
-	            return that.materialOverworldIgnoreList.push(e);
-	          } else {
-	            _ref1 = that.materialOverworldIgnoreList;
-	            _results = [];
-	            for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
-	              e2 = _ref1[i];
-	              if (e2 === e) {
-	                _results.push(that.materialOverworldIgnoreList.splice(i, 1));
-	              } else {
-	                _results.push(void 0);
-	              }
-	            }
-	            return _results;
-	          }
-	        });
-	      };
-	    })(this);
+	  Game.tryToProcessMaterial = function(materialId, times) {
+	    var amount, id, material, processing, source, _i, _j, _len, _len1, _ref, _ref1;
+	    material = Game.materialList.material[materialId];
+	    processing = material.processing;
+	    _ref = processing.requiredMaterial;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      source = _ref[_i];
+	      id = source[0], amount = source[1];
+	      if (Game.material[id] < amount * times) {
+	        Game.logger.log('Not enough material');
+	        return;
+	      }
+	      _ref1 = processing.requiredMaterial;
+	      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	        source = _ref1[_j];
+	        id = source[0], amount = source[1];
+	        Game.material[id] -= amount * times;
+	        Game.material[materialId] += 10 * times;
+	        Game.view.refreshMaterialList();
+	      }
+	    }
+	  };
+
+	  Game.tryToCraft = function(recipe) {
+	    var amount, e, materialId, _i, _j, _len, _len1, _ref, _ref1;
+	    _ref = recipe.requiredMaterial;
 	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
 	      e = _ref[_i];
-	      _fn(e);
+	      materialId = e[0], amount = e[1];
+	      if (this.material[materialId] < amount) {
+	        this.logger.log('Not enough material');
+	        return;
+	      }
 	    }
-	    $('#materialOre').html('');
-	    _ref1 = this.materialOreViewList;
-	    _fn1 = (function(_this) {
-	      return function(e) {
-	        var material, num;
-	        material = _this.materialList.material[e];
-	        num = _this.material[e];
-	        return $('#materialOre').append("" + material.materialName + ": " + num + "<br />");
-	      };
-	    })(this);
+	    _ref1 = recipe.requiredMaterial;
 	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
 	      e = _ref1[_j];
-	      _fn1(e);
+	      materialId = e[0], amount = e[1];
+	      this.material[materialId] -= amount;
 	    }
-	    $('#materialRaw').html('');
-	    _ref2 = this.materialRawViewList;
-	    _results = [];
-	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	      e = _ref2[_k];
-	      _results.push(((function(_this) {
-	        return function(e) {
-	          var material, num;
-	          material = _this.materialList.material[e];
-	          num = _this.material[e];
-	          $('#materialRaw').append("<button>10</button>" + material.materialName + ": " + num + "<br />");
-	          return $('#materialRaw button:last').click(function() {
-	            var amount, id, p, source, _l, _len3, _len4, _m, _ref3, _ref4;
-	            p = material.processing;
-	            _ref3 = p.requiredMaterial;
-	            for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-	              source = _ref3[_l];
-	              id = source[0], amount = source[1];
-	              if (_this.material[id] < amount) {
-	                _this.logger.log('Not enough material');
-	                return;
-	              }
-	            }
-	            _ref4 = p.requiredMaterial;
-	            for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
-	              source = _ref4[_m];
-	              id = source[0], amount = source[1];
-	              _this.material[id] -= amount;
-	            }
-	            _this.material[e] += 10;
-	            return _this.refreshMaterialList();
-	          });
-	        };
-	      })(this))(e));
-	    }
-	    return _results;
+	    this.item.push(recipe.output);
+	    this.logger.log('Craft complete');
+	    this.view.refreshMaterialList();
+	    return this.view.refreshItemList();
 	  };
 
-	  Game.refreshOreVeinList = function() {
+	  Game.tryToStartMining = function(target) {
+	    if (!this.have.pickaxe) {
+	      this.logger.log('No pickaxe');
+	      return;
+	    }
+	    this.using = this.USING_PICKAXE;
+	    this.miningTarget = target;
+	    this.mode = Game.MODE_MINING;
+	    return this.view.refreshStatus();
+	  };
+
+	  Game.tryToGoUnderground = function() {
+	    if (!this.have.pickaxe) {
+	      this.logger.log('No pickaxe');
+	      return;
+	    }
+	    this.using = this.USING_PICKAXE;
+	    this.mode = Game.MODE_SEARCHING_UNDERGROUND;
+	    return this.view.refreshStatus();
+	  };
+
+	  Game.tryToPick = function() {
+	    this.using = this.USING_NONE;
+	    this.mode = Game.MODE_SEARCHING_OVERWORLD;
+	    return this.view.refreshStatus();
+	  };
+
+	  Game.tryToDig = function() {
+	    if (!this.have.shovel) {
+	      this.logger.log('No shovel');
+	      return;
+	    }
+	    this.using = this.USING_SHOVEL;
+	    this.mode = Game.MODE_SEARCHING_OVERWORLD;
+	    return this.view.refreshStatus();
+	  };
+
+	  Game.tryToCut = function() {
+	    if (!this.have.axe) {
+	      this.logger.log('No axe');
+	      return;
+	    }
+	    this.using = this.USING_AXE;
+	    this.mode = Game.MODE_SEARCHING_OVERWORLD;
+	    return this.view.refreshStatus();
+	  };
+
+	  Game.changeIgnoreCheckbox = function(checked, materialId) {
 	    var e, i, _i, _len, _ref, _results;
-	    $('#oreVein').html('');
-	    _ref = this.oreVein;
-	    _results = [];
-	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-	      e = _ref[i];
-	      _results.push(((function(_this) {
-	        return function(e, i) {
-	          $('#oreVein').append("<div><button>Mine this vein</button> " + _this.materialList.material[e.materialId].materialName + ": " + e.remain + " / " + e.amount + "</div>");
-	          return $('#oreVein button:last').click(function() {
-	            _this.miningTarget = i;
-	            return _this.mode = _this.MODE_MINING;
-	          });
-	        };
-	      })(this))(e, i));
+	    if (checked) {
+	      if (Game.materialOverworldIgnoreList.indexOf(materialId) === -1) {
+	        return Game.materialOverworldIgnoreList.push(materialId);
+	      }
+	    } else {
+	      _ref = Game.materialOverworldIgnoreList;
+	      _results = [];
+	      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	        e = _ref[i];
+	        if (e === materialId) {
+	          _results.push(Game.materialOverworldIgnoreList.splice(i, 1));
+	        } else {
+	          _results.push(void 0);
+	        }
+	      }
+	      return _results;
 	    }
-	    return _results;
 	  };
 
-	  Game.refreshRecipeList = function() {
-	    var e, _i, _len, _ref, _results;
-	    $('#recipe').html('');
-	    _ref = this.recipeList.normal;
-	    _results = [];
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      _results.push(((function(_this) {
-	        return function(e) {
-	          $('#recipe').append("<button>" + e.output.name + "</button>");
-	          return $('#recipe button:last').click(function() {
-	            return e.craft();
-	          });
-	        };
-	      })(this))(e));
+	  Game.useItem = function(index) {
+	    var item;
+	    item = this.item[index];
+	    switch (item.type) {
+	      case this.itemList.TYPE_SHOVEL:
+	        this.have.shovel = item;
+	        break;
+	      case this.itemList.TYPE_AXE:
+	        this.have.axe = item;
+	        break;
+	      case this.itemList.TYPE_PICKAXE:
+	        this.have.pickaxe = item;
 	    }
-	    return _results;
-	  };
-
-	  Game.refreshItemList = function() {
-	    var e, _i, _len, _ref, _results;
-	    $('#item').html('');
-	    _ref = this.item;
-	    _results = [];
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      _results.push($('#item').append("" + e.name + "<br />"));
-	    }
-	    return _results;
+	    this.item.splice(index, 1);
+	    return this.view.refreshItemList();
 	  };
 
 	  return Game;
@@ -431,7 +443,9 @@
 	    rawPlatinum: 16,
 	    rawDiamond: 17,
 	    woodStick: 18,
-	    stone: 19
+	    stone: 19,
+	    dirt: 20,
+	    wood: 21
 	  };
 
 	  MaterialList.material = [];
@@ -457,7 +471,9 @@
 	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum', MineProcessing.platinum));
 	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond', MineProcessing.diamond));
 	    this.register(this.id.woodStick, new MaterialNormal('Wood stick'));
-	    return this.register(this.id.stone, new MaterialNormal('Stone'));
+	    this.register(this.id.stone, new MaterialNormal('Stone'));
+	    this.register(this.id.dirt, new MaterialNormal('Dirt'));
+	    return this.register(this.id.wood, new MaterialNormal('Wood'));
 	  };
 
 	  MaterialList.register = function(id, material) {
@@ -475,23 +491,31 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ItemList, ItemPickaxe;
+	var ItemList, ItemTool;
 
-	ItemPickaxe = __webpack_require__(15);
+	ItemTool = __webpack_require__(15);
 
 	ItemList = (function() {
 	  function ItemList() {}
 
-	  ItemList.TYPE_PICKAXE = 1;
+	  ItemList.TYPE_SHOVEL = 1;
+
+	  ItemList.TYPE_AXE = 2;
+
+	  ItemList.TYPE_PICKAXE = 3;
 
 	  ItemList.id = {
-	    stonePickaxe: 1
+	    stoneShovel: 1,
+	    stoneAxe: 2,
+	    stonePickaxe: 3
 	  };
 
 	  ItemList.item = [];
 
 	  ItemList.init = function() {
-	    return this.register(this.id.stonePickaxe, new ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
+	    this.register(this.id.stoneShovel, new ItemTool.ItemShovel('Stone Shovel', Game.materialList.id.stone, []));
+	    this.register(this.id.stoneAxe, new ItemTool.ItemAxe('Stone Axe', Game.materialList.id.stone, []));
+	    return this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
 	  };
 
 	  ItemList.register = function(id, item) {
@@ -524,7 +548,7 @@
 	    var il, ml;
 	    ml = Game.materialList;
 	    il = Game.itemList;
-	    return this.normal = [new Recipe([[ml.id.woodStick, 1], [ml.id.stone, 2]], il.item[il.id.stonePickaxe])];
+	    return this.normal = [new Recipe([[ml.id.woodStick, 1], [ml.id.stone, 2]], il.item[il.id.stoneShovel]), new Recipe([[ml.id.woodStick, 1], [ml.id.stone, 2]], il.item[il.id.stoneAxe]), new Recipe([[ml.id.woodStick, 1], [ml.id.stone, 2]], il.item[il.id.stonePickaxe])];
 	  };
 
 	  return RecipeList;
@@ -549,7 +573,7 @@
 	    return this.data = [[list.id.stone, 0.2], [list.id.woodStick, 0.2]];
 	  };
 
-	  OverworldStuffFinder["try"] = function() {
+	  OverworldStuffFinder.tryToPick = function() {
 	    var chance, change, e, id, result, target, _i, _len, _ref;
 	    target = [];
 	    _ref = this.data;
@@ -567,6 +591,17 @@
 	        Game.logger.log("Picked up " + Game.materialList.material[id].fullName + "!");
 	        return Game.material[id] += 1;
 	      }
+	    }
+	  };
+
+	  OverworldStuffFinder.tryToDig = function() {
+	    return Game.material[Game.materialList.id.dirt] += 1;
+	  };
+
+	  OverworldStuffFinder.tryToCut = function() {
+	    if (Math.random() < 0.1) {
+	      Game.logger.log("Cut down a wood!");
+	      return Game.material[Game.materialList.id.wood] += 20;
 	    }
 	  };
 
@@ -622,6 +657,384 @@
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $, View;
+
+	$ = __webpack_require__(18);
+
+	View = (function() {
+	  function View() {}
+
+	  View.refreshStatus = function() {
+	    return $('#time').text("Time: " + Game.time + " Mode: " + Game.mode + " Target: " + Game.miningTarget + " Using: " + Game.using);
+	  };
+
+	  View.refreshMaterialList = function() {
+	    var e, _fn, _fn1, _fn2, _fn3, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
+	    $('#materialOverworldPick').html('');
+	    _ref = Game.materialOverworldPickViewList;
+	    _fn = (function(_this) {
+	      return function(e) {
+	        var material, num;
+	        material = Game.materialList.material[e];
+	        num = Game.material[e];
+	        $('#materialOverworldPick').append("<input type=\"checkbox\">" + material.materialName + ": " + num + "<br />");
+	        $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) !== -1);
+	        return $('#materialOverworldPick input:last').change(function() {
+	          return Game.changeIgnoreCheckbox($(this).is(':checked'), e);
+	        });
+	      };
+	    })(this);
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      _fn(e);
+	    }
+	    $('#materialOverworldDig').html('');
+	    _ref1 = Game.materialOverworldDigViewList;
+	    _fn1 = (function(_this) {
+	      return function(e) {
+	        var material, num;
+	        material = Game.materialList.material[e];
+	        num = Game.material[e];
+	        return $('#materialOverworldDig').append("" + material.materialName + ": " + num + "<br />");
+	      };
+	    })(this);
+	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	      e = _ref1[_j];
+	      _fn1(e);
+	    }
+	    $('#materialOverworldCut').html('');
+	    _ref2 = Game.materialOverworldCutViewList;
+	    _fn2 = (function(_this) {
+	      return function(e) {
+	        var material, num;
+	        material = Game.materialList.material[e];
+	        num = Game.material[e];
+	        return $('#materialOverworldCut').append("" + material.materialName + ": " + num + "<br />");
+	      };
+	    })(this);
+	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+	      e = _ref2[_k];
+	      _fn2(e);
+	    }
+	    $('#materialOre').html('');
+	    _ref3 = Game.materialOreViewList;
+	    _fn3 = (function(_this) {
+	      return function(e) {
+	        var material, num;
+	        material = Game.materialList.material[e];
+	        num = Game.material[e];
+	        return $('#materialOre').append("" + material.materialName + ": " + num + "<br />");
+	      };
+	    })(this);
+	    for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+	      e = _ref3[_l];
+	      _fn3(e);
+	    }
+	    $('#materialRaw').html('');
+	    _ref4 = Game.materialRawViewList;
+	    _results = [];
+	    for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+	      e = _ref4[_m];
+	      _results.push(((function(_this) {
+	        return function(e) {
+	          var material, num;
+	          material = Game.materialList.material[e];
+	          num = Game.material[e];
+	          $('#materialRaw').append("<button>-&gt;10</button>");
+	          $('#materialRaw button:last').click(function() {
+	            return Game.tryToProcessMaterial(e, 1);
+	          });
+	          $('#materialRaw').append("<button>-&gt;100</button>");
+	          $('#materialRaw button:last').click(function() {
+	            return Game.tryToProcessMaterial(e, 10);
+	          });
+	          return $('#materialRaw').append("" + material.materialName + ": " + num + "<br />");
+	        };
+	      })(this))(e));
+	    }
+	    return _results;
+	  };
+
+	  View.refreshOreVeinList = function() {
+	    var e, i, _i, _len, _ref, _results;
+	    $('#oreVein').html('');
+	    _ref = Game.oreVein;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push(((function(_this) {
+	        return function(e, i) {
+	          $('#oreVein').append("<div><button>Mine this vein</button> " + Game.materialList.material[e.materialId].materialName + ": " + e.remain + " / " + e.amount + "</div>");
+	          return $('#oreVein button:last').click(function() {
+	            return Game.tryToStartMining(i);
+	          });
+	        };
+	      })(this))(e, i));
+	    }
+	    return _results;
+	  };
+
+	  View.refreshRecipeList = function() {
+	    var e, _i, _len, _ref, _results;
+	    $('#recipe').html('');
+	    _ref = Game.recipeList.normal;
+	    _results = [];
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      _results.push(((function(_this) {
+	        return function(e) {
+	          $('#recipe').append("<button>" + e.output.name + "</button>");
+	          return $('#recipe button:last').click(function() {
+	            return Game.tryToCraft(e);
+	          });
+	        };
+	      })(this))(e));
+	    }
+	    return _results;
+	  };
+
+	  View.refreshItemList = function() {
+	    var e, i, _i, _len, _ref, _results;
+	    $('#itemHave').html('');
+	    $('#itemHave').append("<button>Pick</button>");
+	    $('#itemHave button:last').click(function() {
+	      return Game.tryToPick();
+	    });
+	    if (Game.have.shovel) {
+	      $('#itemHave').append("Shovel:<button>" + Game.have.shovel.name + "</button>");
+	      $('#itemHave button:last').click(function() {
+	        return Game.tryToDig();
+	      });
+	    }
+	    if (Game.have.axe) {
+	      $('#itemHave').append("Axe:<button>" + Game.have.axe.name + "</button>");
+	      $('#itemHave button:last').click(function() {
+	        return Game.tryToCut();
+	      });
+	    }
+	    if (Game.have.pickaxe) {
+	      $('#itemHave').append("Pickaxe:<button>" + Game.have.pickaxe.name + "</button>");
+	      $('#itemHave button:last').click(function() {
+	        return Game.tryToGoUnderground();
+	      });
+	    }
+	    $('#itemStock').html('');
+	    _ref = Game.item;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push((function(e, i) {
+	        $('#itemStock').append("<button>" + e.name + "</button>");
+	        return $('#itemStock button:last').click(function() {
+	          return Game.useItem(i);
+	        });
+	      })(e, i));
+	    }
+	    return _results;
+	  };
+
+	  return View;
+
+	})();
+
+	module.exports = View;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialOre,
+	  __hasProp = {}.hasOwnProperty,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+	Material = __webpack_require__(2);
+
+	MaterialOre = (function(_super) {
+	  __extends(MaterialOre, _super);
+
+	  function MaterialOre(materialName) {
+	    MaterialOre.__super__.constructor.call(this, "" + materialName + " Ore", materialName, null);
+	  }
+
+	  return MaterialOre;
+
+	})(Material);
+
+	module.exports = MaterialOre;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialRaw,
+	  __hasProp = {}.hasOwnProperty,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+	Material = __webpack_require__(2);
+
+	MaterialRaw = (function(_super) {
+	  __extends(MaterialRaw, _super);
+
+	  function MaterialRaw(materialName, processing) {
+	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, processing);
+	  }
+
+	  return MaterialRaw;
+
+	})(Material);
+
+	module.exports = MaterialRaw;
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialNormal,
+	  __hasProp = {}.hasOwnProperty,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+	Material = __webpack_require__(2);
+
+	MaterialNormal = (function(_super) {
+	  __extends(MaterialNormal, _super);
+
+	  function MaterialNormal(materialName, processing) {
+	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
+	  }
+
+	  return MaterialNormal;
+
+	})(Material);
+
+	module.exports = MaterialNormal;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processing;
+
+	Processing = (function() {
+	  function Processing(requiredMaterial) {
+	    this.requiredMaterial = requiredMaterial;
+	  }
+
+	  return Processing;
+
+	})();
+
+	module.exports = Processing;
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
+	  __hasProp = {}.hasOwnProperty,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+	Item = __webpack_require__(17);
+
+	ItemTool = (function(_super) {
+	  __extends(ItemTool, _super);
+
+	  function ItemTool(type, name, material, modifier) {
+	    this.material = material;
+	    this.modifier = modifier;
+	    ItemTool.__super__.constructor.call(this, type, name);
+	  }
+
+	  return ItemTool;
+
+	})(Item);
+
+	ItemShovel = (function(_super) {
+	  __extends(ItemShovel, _super);
+
+	  function ItemShovel(name, material, modifier) {
+	    ItemShovel.__super__.constructor.call(this, Game.itemList.TYPE_SHOVEL, name, material, modifier);
+	  }
+
+	  return ItemShovel;
+
+	})(ItemTool);
+
+	ItemAxe = (function(_super) {
+	  __extends(ItemAxe, _super);
+
+	  function ItemAxe(name, material, modifier) {
+	    ItemAxe.__super__.constructor.call(this, Game.itemList.TYPE_AXE, name, material, modifier);
+	  }
+
+	  return ItemAxe;
+
+	})(ItemTool);
+
+	ItemPickaxe = (function(_super) {
+	  __extends(ItemPickaxe, _super);
+
+	  function ItemPickaxe(name, material, modifier) {
+	    ItemPickaxe.__super__.constructor.call(this, Game.itemList.TYPE_PICKAXE, name, material, modifier);
+	  }
+
+	  return ItemPickaxe;
+
+	})(ItemTool);
+
+	module.exports = {
+	  ItemShovel: ItemShovel,
+	  ItemAxe: ItemAxe,
+	  ItemPickaxe: ItemPickaxe
+	};
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Recipe;
+
+	Recipe = (function() {
+	  function Recipe(requiredMaterial, output) {
+	    this.requiredMaterial = requiredMaterial;
+	    this.output = output;
+	  }
+
+	  return Recipe;
+
+	})();
+
+	module.exports = Recipe;
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item;
+
+	Item = (function() {
+	  function Item(type, name) {
+	    this.type = type;
+	    this.name = name;
+	  }
+
+	  return Item;
+
+	})();
+
+	module.exports = Item;
+
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9829,183 +10242,6 @@
 	return jQuery;
 
 	}));
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialOre,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Material = __webpack_require__(2);
-
-	MaterialOre = (function(_super) {
-	  __extends(MaterialOre, _super);
-
-	  function MaterialOre(materialName) {
-	    MaterialOre.__super__.constructor.call(this, "" + materialName + " Ore", materialName, null);
-	  }
-
-	  return MaterialOre;
-
-	})(Material);
-
-	module.exports = MaterialOre;
-
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialRaw,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Material = __webpack_require__(2);
-
-	MaterialRaw = (function(_super) {
-	  __extends(MaterialRaw, _super);
-
-	  function MaterialRaw(materialName, processing) {
-	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, processing);
-	  }
-
-	  return MaterialRaw;
-
-	})(Material);
-
-	module.exports = MaterialRaw;
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialNormal,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Material = __webpack_require__(2);
-
-	MaterialNormal = (function(_super) {
-	  __extends(MaterialNormal, _super);
-
-	  function MaterialNormal(materialName, processing) {
-	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
-	  }
-
-	  return MaterialNormal;
-
-	})(Material);
-
-	module.exports = MaterialNormal;
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processing;
-
-	Processing = (function() {
-	  function Processing(requiredMaterial) {
-	    this.requiredMaterial = requiredMaterial;
-	  }
-
-	  return Processing;
-
-	})();
-
-	module.exports = Processing;
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Item, ItemPickaxe,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Item = __webpack_require__(17);
-
-	ItemPickaxe = (function(_super) {
-	  __extends(ItemPickaxe, _super);
-
-	  function ItemPickaxe(name, material, modifier) {
-	    this.material = material;
-	    this.modifier = modifier;
-	    ItemPickaxe.__super__.constructor.call(this, Game.itemList.TYPE_PICKAXE, name);
-	  }
-
-	  return ItemPickaxe;
-
-	})(Item);
-
-	module.exports = ItemPickaxe;
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Recipe;
-
-	Recipe = (function() {
-	  function Recipe(requiredMaterial, output) {
-	    this.requiredMaterial = requiredMaterial;
-	    this.output = output;
-	  }
-
-	  Recipe.prototype.craft = function() {
-	    var amount, e, materialId, _i, _j, _len, _len1, _ref, _ref1;
-	    _ref = this.requiredMaterial;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      materialId = e[0], amount = e[1];
-	      if (Game.material[materialId] < amount) {
-	        Game.logger.log('Not enough material');
-	        return;
-	      }
-	    }
-	    _ref1 = this.requiredMaterial;
-	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	      e = _ref1[_j];
-	      materialId = e[0], amount = e[1];
-	      Game.material[materialId] -= amount;
-	    }
-	    Game.item.push(this.output);
-	    Game.logger.log('Craft complete');
-	    Game.refreshMaterialList();
-	    return Game.refreshItemList();
-	  };
-
-	  return Recipe;
-
-	})();
-
-	module.exports = Recipe;
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Item;
-
-	Item = (function() {
-	  function Item(type, name) {
-	    this.type = type;
-	    this.name = name;
-	  }
-
-	  return Item;
-
-	})();
-
-	module.exports = Item;
 
 
 /***/ }
