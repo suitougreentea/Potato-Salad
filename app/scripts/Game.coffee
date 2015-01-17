@@ -72,10 +72,13 @@ class Game
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
 
+    @material[@materialList.id.oreCoal] = 100
+
     $('#modeChange1').click(=> @mode = 1)
     $('#modeChange2').click(=> @mode = 2)
     $('#modeChange3').click(=> @mode = 3)
 
+    @view.refreshStatus()
     @view.refreshRecipeList()
     @view.refreshMaterialList()
     @view.refreshOreVeinList()
@@ -83,7 +86,7 @@ class Game
 
   @action: =>
     @time++
-    $('#time').text("Time: #{@time} Mode: #{@mode} Target: #{@miningTarget}")
+    @view.refreshStatus()
     
     switch @mode
       when @MODE_SEARCHING_OVERWORLD
@@ -101,5 +104,50 @@ class Game
         @view.refreshOreVeinList()
         @view.refreshItemList()
 
+  @tryToProcessMaterial: (materialId, times) =>
+    material = @materialList.material[materialId]
+    processing = material.processing
+    for source in processing.requiredMaterial
+      [id, amount] = source
+      if @material[id] < amount
+        @logger.log('Not enough material')
+        return
+      for source in processing.requiredMaterial
+        [id, amount] = source
+        @material[id] -= amount
+        @material[materialId] += 10
+        @view.refreshMaterialList()
+
+  @tryToCraft: (recipe) ->
+    for e in recipe.requiredMaterial
+      [materialId, amount] = e
+      if @material[materialId] < amount
+        @logger.log('Not enough material')
+        return
+
+    for e in recipe.requiredMaterial
+      [materialId, amount] = e
+      @material[materialId] -= amount
+
+    @item.push(recipe.output)
+    @logger.log('Craft complete')
+    @view.refreshMaterialList()
+    @view.refreshItemList()
+
+  @tryToStartMining: (target) ->
+    if false # do not have pickaxe
+      @logger.log('No pickaxe')
+      return
+    @miningTarget = target
+    @mode = Game.MODE_MINING
+    @view.refreshStatus()
+
+  @changeIgnoreCheckbox: (checked, materialId) ->
+    if checked
+      if Game.materialOverworldIgnoreList.indexOf(materialId) == -1
+        Game.materialOverworldIgnoreList.push(materialId)
+    else
+      for e, i in Game.materialOverworldIgnoreList
+        if e == materialId then Game.materialOverworldIgnoreList.splice(i, 1)
 
 module.exports = Game
