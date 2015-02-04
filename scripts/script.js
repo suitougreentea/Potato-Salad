@@ -9609,13 +9609,17 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Logger;
+	var $, Logger;
+
+	$ = __webpack_require__(2);
 
 	Logger = (function() {
 	  function Logger() {}
 
 	  Logger.log = function(str) {
-	    return console.log("[" + Game.time + "] " + str);
+	    console.log("[" + Game.time + "] " + str);
+	    $('#painLog').append("[" + Game.time + "] " + str + "<br />");
+	    return $('#painLog').scrollTop($('#painLog')[0].scrollHeight);
 	  };
 
 	  return Logger;
@@ -9733,7 +9737,7 @@
 
 	var ItemList, ItemTool;
 
-	ItemTool = __webpack_require__(17);
+	ItemTool = __webpack_require__(18);
 
 	ItemList = (function() {
 	  function ItemList() {}
@@ -9775,7 +9779,7 @@
 
 	var Recipe, RecipeList;
 
-	Recipe = __webpack_require__(18);
+	Recipe = __webpack_require__(17);
 
 	RecipeList = (function() {
 	  function RecipeList() {}
@@ -11056,6 +11060,25 @@
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Recipe;
+
+	Recipe = (function() {
+	  function Recipe(_at_requiredMaterial, _at_output) {
+	    this.requiredMaterial = _at_requiredMaterial;
+	    this.output = _at_output;
+	  }
+
+	  return Recipe;
+
+	})();
+
+	module.exports = Recipe;
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
@@ -11113,25 +11136,6 @@
 	  ItemAxe: ItemAxe,
 	  ItemPickaxe: ItemPickaxe
 	};
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Recipe;
-
-	Recipe = (function() {
-	  function Recipe(_at_requiredMaterial, _at_output) {
-	    this.requiredMaterial = _at_requiredMaterial;
-	    this.output = _at_output;
-	  }
-
-	  return Recipe;
-
-	})();
-
-	module.exports = Recipe;
 
 
 /***/ },
