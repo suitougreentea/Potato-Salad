@@ -10,7 +10,7 @@ g.task('html', ->
   return g.src('app/**/*.jade').pipe($.jade(pretty: true)).pipe(g.dest('deploy/')).pipe($.livereload())
 )
 g.task('css', ->
-  return g.src('app/styles/style.sass').pipe($.sass()).pipe(g.dest('deploy/styles/')).pipe($.livereload())
+  return g.src('app/styles/style.sass').pipe($.sass(indentedSyntax: true, onError: (err) -> console.log(err))).pipe(g.dest('deploy/styles/')).pipe($.livereload())
 )
 g.task('js', ->
   return g.src('app/scripts/script.coffee').pipe($.webpack(require('./webpack.config.coffee'))).pipe(g.dest('deploy/scripts/')).pipe($.livereload())
