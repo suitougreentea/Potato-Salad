@@ -92,6 +92,10 @@ class Game
     @material[@materialList.id.oreCoal] = 1000
     @material[@materialList.id.woodStick] = 1000
     @material[@materialList.id.stone] = 1000
+    
+    @onResizeWindow()
+
+    $(window).resize => @onResizeWindow()
 
     @view.refreshStatus()
     @view.refreshRecipeList()
@@ -212,5 +216,15 @@ class Game
         @have.pickaxe = item
     @item.splice(index, 1)
     @view.refreshItemList()
+
+  @onResizeWindow: () ->
+    width = $(window).width()
+    height = $(window).height()
+    console.log "Window resized: (#{width}, #{height})"
+    leftWidth = 270
+    logHeight = 120
+    $('#painLeft').css(top: 0, left: 0).width(leftWidth).height(height)
+    $('#painMain').css(top: 0, left: leftWidth).width(width - leftWidth).height(height - logHeight)
+    $('#painLog').css(top: height - logHeight, left: leftWidth).width(width - leftWidth).height(logHeight)
 
 module.exports = Game

@@ -6,16 +6,21 @@ html
     script(type="text/javascript" src="scripts/script.js")
     title Potato-Salad
   body
-    p#time
-    p#mode
-    p#itemHave
-    p#itemStock
-    div#material
-      div#materialOverworld
-        div#materialOverworldPick
-        div#materialOverworldDig
-        div#materialOverworldCut
-      div#materialOre
-      div#materialRaw
-    p#recipe
-    p#oreVein
+    div#painLeft
+      div.headerPainLeft Items
+      div#itemStock
+      div.headerPainLeft Materials
+      div#material
+        div#materialOverworld
+          div#materialOverworldPick
+          div#materialOverworldDig
+          div#materialOverworldCut
+        div#materialOre
+        div#materialRaw
+    div#painMain
+      div#time
+      div#mode
+      div#itemHave
+      div#recipe
+      div#oreVein
+    div#painLog Log
