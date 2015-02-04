@@ -1,4 +1,5 @@
 $ = require('jquery')
+require('perfect-scrollbar')
 
 Material = require('./Material.coffee')
 OreVein = require('./OreVein.coffee')
