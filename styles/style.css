@@ -1,3 +1,20 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden; }
+
+#painLeft, #painMain, #painLog {
+  position: absolute;
+  border: 1px solid #000;
+  box-sizing: border-box; }
+
+.headerPainLeft {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  background-color: #DDD; }
+
 #materialOverworld, #materialOre, #materialRaw {
   float: left; }
 
