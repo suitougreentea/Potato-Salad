@@ -3,7 +3,9 @@ $ = require('jquery')
 
 class View
   @refreshStatus: ->
-    $('#time').text("Time: #{Game.time} Mode: #{Game.mode} Target: #{Game.miningTarget} Using: #{Game.using}")
+    $('#time').text("Time: #{Game.time}")
+    $('#mode').text("Now you are #{Game.mode}")
+    $('#money').text("320,000,000,000,000,000.00 Mn")
     
   @refreshMaterialList: ->
     $('#materialStock').html('')
