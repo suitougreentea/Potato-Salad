@@ -9892,7 +9892,9 @@
 	  function View() {}
 
 	  View.refreshStatus = function() {
-	    return $('#time').text("Time: " + Game.time + " Mode: " + Game.mode + " Target: " + Game.miningTarget + " Using: " + Game.using);
+	    $('#time').text("Time: " + Game.time);
+	    $('#mode').text("Now you are " + Game.mode);
+	    return $('#money').text("320,000,000,000,000,000.00 Mn");
 	  };
 
 	  View.refreshMaterialList = function() {
