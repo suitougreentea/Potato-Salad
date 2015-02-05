@@ -157,9 +157,14 @@
 	  };
 
 	  Game.action = function() {
-	    var e, mineAmount;
+	    var e, mineAmount, _i, _len, _ref;
 	    Game.time++;
 	    Game.view.refreshStatus();
+	    _ref = Game.processorList.processor;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      e.update();
+	    }
 	    switch (Game.mode) {
 	      case Game.MODE_SEARCHING_OVERWORLD:
 	        switch (Game.using) {
@@ -262,6 +267,10 @@
 	      this.item.splice(index, 1);
 	      return this.view.refreshItemList();
 	    }
+	  };
+
+	  Game.formatNumber = function(num) {
+	    return num.toFixed(2);
 	  };
 
 	  Game.onResizeWindow = function() {
@@ -9867,7 +9876,9 @@
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $, View;
+	var $, Processor, View;
+
+	Processor = __webpack_require__(21);
 
 	$ = __webpack_require__(2);
 
@@ -9891,7 +9902,7 @@
 	          var material, num;
 	          material = Game.materialList.material[e];
 	          num = Game.material[e];
-	          return $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + num + "</div></div>");
+	          return $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + (Game.formatNumber(num)) + "</div></div>");
 	        };
 	      })(this);
 	      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -9941,43 +9952,91 @@
 	  };
 
 	  View.refreshRecipeList = function() {
-	    var e, i, processor, _fn, _fn1, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+	    var e, i, processor, _fn, _fn1, _fn2, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
 	    $('#recipe').html('');
 	    _ref = Game.processorList.processor;
 	    _results = [];
 	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
 	      processor = _ref[_i];
-	      $('#recipe').append("<div>" + processor.name + " (" + (processor.num()) + ")</div>");
-	      _ref1 = processor.itemRecipe;
-	      _fn = (function(_this) {
+	      if (processor.num() === 0) {
+	        continue;
+	      }
+	      $('#recipe').append("<div class='processor'><div class='processorName'></div><div class='processorRecipe'></div><div class='processorStateList'></div><div class='processorQueueList'></div></div>");
+	      $('.processorName:last').text(processor.name + " (" + (processor.num()) + ")");
+	      if (processor.itemRecipe.length > 0) {
+	        $('.processorRecipe').append("<div class='processorRecipeItem'></div>");
+	        _ref1 = processor.itemRecipe;
+	        _fn = (function(_this) {
+	          return function(processor, e, i) {
+	            $('.processorRecipeItem:last').append("<div class='buttonItem'>" + e.outputItem[0].name + "</div>");
+	            return $('.processorRecipeItem:last .buttonItem:last').click(function() {
+	              return processor.addQueueItemRecipe(i);
+	            });
+	          };
+	        })(this);
+	        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
+	          e = _ref1[i];
+	          _fn(processor, e, i);
+	        }
+	      }
+	      if (processor.materialRecipe.length > 0) {
+	        $('.processorRecipe').append("<div class='processorRecipeMaterial'></div>");
+	        _ref2 = processor.materialRecipe;
+	        _fn1 = (function(_this) {
+	          return function(processor, e, i) {
+	            var amount, id, _ref3;
+	            _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
+	            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	            return $('.processorRecipeMaterial:last .buttonItem:last').click(function() {
+	              return processor.addQueueMaterialRecipe(i, 1);
+	            });
+	          };
+	        })(this);
+	        for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
+	          e = _ref2[i];
+	          _fn1(processor, e, i);
+	        }
+	      }
+	      _ref3 = processor.state;
+	      _fn2 = (function(_this) {
 	        return function(processor, e, i) {
-	          $('#recipe').append("<div class='buttonItem'>" + e.outputItem[0].name + "</div>");
-	          return $('#recipe .buttonItem:last').click(function() {
-	            return processor.craftItemRecipe(i);
-	          });
+	          var id;
+	          $('.processorStateList:last').append("<div class='processorState'><div class='processorStateIcon'></div><div class='processorStateRight'><div class='processorStateText'></div><div class='processorStateMeter'></div></div></div>");
+	          $('.processorStateMeter:last').text(i + ": " + e.timeRemain + " / " + e.time);
+	          switch (e.type) {
+	            case Processor.TYPE_ITEM:
+	              return $('.processorStateText:last').text("" + e.recipe.outputItem[0].name);
+	            case Processor.TYPE_MATERIAL:
+	              id = e.recipe.outputMaterial[0][0];
+	              return $('.processorStateText:last').text("" + Game.materialList.material[id].fullName);
+	          }
 	        };
 	      })(this);
-	      for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
-	        e = _ref1[i];
-	        _fn(processor, e, i);
+	      for (i = _l = 0, _len3 = _ref3.length; _l < _len3; i = ++_l) {
+	        e = _ref3[i];
+	        _fn2(processor, e, i);
 	      }
-	      $('#recipe').append('<br />');
-	      _ref2 = processor.materialRecipe;
-	      _fn1 = (function(_this) {
-	        return function(processor, e, i) {
-	          var amount, id, _ref3;
-	          _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
-	          $('#recipe').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
-	          return $('#recipe .buttonItem:last').click(function() {
-	            return processor.craftMaterialRecipe(i, 1);
-	          });
-	        };
-	      })(this);
-	      for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
-	        e = _ref2[i];
-	        _fn1(processor, e, i);
-	      }
-	      _results.push($('#recipe').append('<br />'));
+	      _results.push((function() {
+	        var _len4, _m, _ref4, _results1;
+	        _ref4 = processor.queue;
+	        _results1 = [];
+	        for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
+	          e = _ref4[i];
+	          _results1.push(((function(_this) {
+	            return function(processor, e, i) {
+	              var id;
+	              switch (e.type) {
+	                case Processor.TYPE_ITEM:
+	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + e.recipe.outputItem[0].name + "</div>");
+	                case Processor.TYPE_MATERIAL:
+	                  id = e.recipe.outputMaterial[0][0];
+	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	              }
+	            };
+	          })(this))(processor, e, i));
+	        }
+	        return _results1;
+	      }).call(this));
 	    }
 	    return _results;
 	  };
@@ -10989,7 +11048,7 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Item = __webpack_require__(21);
+	Item = __webpack_require__(22);
 
 	ItemTool = (function(_super) {
 	  __extends(ItemTool, _super);
@@ -11067,7 +11126,7 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Item = __webpack_require__(21);
+	Item = __webpack_require__(22);
 
 	ItemProcessor = (function(_super) {
 	  __extends(ItemProcessor, _super);
@@ -11098,7 +11157,7 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(22);
+	Processor = __webpack_require__(21);
 
 	RecipeMaterial = __webpack_require__(23);
 
@@ -11112,10 +11171,11 @@
 	  function ProcessorToolbox() {
 	    var il, ml;
 	    ProcessorToolbox.__super__.constructor.call(this);
+	    this.add();
 	    il = Game.itemList;
 	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], null, [il.item[il.id.stoneShovel]], null)];
-	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], null, [[ml.id.rawCoal, 1]])];
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)];
+	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]])];
 	  }
 
 	  return ProcessorToolbox;
@@ -11133,7 +11193,7 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(22);
+	Processor = __webpack_require__(21);
 
 	RecipeMaterial = __webpack_require__(23);
 
@@ -11150,8 +11210,8 @@
 	    this.add();
 	    il = Game.itemList;
 	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], null, [il.item[il.id.toolBox1]], null)];
-	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], null, [[ml.id.rawCoal, 1]])];
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null)];
+	    this.materialRecipe = [];
 	  }
 
 	  return ProcessorHand;
@@ -11163,6 +11223,182 @@
 
 /***/ },
 /* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor;
+
+	Processor = (function() {
+	  Processor.TYPE_NONE = 0;
+
+	  Processor.TYPE_ITEM = 1;
+
+	  Processor.TYPE_MATERIAL = 2;
+
+	  Processor.prototype.name = void 0;
+
+	  Processor.prototype.itemRecipe = [];
+
+	  Processor.prototype.materialRecipe = [];
+
+	  Processor.prototype.num = function() {
+	    return this.state.length;
+	  };
+
+	  Processor.prototype.add = function() {
+	    return this.state.push({
+	      type: Processor.TYPE_NONE,
+	      recipe: null,
+	      time: null,
+	      timeRemain: null
+	    });
+	  };
+
+	  Processor.prototype.remove = function() {
+	    return this.state.splice(this.num - 1, 1);
+	  };
+
+	  function Processor() {
+	    this.state = [];
+	    this.queue = [];
+	  }
+
+	  Processor.prototype.update = function() {
+	    var add, amount, e, i, materialId, output, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
+	    _ref = this.state;
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      if (e.type !== Processor.TYPE_NONE) {
+	        e.timeRemain -= 1;
+	        if (e.timeRemain === 0) {
+	          switch (e.type) {
+	            case Processor.TYPE_ITEM:
+	              _ref1 = e.recipe.outputItem;
+	              for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	                output = _ref1[_j];
+	                Game.item.push(output);
+	              }
+	              if (e.recipe.outputMaterial) {
+	                _ref2 = e.recipe.outputMaterial;
+	                for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+	                  output = _ref2[_k];
+	                  materialId = output[0], amount = output[1];
+	                  Game.material[materialId] += amount;
+	                }
+	              }
+	              break;
+	            case Processor.TYPE_MATERIAL:
+	              _ref3 = e.recipe.outputMaterial;
+	              for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+	                output = _ref3[_l];
+	                materialId = output[0], amount = output[1];
+	                Game.material[materialId] += amount;
+	              }
+	          }
+	          this.state[i] = {
+	            type: Processor.TYPE_NONE,
+	            recipe: null,
+	            time: null,
+	            timeRemain: null
+	          };
+	          Game.logger.log('Craft complete');
+	          Game.view.refreshRecipeList();
+	          Game.view.refreshItemList();
+	          Game.view.refreshMaterialList();
+	          return true;
+	        }
+	      }
+	      _ref4 = this.state;
+	      for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
+	        e = _ref4[i];
+	        if (this.queue.length > 0) {
+	          if (e.type === Processor.TYPE_NONE) {
+	            add = this.queue[0];
+	            this.state[i].type = add.type;
+	            this.state[i].recipe = add.recipe;
+	            this.state[i].time = add.recipe.time;
+	            this.state[i].timeRemain = add.recipe.time;
+	            if (add.amount) {
+	              add.amount -= 1;
+	              if (add.amount === 0) {
+	                this.queue.splice(0, 1);
+	              }
+	            } else {
+	              this.queue.splice(0, 1);
+	            }
+	          }
+	        }
+	      }
+	    }
+	    return Game.view.refreshRecipeList();
+	  };
+
+	  Processor.prototype.addQueueItemRecipe = function(index) {
+	    var amount, e, materialId, recipe, _i, _j, _len, _len1, _ref, _ref1;
+	    recipe = this.itemRecipe[index];
+	    _ref = recipe.requiredMaterial;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      materialId = e[0], amount = e[1];
+	      if (Game.material[materialId] < amount) {
+	        Game.logger.log('Not enough material');
+	        return false;
+	      }
+	    }
+	    _ref1 = recipe.requiredMaterial;
+	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	      e = _ref1[_j];
+	      materialId = e[0], amount = e[1];
+	      Game.material[materialId] -= amount;
+	    }
+	    this.queue.push({
+	      type: Processor.TYPE_ITEM,
+	      recipe: recipe,
+	      amount: null
+	    });
+	    Game.view.refreshItemList();
+	    Game.view.refreshMaterialList();
+	    Game.view.refreshRecipeList();
+	    return true;
+	  };
+
+	  Processor.prototype.addQueueMaterialRecipe = function(index, times) {
+	    var amount, materialId, recipe, source, _i, _j, _len, _len1, _ref, _ref1;
+	    recipe = this.materialRecipe[index];
+	    _ref = recipe.requiredMaterial;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      source = _ref[_i];
+	      materialId = source[0], amount = source[1];
+	      if (Game.material[materialId] < amount * times) {
+	        Game.logger.log('Not enough material');
+	        return false;
+	      }
+	    }
+	    _ref1 = recipe.requiredMaterial;
+	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	      source = _ref1[_j];
+	      materialId = source[0], amount = source[1];
+	      Game.material[materialId] -= amount * times;
+	    }
+	    this.queue.push({
+	      type: Processor.TYPE_MATERIAL,
+	      recipe: recipe,
+	      amount: 1
+	    });
+	    Game.view.refreshItemList();
+	    Game.view.refreshMaterialList();
+	    Game.view.refreshRecipeList();
+	    return true;
+	  };
+
+	  return Processor;
+
+	})();
+
+	module.exports = Processor;
+
+
+/***/ },
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Item;
@@ -11185,117 +11421,15 @@
 
 
 /***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processor;
-
-	Processor = (function() {
-	  Processor.prototype.name = void 0;
-
-	  Processor.prototype.itemRecipe = [];
-
-	  Processor.prototype.materialRecipe = [];
-
-	  Processor.prototype.num = function() {
-	    return this.state.length;
-	  };
-
-	  Processor.prototype.add = function() {
-	    return this.state.push(null);
-	  };
-
-	  Processor.prototype.remove = function() {
-	    return this.state.splice(this.num - 1, 1);
-	  };
-
-	  function Processor() {
-	    this.state = [];
-	    this.queue = [];
-	  }
-
-	  Processor.prototype.craftItemRecipe = function(index) {
-	    var amount, e, materialId, output, recipe, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3;
-	    recipe = this.itemRecipe[index];
-	    _ref = recipe.requiredMaterial;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      materialId = e[0], amount = e[1];
-	      if (Game.material[materialId] < amount) {
-	        Game.logger.log('Not enough material');
-	        return false;
-	      }
-	    }
-	    _ref1 = recipe.requiredMaterial;
-	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	      e = _ref1[_j];
-	      materialId = e[0], amount = e[1];
-	      Game.material[materialId] -= amount;
-	    }
-	    _ref2 = recipe.outputItem;
-	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	      output = _ref2[_k];
-	      Game.item.push(output);
-	    }
-	    if (recipe.outputMaterial) {
-	      _ref3 = recipe.outputMaterial;
-	      for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-	        output = _ref3[_l];
-	        materialId = output[0], amount = output[1];
-	        Game.material[materialId] += amount * times;
-	      }
-	    }
-	    Game.logger.log('Craft complete');
-	    Game.view.refreshMaterialList();
-	    Game.view.refreshItemList();
-	    return true;
-	  };
-
-	  Processor.prototype.craftMaterialRecipe = function(index, times) {
-	    var amount, materialId, output, recipe, source, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
-	    recipe = this.materialRecipe[index];
-	    _ref = recipe.requiredMaterial;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      source = _ref[_i];
-	      materialId = source[0], amount = source[1];
-	      if (Game.material[materialId] < amount * times) {
-	        Game.logger.log('Not enough material');
-	        return false;
-	      }
-	    }
-	    _ref1 = recipe.requiredMaterial;
-	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	      source = _ref1[_j];
-	      materialId = source[0], amount = source[1];
-	      Game.material[materialId] -= amount * times;
-	    }
-	    _ref2 = recipe.outputMaterial;
-	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	      output = _ref2[_k];
-	      materialId = output[0], amount = output[1];
-	      Game.material[materialId] += amount * times;
-	    }
-	    Game.logger.log('Craft complete');
-	    Game.view.refreshMaterialList();
-	    return true;
-	  };
-
-	  return Processor;
-
-	})();
-
-	module.exports = Processor;
-
-
-/***/ },
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeMaterial;
 
 	RecipeMaterial = (function() {
-	  function RecipeMaterial(_at_requiredMaterial, _at_otherParam, _at_outputMaterial) {
+	  function RecipeMaterial(_at_requiredMaterial, _at_time, _at_otherParam, _at_outputMaterial) {
 	    this.requiredMaterial = _at_requiredMaterial;
+	    this.time = _at_time;
 	    this.otherParam = _at_otherParam;
 	    this.outputMaterial = _at_outputMaterial;
 	  }
@@ -11314,9 +11448,10 @@
 	var RecipeItem;
 
 	RecipeItem = (function() {
-	  function RecipeItem(_at_requiredItem, _at_requiredMaterial, _at_otherParam, _at_outputItem, _at_outputMaterial) {
+	  function RecipeItem(_at_requiredItem, _at_requiredMaterial, _at_time, _at_otherParam, _at_outputItem, _at_outputMaterial) {
 	    this.requiredItem = _at_requiredItem;
 	    this.requiredMaterial = _at_requiredMaterial;
+	    this.time = _at_time;
 	    this.otherParam = _at_otherParam;
 	    this.outputItem = _at_outputItem;
 	    this.outputMaterial = _at_outputMaterial;
