@@ -14,8 +14,7 @@ class ProcessorToolbox extends Processor
       new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null)
       new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)
     ]
-    @materialRecipe = [
-      new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]])
-    ]
+    @materialRecipe = []
 
 module.exports = ProcessorToolbox
+
