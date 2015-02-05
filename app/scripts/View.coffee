@@ -6,14 +6,14 @@ class View
     
   @refreshMaterialList: ->
     $('#materialStock').html('')
-    for list in [Game.materialOverworldPickViewList, Game.materialOverworldDigViewList, Game.materialOverworldCutViewList, Game.materialOreViewList, Game.materialRawViewList]
-      for e in list
+    for list in Game.materialViewList.data
+      $('#materialStock').append("<div class='materialHeader'>#{list.name}</div>")
+      for e in list.list
         ((e) =>
           material = Game.materialList.material[e]
           num = Game.material[e]
           $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>#{material.fullName}</div><div class='materialAmount'>#{num}</div></div>")
         )(e)
-      $('#materialStock').append('<hr />')
     return
     $('#materialOverworldPick').html('')
     for e in Game.materialOverworldPickViewList

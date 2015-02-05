@@ -23,42 +23,9 @@ class Game
   @USING_PICKAXE = 3
   @using = 0
 
-  @materialOverworldPickViewList = [
-    @materialList.id.stone
-    @materialList.id.woodStick
-  ]
-  @materialOverworldDigViewList = [
-    @materialList.id.dirt
-  ]
-  @materialOverworldCutViewList = [
-    @materialList.id.wood
-  ]
+  @materialViewList = require('./MaterialViewList.coffee')
 
   @materialOverworldIgnoreList = []
-
-  @materialOreViewList = [
-    @materialList.id.oreCoal
-    @materialList.id.oreIron
-    @materialList.id.oreCopper
-    @materialList.id.oreTin
-    @materialList.id.oreBauxite
-    @materialList.id.oreNickel
-    @materialList.id.oreGold
-    @materialList.id.orePlatinum
-    @materialList.id.oreDiamond
-  ]
-
-  @materialRawViewList = [
-    @materialList.id.rawCoal
-    @materialList.id.rawIron
-    @materialList.id.rawCopper
-    @materialList.id.rawTin
-    @materialList.id.rawAluminium
-    @materialList.id.rawNickel
-    @materialList.id.rawGold
-    @materialList.id.rawPlatinum
-    @materialList.id.rawDiamond
-  ]
 
   @oreVein = [
     new OreVein(0, 10)
@@ -82,6 +49,7 @@ class Game
 
   @init: ->
     @materialList.init()
+    @materialViewList.init()
     for e, i in @materialList.material
       @material[i] = 0
     @itemList.init()

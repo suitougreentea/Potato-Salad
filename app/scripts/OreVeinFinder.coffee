@@ -2,17 +2,17 @@ OreVein = require('./OreVein.coffee')
 
 class OreVeinFinder
   @init: ->
-    list = Game.materialList
+    _ = Game.materialList.id
     @data = [
-      [list.id.oreCoal,     0.005,   10, 2]
-      [list.id.oreIron,     0.002,   10, 2]
-      [list.id.oreCopper,   0.003,   10, 2]
-      [list.id.oreTin,      0.002,   10, 2]
-      [list.id.oreBauxite,  0.004,   10, 2]
-      [list.id.oreNickel,   0.001,   10, 2]
-      [list.id.oreGold,     0.0001,  10, 2]
-      [list.id.orePlatinum, 0.00005, 10, 2]
-      [list.id.oreDiamond,  0.00005, 10, 2]
+      [_.oreCoal,     0.005,   10, 2]
+      [_.oreIron,     0.002,   10, 2]
+      [_.oreCopper,   0.003,   10, 2]
+      [_.oreTin,      0.002,   10, 2]
+      [_.oreBauxite,  0.004,   10, 2]
+      [_.oreNickel,   0.001,   10, 2]
+      [_.oreGold,     0.0001,  10, 2]
+      [_.orePlatinum, 0.00005, 10, 2]
+      [_.oreDiamond,  0.00005, 10, 2]
     ]
 
   @try: ->
