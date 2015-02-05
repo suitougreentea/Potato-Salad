@@ -74,6 +74,8 @@ class Game
   @action: =>
     @time++
     @view.refreshStatus()
+    for e in @processorList.processor
+      e.update()
     
     switch @mode
       when @MODE_SEARCHING_OVERWORLD
@@ -148,6 +150,9 @@ class Game
     if item.use()
       @item.splice(index, 1)
       @view.refreshItemList()
+
+  @formatNumber: (num) ->
+    return num.toFixed(2)
 
   @onResizeWindow: () ->
     width = $(window).width()

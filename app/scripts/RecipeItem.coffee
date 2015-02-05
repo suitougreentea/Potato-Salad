@@ -1,4 +1,4 @@
 class RecipeItem
-  constructor: (@requiredItem, @requiredMaterial, @otherParam, @outputItem, @outputMaterial) ->
+  constructor: (@requiredItem, @requiredMaterial, @time, @otherParam, @outputItem, @outputMaterial) ->
 
 module.exports = RecipeItem

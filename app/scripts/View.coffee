@@ -1,3 +1,4 @@
+Processor = require('./Processor.coffee')
 $ = require('jquery')
 
 class View
@@ -12,7 +13,7 @@ class View
         ((e) =>
           material = Game.materialList.material[e]
           num = Game.material[e]
-          $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>#{material.fullName}</div><div class='materialAmount'>#{num}</div></div>")
+          $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>#{material.fullName}</div><div class='materialAmount'>#{Game.formatNumber(num)}</div></div>")
         )(e)
     return
     $('#materialOverworldPick').html('')
@@ -38,20 +39,49 @@ class View
   @refreshRecipeList: ->
     $('#recipe').html('')
     for processor in Game.processorList.processor
-      $('#recipe').append("<div>#{processor.name} (#{processor.num()})</div>")
-      for e, i in processor.itemRecipe
+      if processor.num() == 0 then continue
+      $('#recipe').append("<div class='processor'><div class='processorName'></div><div class='processorRecipe'></div><div class='processorStateList'></div><div class='processorQueueList'></div></div>")
+
+      $('.processorName:last').text("#{processor.name} (#{processor.num()})")
+
+      if processor.itemRecipe.length > 0
+        $('.processorRecipe').append("<div class='processorRecipeItem'></div>")
+        for e, i in processor.itemRecipe
+          ((processor, e, i) =>
+            $('.processorRecipeItem:last').append("<div class='buttonItem'>#{e.outputItem[0].name}</div>")
+            $('.processorRecipeItem:last .buttonItem:last').click(-> processor.addQueueItemRecipe(i))
+          )(processor, e, i)
+          
+      if processor.materialRecipe.length > 0
+        $('.processorRecipe').append("<div class='processorRecipeMaterial'></div>")
+        for e, i in processor.materialRecipe
+          ((processor, e, i) =>
+            [id, amount] = e.outputMaterial[0]
+            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
+            $('.processorRecipeMaterial:last .buttonItem:last').click(-> processor.addQueueMaterialRecipe(i, 1))
+          )(processor, e, i)
+
+      for e, i in processor.state
         ((processor, e, i) =>
-          $('#recipe').append("<div class='buttonItem'>#{e.outputItem[0].name}</div>")
-          $('#recipe .buttonItem:last').click(-> processor.craftItemRecipe(i))
+          $('.processorStateList:last').append("<div class='processorState'><div class='processorStateIcon'></div><div class='processorStateRight'><div class='processorStateText'></div><div class='processorStateMeter'></div></div></div>")
+          $('.processorStateMeter:last').text("#{i}: #{e.timeRemain} / #{e.time}")
+          switch e.type
+            when Processor.TYPE_ITEM
+              $('.processorStateText:last').text("#{e.recipe.outputItem[0].name}")
+            when Processor.TYPE_MATERIAL
+              id = e.recipe.outputMaterial[0][0]
+              $('.processorStateText:last').text("#{Game.materialList.material[id].fullName}")
         )(processor, e, i)
-      $('#recipe').append('<br />')
-      for e, i in processor.materialRecipe
+
+      for e, i in processor.queue
         ((processor, e, i) =>
-          [id, amount] = e.outputMaterial[0]
-          $('#recipe').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
-          $('#recipe .buttonItem:last').click(-> processor.craftMaterialRecipe(i, 1))
+          switch e.type
+            when Processor.TYPE_ITEM
+              $('.processorQueueList:last').append("<div class='buttonItem'>#{e.recipe.outputItem[0].name}</div>")
+            when Processor.TYPE_MATERIAL
+              id = e.recipe.outputMaterial[0][0]
+              $('.processorQueueList:last').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
         )(processor, e, i)
-      $('#recipe').append('<br />')
 
   @refreshItemList: ->
     $('#itemHave').html('')

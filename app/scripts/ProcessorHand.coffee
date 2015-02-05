@@ -10,11 +10,8 @@ class ProcessorHand extends Processor
     il = Game.itemList
     ml = Game.materialList
     @itemRecipe = [
-      new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], null, [il.item[il.id.stoneShovel]], null)
-      new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], null, [il.item[il.id.toolBox1]], null)
+      new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null)
     ]
-    @materialRecipe = [
-      new RecipeMaterial([[ml.id.oreCoal, 1]], null, [[ml.id.rawCoal, 1]])
-    ]
+    @materialRecipe = []
 
 module.exports = ProcessorHand
