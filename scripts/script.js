@@ -62,7 +62,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $, Game, Material, OreVein, ProcessorHand;
+	var $, Game, Material, OreVein;
 
 	$ = __webpack_require__(2);
 
@@ -72,20 +72,18 @@
 
 	OreVein = __webpack_require__(4);
 
-	ProcessorHand = __webpack_require__(5);
-
 	Game = (function() {
 	  function Game() {}
 
-	  Game.logger = __webpack_require__(6);
+	  Game.logger = __webpack_require__(5);
 
 	  Game.material = [];
 
-	  Game.materialList = __webpack_require__(7);
+	  Game.materialList = __webpack_require__(6);
 
 	  Game.item = [];
 
-	  Game.itemList = __webpack_require__(8);
+	  Game.itemList = __webpack_require__(7);
 
 	  Game.have = {
 	    shovel: null,
@@ -103,13 +101,13 @@
 
 	  Game.using = 0;
 
-	  Game.materialViewList = __webpack_require__(9);
+	  Game.materialViewList = __webpack_require__(8);
 
 	  Game.materialOverworldIgnoreList = [];
 
 	  Game.oreVein = [new OreVein(0, 10)];
 
-	  Game.processorList = [];
+	  Game.processorList = __webpack_require__(9);
 
 	  Game.overworldStuffFinder = __webpack_require__(10);
 
@@ -139,7 +137,7 @@
 	      this.material[i] = 0;
 	    }
 	    this.itemList.init();
-	    this.processorList.push(new ProcessorHand());
+	    this.processorList.init();
 	    this.overworldStuffFinder.init();
 	    this.oreVeinFinder.init();
 	    this.material[this.materialList.id.oreCoal] = 1000;
@@ -260,18 +258,10 @@
 	  Game.useItem = function(index) {
 	    var item;
 	    item = this.item[index];
-	    switch (item.type) {
-	      case this.itemList.TYPE_SHOVEL:
-	        this.have.shovel = item;
-	        break;
-	      case this.itemList.TYPE_AXE:
-	        this.have.axe = item;
-	        break;
-	      case this.itemList.TYPE_PICKAXE:
-	        this.have.pickaxe = item;
+	    if (item.use()) {
+	      this.item.splice(index, 1);
+	      return this.view.refreshItemList();
 	    }
-	    this.item.splice(index, 1);
-	    return this.view.refreshItemList();
 	  };
 
 	  Game.onResizeWindow = function() {
@@ -9561,39 +9551,6 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Processor, ProcessorHand, RecipeItem, RecipeMaterial,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Processor = __webpack_require__(14);
-
-	RecipeMaterial = __webpack_require__(15);
-
-	RecipeItem = __webpack_require__(16);
-
-	ProcessorHand = (function(_super) {
-	  __extends(ProcessorHand, _super);
-
-	  function ProcessorHand() {
-	    var il, ml;
-	    il = Game.itemList;
-	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], null, [il.item[il.id.stoneShovel]], null)];
-	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], null, [[ml.id.rawCoal, 1]])];
-	    ProcessorHand.__super__.constructor.call(this);
-	  }
-
-	  return ProcessorHand;
-
-	})(Processor);
-
-	module.exports = ProcessorHand;
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var $, Logger;
 
 	$ = __webpack_require__(2);
@@ -9615,39 +9572,18 @@
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw, MineProcessing, Processing;
+	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw;
 
 	Material = __webpack_require__(3);
 
-	MaterialOre = __webpack_require__(17);
+	MaterialOre = __webpack_require__(14);
 
-	MaterialRaw = __webpack_require__(18);
+	MaterialRaw = __webpack_require__(15);
 
-	MaterialNormal = __webpack_require__(19);
-
-	Processing = __webpack_require__(20);
-
-	MineProcessing = (function() {
-	  function MineProcessing() {}
-
-	  MineProcessing.init = function() {
-	    this.coal = new Processing([[Game.materialList.id.oreCoal, 15]]);
-	    this.iron = new Processing([[Game.materialList.id.oreIron, 15]]);
-	    this.copper = new Processing([[Game.materialList.id.oreCopper, 15]]);
-	    this.tin = new Processing([[Game.materialList.id.oreTin, 15]]);
-	    this.aluminium = new Processing([[Game.materialList.id.oreBauxite, 15]]);
-	    this.nickel = new Processing([[Game.materialList.id.oreNickel, 15]]);
-	    this.gold = new Processing([[Game.materialList.id.oreGold, 15]]);
-	    this.platinum = new Processing([[Game.materialList.id.orePlatinum, 15]]);
-	    return this.diamond = new Processing([[Game.materialList.id.oreDiamond, 15]]);
-	  };
-
-	  return MineProcessing;
-
-	})();
+	MaterialNormal = __webpack_require__(16);
 
 	MaterialList = (function() {
 	  function MaterialList() {}
@@ -9680,7 +9616,6 @@
 	  MaterialList.material = [];
 
 	  MaterialList.init = function() {
-	    MineProcessing.init();
 	    this.register(this.id.oreCoal, new MaterialOre('Coal'));
 	    this.register(this.id.oreIron, new MaterialOre('Iron'));
 	    this.register(this.id.oreCopper, new MaterialOre('Copper'));
@@ -9690,15 +9625,15 @@
 	    this.register(this.id.oreGold, new MaterialOre('Gold'));
 	    this.register(this.id.orePlatinum, new MaterialOre('Platinum'));
 	    this.register(this.id.oreDiamond, new MaterialOre('Diamond'));
-	    this.register(this.id.rawCoal, new MaterialRaw('Coal', MineProcessing.coal));
-	    this.register(this.id.rawIron, new MaterialRaw('Iron', MineProcessing.iron));
-	    this.register(this.id.rawCopper, new MaterialRaw('Copper', MineProcessing.copper));
-	    this.register(this.id.rawTin, new MaterialRaw('Tin', MineProcessing.tin));
-	    this.register(this.id.rawAluminium, new MaterialRaw('Aluminium', MineProcessing.aluminium));
-	    this.register(this.id.rawNickel, new MaterialRaw('Nickel', MineProcessing.nickel));
-	    this.register(this.id.rawGold, new MaterialRaw('Gold', MineProcessing.gold));
-	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum', MineProcessing.platinum));
-	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond', MineProcessing.diamond));
+	    this.register(this.id.rawCoal, new MaterialRaw('Coal'));
+	    this.register(this.id.rawIron, new MaterialRaw('Iron'));
+	    this.register(this.id.rawCopper, new MaterialRaw('Copper'));
+	    this.register(this.id.rawTin, new MaterialRaw('Tin'));
+	    this.register(this.id.rawAluminium, new MaterialRaw('Aluminium'));
+	    this.register(this.id.rawNickel, new MaterialRaw('Nickel'));
+	    this.register(this.id.rawGold, new MaterialRaw('Gold'));
+	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum'));
+	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond'));
 	    this.register(this.id.woodStick, new MaterialNormal('Wood stick'));
 	    this.register(this.id.stone, new MaterialNormal('Stone'));
 	    this.register(this.id.dirt, new MaterialNormal('Dirt'));
@@ -9717,12 +9652,16 @@
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ItemList, ItemTool;
+	var ItemList, ItemProcessor, ItemTool, ProcessorToolbox;
 
-	ItemTool = __webpack_require__(21);
+	ItemTool = __webpack_require__(17);
+
+	ItemProcessor = __webpack_require__(18);
+
+	ProcessorToolbox = __webpack_require__(19);
 
 	ItemList = (function() {
 	  function ItemList() {}
@@ -9733,10 +9672,13 @@
 
 	  ItemList.TYPE_PICKAXE = 3;
 
+	  ItemList.TYPE_PROCESSOR = 100;
+
 	  ItemList.id = {
 	    stoneShovel: 1,
 	    stoneAxe: 2,
-	    stonePickaxe: 3
+	    stonePickaxe: 3,
+	    toolBox1: 4
 	  };
 
 	  ItemList.item = [];
@@ -9744,7 +9686,8 @@
 	  ItemList.init = function() {
 	    this.register(this.id.stoneShovel, new ItemTool.ItemShovel('Stone Shovel', Game.materialList.id.stone, []));
 	    this.register(this.id.stoneAxe, new ItemTool.ItemAxe('Stone Axe', Game.materialList.id.stone, []));
-	    return this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
+	    this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
+	    return this.register(this.id.toolBox1, new ItemProcessor('Tool Box', Game.processorList.id.toolBox1));
 	  };
 
 	  ItemList.register = function(id, item) {
@@ -9759,7 +9702,7 @@
 
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var MaterialViewList;
@@ -9789,6 +9732,38 @@
 	})();
 
 	module.exports = MaterialViewList;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ProcessorHand, ProcessorList, ProcessorToolbox;
+
+	ProcessorHand = __webpack_require__(20);
+
+	ProcessorToolbox = __webpack_require__(19);
+
+	ProcessorList = (function() {
+	  function ProcessorList() {}
+
+	  ProcessorList.id = {
+	    hand: 0,
+	    toolBox1: 1
+	  };
+
+	  ProcessorList.processor = [];
+
+	  ProcessorList.init = function() {
+	    this.processor[this.id.hand] = new ProcessorHand();
+	    return this.processor[this.id.toolBox1] = new ProcessorToolbox();
+	  };
+
+	  return ProcessorList;
+
+	})();
+
+	module.exports = ProcessorList;
 
 
 /***/ },
@@ -9904,7 +9879,7 @@
 	  };
 
 	  View.refreshMaterialList = function() {
-	    var e, list, _fn, _fn1, _fn2, _fn3, _fn4, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _results;
+	    var e, list, _fn, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
 	    $('#materialStock').html('');
 	    _ref = Game.materialViewList.data;
 	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -9927,83 +9902,19 @@
 	    return;
 	    $('#materialOverworldPick').html('');
 	    _ref2 = Game.materialOverworldPickViewList;
-	    _fn1 = (function(_this) {
-	      return function(e) {
-	        var material, num;
-	        material = Game.materialList.material[e];
-	        num = Game.material[e];
-	        $('#materialOverworldPick').append("<input type=\"checkbox\">" + material.materialName + ": " + num + "<br />");
-	        $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) !== -1);
-	        return $('#materialOverworldPick input:last').change(function() {
-	          return Game.changeIgnoreCheckbox($(this).is(':checked'), e);
-	        });
-	      };
-	    })(this);
+	    _results = [];
 	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
 	      e = _ref2[_k];
-	      _fn1(e);
-	    }
-	    $('#materialOverworldDig').html('');
-	    _ref3 = Game.materialOverworldDigViewList;
-	    _fn2 = (function(_this) {
-	      return function(e) {
-	        var material, num;
-	        material = Game.materialList.material[e];
-	        num = Game.material[e];
-	        return $('#materialOverworldDig').append(material.materialName + ": " + num + "<br />");
-	      };
-	    })(this);
-	    for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-	      e = _ref3[_l];
-	      _fn2(e);
-	    }
-	    $('#materialOverworldCut').html('');
-	    _ref4 = Game.materialOverworldCutViewList;
-	    _fn3 = (function(_this) {
-	      return function(e) {
-	        var material, num;
-	        material = Game.materialList.material[e];
-	        num = Game.material[e];
-	        return $('#materialOverworldCut').append(material.materialName + ": " + num + "<br />");
-	      };
-	    })(this);
-	    for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
-	      e = _ref4[_m];
-	      _fn3(e);
-	    }
-	    $('#materialOre').html('');
-	    _ref5 = Game.materialOreViewList;
-	    _fn4 = (function(_this) {
-	      return function(e) {
-	        var material, num;
-	        material = Game.materialList.material[e];
-	        num = Game.material[e];
-	        return $('#materialOre').append(material.materialName + ": " + num + "<br />");
-	      };
-	    })(this);
-	    for (_n = 0, _len5 = _ref5.length; _n < _len5; _n++) {
-	      e = _ref5[_n];
-	      _fn4(e);
-	    }
-	    $('#materialRaw').html('');
-	    _ref6 = Game.materialRawViewList;
-	    _results = [];
-	    for (_o = 0, _len6 = _ref6.length; _o < _len6; _o++) {
-	      e = _ref6[_o];
 	      _results.push(((function(_this) {
 	        return function(e) {
 	          var material, num;
 	          material = Game.materialList.material[e];
 	          num = Game.material[e];
-	          $('#materialRaw').append("<button>-&gt;10</button>");
-	          $('#materialRaw button:last').click(function() {
-	            return Game.tryToProcessMaterial(e, 1);
+	          $('#materialOverworldPick').append("<input type=\"checkbox\">" + material.materialName + ": " + num + "<br />");
+	          $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) !== -1);
+	          return $('#materialOverworldPick input:last').change(function() {
+	            return Game.changeIgnoreCheckbox($(this).is(':checked'), e);
 	          });
-	          $('#materialRaw').append("<button>-&gt;100</button>");
-	          $('#materialRaw button:last').click(function() {
-	            return Game.tryToProcessMaterial(e, 10);
-	          });
-	          return $('#materialRaw').append(material.materialName + ": " + num + "<br />");
 	        };
 	      })(this))(e));
 	    }
@@ -10030,12 +9941,13 @@
 	  };
 
 	  View.refreshRecipeList = function() {
-	    var e, i, processor, _fn, _i, _j, _len, _len1, _ref, _ref1, _results;
+	    var e, i, processor, _fn, _fn1, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
 	    $('#recipe').html('');
-	    _ref = Game.processorList;
+	    _ref = Game.processorList.processor;
 	    _results = [];
 	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
 	      processor = _ref[_i];
+	      $('#recipe').append("<div>" + processor.name + " (" + (processor.num()) + ")</div>");
 	      _ref1 = processor.itemRecipe;
 	      _fn = (function(_this) {
 	        return function(processor, e, i) {
@@ -10049,25 +9961,23 @@
 	        e = _ref1[i];
 	        _fn(processor, e, i);
 	      }
-	      _results.push((function() {
-	        var _k, _len2, _ref2, _results1;
-	        _ref2 = processor.materialRecipe;
-	        _results1 = [];
-	        for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
-	          e = _ref2[i];
-	          _results1.push(((function(_this) {
-	            return function(processor, e, i) {
-	              var amount, id, _ref3;
-	              _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
-	              $('#recipe').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
-	              return $('#recipe .buttonItem:last').click(function() {
-	                return processor.craftMaterialRecipe(i, 1);
-	              });
-	            };
-	          })(this))(processor, e, i));
-	        }
-	        return _results1;
-	      }).call(this));
+	      $('#recipe').append('<br />');
+	      _ref2 = processor.materialRecipe;
+	      _fn1 = (function(_this) {
+	        return function(processor, e, i) {
+	          var amount, id, _ref3;
+	          _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
+	          $('#recipe').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	          return $('#recipe .buttonItem:last').click(function() {
+	            return processor.craftMaterialRecipe(i, 1);
+	          });
+	        };
+	      })(this);
+	      for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
+	        e = _ref2[i];
+	        _fn1(processor, e, i);
+	      }
+	      _results.push($('#recipe').append('<br />'));
 	    }
 	    return _results;
 	  };
@@ -11003,14 +10913,306 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Material, MaterialOre,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Material = __webpack_require__(3);
+
+	MaterialOre = (function(_super) {
+	  __extends(MaterialOre, _super);
+
+	  function MaterialOre(materialName) {
+	    MaterialOre.__super__.constructor.call(this, materialName + " Ore", materialName, null);
+	  }
+
+	  return MaterialOre;
+
+	})(Material);
+
+	module.exports = MaterialOre;
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialRaw,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Material = __webpack_require__(3);
+
+	MaterialRaw = (function(_super) {
+	  __extends(MaterialRaw, _super);
+
+	  function MaterialRaw(materialName, processing) {
+	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, processing);
+	  }
+
+	  return MaterialRaw;
+
+	})(Material);
+
+	module.exports = MaterialRaw;
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialNormal,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Material = __webpack_require__(3);
+
+	MaterialNormal = (function(_super) {
+	  __extends(MaterialNormal, _super);
+
+	  function MaterialNormal(materialName, processing) {
+	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
+	  }
+
+	  return MaterialNormal;
+
+	})(Material);
+
+	module.exports = MaterialNormal;
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Item = __webpack_require__(21);
+
+	ItemTool = (function(_super) {
+	  __extends(ItemTool, _super);
+
+	  function ItemTool(type, name, _at_material, _at_modifier) {
+	    this.material = _at_material;
+	    this.modifier = _at_modifier;
+	    ItemTool.__super__.constructor.call(this, type, name);
+	  }
+
+	  return ItemTool;
+
+	})(Item);
+
+	ItemShovel = (function(_super) {
+	  __extends(ItemShovel, _super);
+
+	  function ItemShovel(name, material, modifier) {
+	    ItemShovel.__super__.constructor.call(this, Game.itemList.TYPE_SHOVEL, name, material, modifier);
+	  }
+
+	  ItemShovel.prototype.use = function() {
+	    Game.have.shovel = this;
+	    return true;
+	  };
+
+	  return ItemShovel;
+
+	})(ItemTool);
+
+	ItemAxe = (function(_super) {
+	  __extends(ItemAxe, _super);
+
+	  function ItemAxe(name, material, modifier) {
+	    ItemAxe.__super__.constructor.call(this, Game.itemList.TYPE_AXE, name, material, modifier);
+	  }
+
+	  ItemAxe.prototype.use = function() {
+	    Game.have.axe = this;
+	    return true;
+	  };
+
+	  return ItemAxe;
+
+	})(ItemTool);
+
+	ItemPickaxe = (function(_super) {
+	  __extends(ItemPickaxe, _super);
+
+	  function ItemPickaxe(name, material, modifier) {
+	    ItemPickaxe.__super__.constructor.call(this, Game.itemList.TYPE_PICKAXE, name, material, modifier);
+	  }
+
+	  ItemPickaxe.prototype.use = function() {
+	    Game.have.pickaxe = this;
+	    return true;
+	  };
+
+	  return ItemPickaxe;
+
+	})(ItemTool);
+
+	module.exports = {
+	  ItemShovel: ItemShovel,
+	  ItemAxe: ItemAxe,
+	  ItemPickaxe: ItemPickaxe
+	};
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item, ItemProcessor,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Item = __webpack_require__(21);
+
+	ItemProcessor = (function(_super) {
+	  __extends(ItemProcessor, _super);
+
+	  function ItemProcessor(name, _at_processorId) {
+	    this.processorId = _at_processorId;
+	    ItemProcessor.__super__.constructor.call(this, Game.itemList.TYPE_PROCESSOR, name);
+	  }
+
+	  ItemProcessor.prototype.use = function() {
+	    Game.processorList.processor[this.processorId].add();
+	    Game.view.refreshRecipeList();
+	    return true;
+	  };
+
+	  return ItemProcessor;
+
+	})(Item);
+
+	module.exports = ItemProcessor;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor, ProcessorToolbox, RecipeItem, RecipeMaterial,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Processor = __webpack_require__(22);
+
+	RecipeMaterial = __webpack_require__(23);
+
+	RecipeItem = __webpack_require__(24);
+
+	ProcessorToolbox = (function(_super) {
+	  __extends(ProcessorToolbox, _super);
+
+	  ProcessorToolbox.prototype.name = 'Tool Box';
+
+	  function ProcessorToolbox() {
+	    var il, ml;
+	    ProcessorToolbox.__super__.constructor.call(this);
+	    il = Game.itemList;
+	    ml = Game.materialList;
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], null, [il.item[il.id.stoneShovel]], null)];
+	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], null, [[ml.id.rawCoal, 1]])];
+	  }
+
+	  return ProcessorToolbox;
+
+	})(Processor);
+
+	module.exports = ProcessorToolbox;
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor, ProcessorHand, RecipeItem, RecipeMaterial,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Processor = __webpack_require__(22);
+
+	RecipeMaterial = __webpack_require__(23);
+
+	RecipeItem = __webpack_require__(24);
+
+	ProcessorHand = (function(_super) {
+	  __extends(ProcessorHand, _super);
+
+	  ProcessorHand.prototype.name = 'Hand';
+
+	  function ProcessorHand() {
+	    var il, ml;
+	    ProcessorHand.__super__.constructor.call(this);
+	    this.add();
+	    il = Game.itemList;
+	    ml = Game.materialList;
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], null, [il.item[il.id.toolBox1]], null)];
+	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], null, [[ml.id.rawCoal, 1]])];
+	  }
+
+	  return ProcessorHand;
+
+	})(Processor);
+
+	module.exports = ProcessorHand;
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item;
+
+	Item = (function() {
+	  function Item(_at_type, _at_name) {
+	    this.type = _at_type;
+	    this.name = _at_name;
+	  }
+
+	  Item.prototype.use = function() {
+	    return false;
+	  };
+
+	  return Item;
+
+	})();
+
+	module.exports = Item;
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var Processor;
 
 	Processor = (function() {
+	  Processor.prototype.name = void 0;
+
 	  Processor.prototype.itemRecipe = [];
 
 	  Processor.prototype.materialRecipe = [];
 
-	  function Processor() {}
+	  Processor.prototype.num = function() {
+	    return this.state.length;
+	  };
+
+	  Processor.prototype.add = function() {
+	    return this.state.push(null);
+	  };
+
+	  Processor.prototype.remove = function() {
+	    return this.state.splice(this.num - 1, 1);
+	  };
+
+	  function Processor() {
+	    this.state = [];
+	    this.queue = [];
+	  }
 
 	  Processor.prototype.craftItemRecipe = function(index) {
 	    var amount, e, materialId, output, recipe, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3;
@@ -11086,7 +11288,7 @@
 
 
 /***/ },
-/* 15 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeMaterial;
@@ -11106,7 +11308,7 @@
 
 
 /***/ },
-/* 16 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeItem;
@@ -11125,178 +11327,6 @@
 	})();
 
 	module.exports = RecipeItem;
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialOre,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Material = __webpack_require__(3);
-
-	MaterialOre = (function(_super) {
-	  __extends(MaterialOre, _super);
-
-	  function MaterialOre(materialName) {
-	    MaterialOre.__super__.constructor.call(this, materialName + " Ore", materialName, null);
-	  }
-
-	  return MaterialOre;
-
-	})(Material);
-
-	module.exports = MaterialOre;
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialRaw,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Material = __webpack_require__(3);
-
-	MaterialRaw = (function(_super) {
-	  __extends(MaterialRaw, _super);
-
-	  function MaterialRaw(materialName, processing) {
-	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, processing);
-	  }
-
-	  return MaterialRaw;
-
-	})(Material);
-
-	module.exports = MaterialRaw;
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialNormal,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Material = __webpack_require__(3);
-
-	MaterialNormal = (function(_super) {
-	  __extends(MaterialNormal, _super);
-
-	  function MaterialNormal(materialName, processing) {
-	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
-	  }
-
-	  return MaterialNormal;
-
-	})(Material);
-
-	module.exports = MaterialNormal;
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processing;
-
-	Processing = (function() {
-	  function Processing(_at_requiredMaterial) {
-	    this.requiredMaterial = _at_requiredMaterial;
-	  }
-
-	  return Processing;
-
-	})();
-
-	module.exports = Processing;
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Item = __webpack_require__(22);
-
-	ItemTool = (function(_super) {
-	  __extends(ItemTool, _super);
-
-	  function ItemTool(type, name, _at_material, _at_modifier) {
-	    this.material = _at_material;
-	    this.modifier = _at_modifier;
-	    ItemTool.__super__.constructor.call(this, type, name);
-	  }
-
-	  return ItemTool;
-
-	})(Item);
-
-	ItemShovel = (function(_super) {
-	  __extends(ItemShovel, _super);
-
-	  function ItemShovel(name, material, modifier) {
-	    ItemShovel.__super__.constructor.call(this, Game.itemList.TYPE_SHOVEL, name, material, modifier);
-	  }
-
-	  return ItemShovel;
-
-	})(ItemTool);
-
-	ItemAxe = (function(_super) {
-	  __extends(ItemAxe, _super);
-
-	  function ItemAxe(name, material, modifier) {
-	    ItemAxe.__super__.constructor.call(this, Game.itemList.TYPE_AXE, name, material, modifier);
-	  }
-
-	  return ItemAxe;
-
-	})(ItemTool);
-
-	ItemPickaxe = (function(_super) {
-	  __extends(ItemPickaxe, _super);
-
-	  function ItemPickaxe(name, material, modifier) {
-	    ItemPickaxe.__super__.constructor.call(this, Game.itemList.TYPE_PICKAXE, name, material, modifier);
-	  }
-
-	  return ItemPickaxe;
-
-	})(ItemTool);
-
-	module.exports = {
-	  ItemShovel: ItemShovel,
-	  ItemAxe: ItemAxe,
-	  ItemPickaxe: ItemPickaxe
-	};
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Item;
-
-	Item = (function() {
-	  function Item(_at_type, _at_name) {
-	    this.type = _at_type;
-	    this.name = _at_name;
-	  }
-
-	  return Item;
-
-	})();
-
-	module.exports = Item;
 
 
 /***/ }
