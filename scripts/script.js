@@ -9687,7 +9687,8 @@
 	    stoneShovel: 1,
 	    stoneAxe: 2,
 	    stonePickaxe: 3,
-	    toolBox1: 4
+	    toolBox1: 4,
+	    furnace1: 5
 	  };
 
 	  ItemList.item = [];
@@ -9696,7 +9697,8 @@
 	    this.register(this.id.stoneShovel, new ItemTool.ItemShovel('Stone Shovel', Game.materialList.id.stone, []));
 	    this.register(this.id.stoneAxe, new ItemTool.ItemAxe('Stone Axe', Game.materialList.id.stone, []));
 	    this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
-	    return this.register(this.id.toolBox1, new ItemProcessor('Tool Box', Game.processorList.id.toolBox1));
+	    this.register(this.id.toolBox1, new ItemProcessor('Tool Box', Game.processorList.id.toolBox1));
+	    return this.register(this.id.furnace1, new ItemProcessor('Furnace', Game.processorList.id.furnace1));
 	  };
 
 	  ItemList.register = function(id, item) {
@@ -9747,25 +9749,29 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ProcessorHand, ProcessorList, ProcessorToolbox;
+	var ProcessorFurnace, ProcessorHand, ProcessorList, ProcessorToolbox;
 
 	ProcessorHand = __webpack_require__(20);
 
 	ProcessorToolbox = __webpack_require__(19);
+
+	ProcessorFurnace = __webpack_require__(21);
 
 	ProcessorList = (function() {
 	  function ProcessorList() {}
 
 	  ProcessorList.id = {
 	    hand: 0,
-	    toolBox1: 1
+	    toolBox1: 1,
+	    furnace1: 2
 	  };
 
 	  ProcessorList.processor = [];
 
 	  ProcessorList.init = function() {
 	    this.processor[this.id.hand] = new ProcessorHand();
-	    return this.processor[this.id.toolBox1] = new ProcessorToolbox();
+	    this.processor[this.id.toolBox1] = new ProcessorToolbox();
+	    return this.processor[this.id.furnace1] = new ProcessorFurnace();
 	  };
 
 	  return ProcessorList;
@@ -9878,7 +9884,7 @@
 
 	var $, Processor, View;
 
-	Processor = __webpack_require__(21);
+	Processor = __webpack_require__(22);
 
 	$ = __webpack_require__(2);
 
@@ -11048,7 +11054,7 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Item = __webpack_require__(22);
+	Item = __webpack_require__(23);
 
 	ItemTool = (function(_super) {
 	  __extends(ItemTool, _super);
@@ -11126,7 +11132,7 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Item = __webpack_require__(22);
+	Item = __webpack_require__(23);
 
 	ItemProcessor = (function(_super) {
 	  __extends(ItemProcessor, _super);
@@ -11157,11 +11163,11 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(21);
+	Processor = __webpack_require__(22);
 
-	RecipeMaterial = __webpack_require__(23);
+	RecipeMaterial = __webpack_require__(24);
 
-	RecipeItem = __webpack_require__(24);
+	RecipeItem = __webpack_require__(25);
 
 	ProcessorToolbox = (function(_super) {
 	  __extends(ProcessorToolbox, _super);
@@ -11175,7 +11181,7 @@
 	    il = Game.itemList;
 	    ml = Game.materialList;
 	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)];
-	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]])];
+	    this.materialRecipe = [];
 	  }
 
 	  return ProcessorToolbox;
@@ -11193,11 +11199,11 @@
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(21);
+	Processor = __webpack_require__(22);
 
-	RecipeMaterial = __webpack_require__(23);
+	RecipeMaterial = __webpack_require__(24);
 
-	RecipeItem = __webpack_require__(24);
+	RecipeItem = __webpack_require__(25);
 
 	ProcessorHand = (function(_super) {
 	  __extends(ProcessorHand, _super);
@@ -11210,7 +11216,7 @@
 	    this.add();
 	    il = Game.itemList;
 	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null)];
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null), new RecipeItem([], [[ml.id.woodStick, 50], [ml.id.stone, 50]], 20, null, [il.item[il.id.furnace1]], null)];
 	    this.materialRecipe = [];
 	  }
 
@@ -11223,6 +11229,42 @@
 
 /***/ },
 /* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor, ProcessorFurnace, RecipeItem, RecipeMaterial,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Processor = __webpack_require__(22);
+
+	RecipeMaterial = __webpack_require__(24);
+
+	RecipeItem = __webpack_require__(25);
+
+	ProcessorFurnace = (function(_super) {
+	  __extends(ProcessorFurnace, _super);
+
+	  ProcessorFurnace.prototype.name = 'Furnace';
+
+	  function ProcessorFurnace() {
+	    var il, ml;
+	    ProcessorFurnace.__super__.constructor.call(this);
+	    this.add();
+	    il = Game.itemList;
+	    ml = Game.materialList;
+	    this.itemRecipe = [];
+	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]]), new RecipeMaterial([[ml.id.oreCopper, 1]], 10, null, [[ml.id.rawCopper, 1]])];
+	  }
+
+	  return ProcessorFurnace;
+
+	})(Processor);
+
+	module.exports = ProcessorFurnace;
+
+
+/***/ },
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Processor;
@@ -11398,7 +11440,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Item;
@@ -11421,7 +11463,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeMaterial;
@@ -11442,7 +11484,7 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeItem;
