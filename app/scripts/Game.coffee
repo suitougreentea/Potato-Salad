@@ -3,7 +3,6 @@ require('perfect-scrollbar')
 
 Material = require('./Material.coffee')
 OreVein = require('./OreVein.coffee')
-ProcessorHand = require('./ProcessorHand.coffee')
 
 class Game
   @logger: require('./Logger.coffee')
@@ -32,7 +31,7 @@ class Game
     new OreVein(0, 10)
   ]
 
-  @processorList = []
+  @processorList = require('./ProcessorList.coffee')
 
   @overworldStuffFinder = require('./OverworldStuffFinder.coffee')
   @oreVeinFinder = require('./OreVeinFinder.coffee')
@@ -54,8 +53,7 @@ class Game
     for e, i in @materialList.material
       @material[i] = 0
     @itemList.init()
-    @processorList.push(new ProcessorHand())
-
+    @processorList.init()
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
 
@@ -98,20 +96,6 @@ class Game
         @view.refreshMaterialList()
         @view.refreshOreVeinList()
         @view.refreshItemList()
-
-#  @tryToProcessMaterial: (materialId, times) =>
-#    material = @materialList.material[materialId]
-#    processing = material.processing
-#    for source in processing.requiredMaterial
-#      [id, amount] = source
-#      if @material[id] < amount * times
-#        @logger.log('Not enough material')
-#        return
-#      for source in processing.requiredMaterial
-#        [id, amount] = source
-#        @material[id] -= amount * times
-#        @material[materialId] += 10 * times
-#        @view.refreshMaterialList()
 
   @tryToStartMining: (target) ->
     if !@have.pickaxe
@@ -161,15 +145,9 @@ class Game
 
   @useItem: (index) ->
     item = @item[index]
-    switch item.type
-      when @itemList.TYPE_SHOVEL
-        @have.shovel = item
-      when @itemList.TYPE_AXE
-        @have.axe = item
-      when @itemList.TYPE_PICKAXE
-        @have.pickaxe = item
-    @item.splice(index, 1)
-    @view.refreshItemList()
+    if item.use()
+      @item.splice(index, 1)
+      @view.refreshItemList()
 
   @onResizeWindow: () ->
     width = $(window).width()

@@ -1,8 +1,15 @@
 class Processor
+  name: undefined
   itemRecipe: []
   materialRecipe: []
+
+  num: -> @state.length
+  add: -> @state.push null
+  remove: -> @state.splice(@num - 1, 1)
   
   constructor: () ->
+    @state = []
+    @queue = []
 
   craftItemRecipe: (index) ->
     recipe = @itemRecipe[index]

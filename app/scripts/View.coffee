@@ -27,42 +27,6 @@ class View
         $('#materialOverworldPick input:last').change(-> Game.changeIgnoreCheckbox($(@).is(':checked'), e))
       )(e)
 
-    $('#materialOverworldDig').html('')
-    for e in Game.materialOverworldDigViewList
-      ((e) =>
-        material = Game.materialList.material[e]
-        num = Game.material[e]
-        $('#materialOverworldDig').append("#{material.materialName}: #{num}<br />")
-      )(e)
-
-    $('#materialOverworldCut').html('')
-    for e in Game.materialOverworldCutViewList
-      ((e) =>
-        material = Game.materialList.material[e]
-        num = Game.material[e]
-        $('#materialOverworldCut').append("#{material.materialName}: #{num}<br />")
-      )(e)
-
-    $('#materialOre').html('')
-    for e in Game.materialOreViewList
-      ((e) =>
-        material = Game.materialList.material[e]
-        num = Game.material[e]
-        $('#materialOre').append("#{material.materialName}: #{num}<br />")
-      )(e)
-
-    $('#materialRaw').html('')
-    for e in Game.materialRawViewList
-      ((e) =>
-        material = Game.materialList.material[e]
-        num = Game.material[e]
-        $('#materialRaw').append("<button>-&gt;10</button>")
-        $('#materialRaw button:last').click(-> Game.tryToProcessMaterial(e, 1))
-        $('#materialRaw').append("<button>-&gt;100</button>")
-        $('#materialRaw button:last').click(-> Game.tryToProcessMaterial(e, 10))
-        $('#materialRaw').append("#{material.materialName}: #{num}<br />")
-      )(e)
-
   @refreshOreVeinList: ->
     $('#oreVein').html('')
     for e, i in Game.oreVein
@@ -73,18 +37,21 @@ class View
 
   @refreshRecipeList: ->
     $('#recipe').html('')
-    for processor in Game.processorList
+    for processor in Game.processorList.processor
+      $('#recipe').append("<div>#{processor.name} (#{processor.num()})</div>")
       for e, i in processor.itemRecipe
         ((processor, e, i) =>
           $('#recipe').append("<div class='buttonItem'>#{e.outputItem[0].name}</div>")
           $('#recipe .buttonItem:last').click(-> processor.craftItemRecipe(i))
         )(processor, e, i)
+      $('#recipe').append('<br />')
       for e, i in processor.materialRecipe
         ((processor, e, i) =>
           [id, amount] = e.outputMaterial[0]
           $('#recipe').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
           $('#recipe .buttonItem:last').click(-> processor.craftMaterialRecipe(i, 1))
         )(processor, e, i)
+      $('#recipe').append('<br />')
 
   @refreshItemList: ->
     $('#itemHave').html('')
