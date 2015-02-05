@@ -326,16 +326,19 @@
 	  };
 
 	  Game.onResizeWindow = function() {
-	    var height, leftWidth, logHeight, width;
+	    var height, itemHeight, leftWidth, logHeight, width;
 	    width = $(window).width();
 	    height = $(window).height();
 	    console.log("Window resized: (" + width + ", " + height + ")");
 	    leftWidth = 270;
 	    logHeight = 120;
+	    itemHeight = 48 * 3;
 	    $('#painLeft').css({
 	      top: 0,
 	      left: 0
 	    }).width(leftWidth).height(height);
+	    $('#itemStock').height(itemHeight);
+	    $('#materialStock').height(height - itemHeight - 32 * 2);
 	    $('#painMain').css({
 	      top: 0,
 	      left: leftWidth
@@ -9737,7 +9740,7 @@
 
 	var ItemList, ItemTool;
 
-	ItemTool = __webpack_require__(18);
+	ItemTool = __webpack_require__(17);
 
 	ItemList = (function() {
 	  function ItemList() {}
@@ -9779,7 +9782,7 @@
 
 	var Recipe, RecipeList;
 
-	Recipe = __webpack_require__(17);
+	Recipe = __webpack_require__(18);
 
 	RecipeList = (function() {
 	  function RecipeList() {}
@@ -9915,10 +9918,29 @@
 	  };
 
 	  View.refreshMaterialList = function() {
-	    var e, _fn, _fn1, _fn2, _fn3, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
+	    var e, list, _fn, _fn1, _fn2, _fn3, _fn4, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _results;
+	    $('#materialStock').html('');
+	    _ref = [Game.materialOverworldPickViewList, Game.materialOverworldDigViewList, Game.materialOverworldCutViewList, Game.materialOreViewList, Game.materialRawViewList];
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      list = _ref[_i];
+	      _fn = (function(_this) {
+	        return function(e) {
+	          var material, num;
+	          material = Game.materialList.material[e];
+	          num = Game.material[e];
+	          return $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + num + "</div></div>");
+	        };
+	      })(this);
+	      for (_j = 0, _len1 = list.length; _j < _len1; _j++) {
+	        e = list[_j];
+	        _fn(e);
+	      }
+	      $('#materialStock').append('<hr />');
+	    }
+	    return;
 	    $('#materialOverworldPick').html('');
-	    _ref = Game.materialOverworldPickViewList;
-	    _fn = (function(_this) {
+	    _ref1 = Game.materialOverworldPickViewList;
+	    _fn1 = (function(_this) {
 	      return function(e) {
 	        var material, num;
 	        material = Game.materialList.material[e];
@@ -9930,13 +9952,13 @@
 	        });
 	      };
 	    })(this);
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      _fn(e);
+	    for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+	      e = _ref1[_k];
+	      _fn1(e);
 	    }
 	    $('#materialOverworldDig').html('');
-	    _ref1 = Game.materialOverworldDigViewList;
-	    _fn1 = (function(_this) {
+	    _ref2 = Game.materialOverworldDigViewList;
+	    _fn2 = (function(_this) {
 	      return function(e) {
 	        var material, num;
 	        material = Game.materialList.material[e];
@@ -9944,13 +9966,13 @@
 	        return $('#materialOverworldDig').append(material.materialName + ": " + num + "<br />");
 	      };
 	    })(this);
-	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	      e = _ref1[_j];
-	      _fn1(e);
+	    for (_l = 0, _len3 = _ref2.length; _l < _len3; _l++) {
+	      e = _ref2[_l];
+	      _fn2(e);
 	    }
 	    $('#materialOverworldCut').html('');
-	    _ref2 = Game.materialOverworldCutViewList;
-	    _fn2 = (function(_this) {
+	    _ref3 = Game.materialOverworldCutViewList;
+	    _fn3 = (function(_this) {
 	      return function(e) {
 	        var material, num;
 	        material = Game.materialList.material[e];
@@ -9958,13 +9980,13 @@
 	        return $('#materialOverworldCut').append(material.materialName + ": " + num + "<br />");
 	      };
 	    })(this);
-	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	      e = _ref2[_k];
-	      _fn2(e);
+	    for (_m = 0, _len4 = _ref3.length; _m < _len4; _m++) {
+	      e = _ref3[_m];
+	      _fn3(e);
 	    }
 	    $('#materialOre').html('');
-	    _ref3 = Game.materialOreViewList;
-	    _fn3 = (function(_this) {
+	    _ref4 = Game.materialOreViewList;
+	    _fn4 = (function(_this) {
 	      return function(e) {
 	        var material, num;
 	        material = Game.materialList.material[e];
@@ -9972,15 +9994,15 @@
 	        return $('#materialOre').append(material.materialName + ": " + num + "<br />");
 	      };
 	    })(this);
-	    for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-	      e = _ref3[_l];
-	      _fn3(e);
+	    for (_n = 0, _len5 = _ref4.length; _n < _len5; _n++) {
+	      e = _ref4[_n];
+	      _fn4(e);
 	    }
 	    $('#materialRaw').html('');
-	    _ref4 = Game.materialRawViewList;
+	    _ref5 = Game.materialRawViewList;
 	    _results = [];
-	    for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
-	      e = _ref4[_m];
+	    for (_o = 0, _len6 = _ref5.length; _o < _len6; _o++) {
+	      e = _ref5[_o];
 	      _results.push(((function(_this) {
 	        return function(e) {
 	          var material, num;
@@ -10070,7 +10092,7 @@
 	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
 	      e = _ref[i];
 	      _results.push((function(e, i) {
-	        $('#itemStock').append("<button>" + e.name + "</button>");
+	        $('#itemStock').append("<div class='buttonItem'>" + e.name + "</div>");
 	        return $('#itemStock button:last').click(function() {
 	          return Game.useItem(i);
 	        });
@@ -11060,25 +11082,6 @@
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Recipe;
-
-	Recipe = (function() {
-	  function Recipe(_at_requiredMaterial, _at_output) {
-	    this.requiredMaterial = _at_requiredMaterial;
-	    this.output = _at_output;
-	  }
-
-	  return Recipe;
-
-	})();
-
-	module.exports = Recipe;
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
@@ -11136,6 +11139,25 @@
 	  ItemAxe: ItemAxe,
 	  ItemPickaxe: ItemPickaxe
 	};
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Recipe;
+
+	Recipe = (function() {
+	  function Recipe(_at_requiredMaterial, _at_output) {
+	    this.requiredMaterial = _at_requiredMaterial;
+	    this.output = _at_output;
+	  }
+
+	  return Recipe;
+
+	})();
+
+	module.exports = Recipe;
 
 
 /***/ },

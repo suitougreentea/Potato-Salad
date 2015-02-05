@@ -18,17 +18,64 @@ body {
   font-family: monospace;
   overflow-y: scroll; }
 
+#itemStock {
+  overflow-x: hidden;
+  overflow-y: scroll; }
+
+#materialStock {
+  overflow-x: hidden;
+  overflow-y: scroll; }
+
 .headerPainLeft {
   width: 100%;
-  height: 48px;
-  line-height: 48px;
+  height: 32px;
+  line-height: 32px;
   text-align: center;
   background-color: #DDD; }
 
-#materialOverworld, #materialOre, #materialRaw {
+.buttonItem {
+  box-sizing: border-box;
+  background-color: #CCC;
+  border-left: 2px solid #EEE;
+  border-top: 2px solid #EEE;
+  border-right: 2px solid #888;
+  border-bottom: 2px solid #888;
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  font-size: 12px; }
+
+.buttonItem:hover {
+  background-color: #EEE; }
+
+.buttonItem:active {
+  background-color: #999; }
+
+.material {
+  box-sizing: border-box;
+  background-color: #CCC;
+  border: 2px solid #888;
+  width: 100%;
+  height: 48px; }
+
+.materialIcon {
+  width: 32px;
+  height: 32px;
+  margin: 6px;
   float: left; }
 
-#material:after {
-  content: "";
-  display: block;
-  clear: both; }
+.materialName {
+  height: 24px;
+  line-height: 24px;
+  font-size: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px; }
+
+.materialAmount {
+  text-align: right;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  height: 16px;
+  line-height: 16px;
+  font-size: 12px; }
