@@ -3,6 +3,7 @@ require('perfect-scrollbar')
 
 Material = require('./Material.coffee')
 OreVein = require('./OreVein.coffee')
+ProcessorHand = require('./ProcessorHand.coffee')
 
 class Game
   @logger: require('./Logger.coffee')
@@ -31,7 +32,7 @@ class Game
     new OreVein(0, 10)
   ]
 
-  @recipeList = require('./RecipeList.coffee')
+  @processorList = []
 
   @overworldStuffFinder = require('./OverworldStuffFinder.coffee')
   @oreVeinFinder = require('./OreVeinFinder.coffee')
@@ -53,7 +54,7 @@ class Game
     for e, i in @materialList.material
       @material[i] = 0
     @itemList.init()
-    @recipeList.init()
+    @processorList.push(new ProcessorHand())
 
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
@@ -98,35 +99,19 @@ class Game
         @view.refreshOreVeinList()
         @view.refreshItemList()
 
-  @tryToProcessMaterial: (materialId, times) =>
-    material = @materialList.material[materialId]
-    processing = material.processing
-    for source in processing.requiredMaterial
-      [id, amount] = source
-      if @material[id] < amount * times
-        @logger.log('Not enough material')
-        return
-      for source in processing.requiredMaterial
-        [id, amount] = source
-        @material[id] -= amount * times
-        @material[materialId] += 10 * times
-        @view.refreshMaterialList()
-
-  @tryToCraft: (recipe) ->
-    for e in recipe.requiredMaterial
-      [materialId, amount] = e
-      if @material[materialId] < amount
-        @logger.log('Not enough material')
-        return
-
-    for e in recipe.requiredMaterial
-      [materialId, amount] = e
-      @material[materialId] -= amount
-
-    @item.push(recipe.output)
-    @logger.log('Craft complete')
-    @view.refreshMaterialList()
-    @view.refreshItemList()
+#  @tryToProcessMaterial: (materialId, times) =>
+#    material = @materialList.material[materialId]
+#    processing = material.processing
+#    for source in processing.requiredMaterial
+#      [id, amount] = source
+#      if @material[id] < amount * times
+#        @logger.log('Not enough material')
+#        return
+#      for source in processing.requiredMaterial
+#        [id, amount] = source
+#        @material[id] -= amount * times
+#        @material[materialId] += 10 * times
+#        @view.refreshMaterialList()
 
   @tryToStartMining: (target) ->
     if !@have.pickaxe

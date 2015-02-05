@@ -73,11 +73,18 @@ class View
 
   @refreshRecipeList: ->
     $('#recipe').html('')
-    for e in Game.recipeList.normal
-      ((e) =>
-        $('#recipe').append("<button>#{e.output.name}</button>")
-        $('#recipe button:last').click(-> Game.tryToCraft(e))
-      )(e)
+    for processor in Game.processorList
+      for e, i in processor.itemRecipe
+        ((processor, e, i) =>
+          $('#recipe').append("<div class='buttonItem'>#{e.outputItem[0].name}</div>")
+          $('#recipe .buttonItem:last').click(-> processor.craftItemRecipe(i))
+        )(processor, e, i)
+      for e, i in processor.materialRecipe
+        ((processor, e, i) =>
+          [id, amount] = e.outputMaterial[0]
+          $('#recipe').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
+          $('#recipe .buttonItem:last').click(-> processor.craftMaterialRecipe(i, 1))
+        )(processor, e, i)
 
   @refreshItemList: ->
     $('#itemHave').html('')
@@ -97,7 +104,7 @@ class View
     for e, i in Game.item
       ((e, i) ->
         $('#itemStock').append("<div class='buttonItem'>#{e.name}</div>")
-        $('#itemStock button:last').click(-> Game.useItem(i))
+        $('#itemStock .buttonItem:last').click(-> Game.useItem(i))
       )(e, i)
 
 module.exports = View
