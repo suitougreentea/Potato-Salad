@@ -46,7 +46,7 @@
 
 	var $;
 
-	$ = __webpack_require__(22);
+	$ = __webpack_require__(2);
 
 	$(function() {
 	  var actionIntervalId;
@@ -64,26 +64,26 @@
 
 	var $, Game, Material, OreVein;
 
-	$ = __webpack_require__(22);
+	$ = __webpack_require__(2);
 
-	__webpack_require__(21);
+	__webpack_require__(13);
 
-	Material = __webpack_require__(2);
+	Material = __webpack_require__(3);
 
-	OreVein = __webpack_require__(3);
+	OreVein = __webpack_require__(4);
 
 	Game = (function() {
 	  function Game() {}
 
-	  Game.logger = __webpack_require__(4);
+	  Game.logger = __webpack_require__(5);
 
 	  Game.material = [];
 
-	  Game.materialList = __webpack_require__(5);
+	  Game.materialList = __webpack_require__(6);
 
 	  Game.item = [];
 
-	  Game.itemList = __webpack_require__(6);
+	  Game.itemList = __webpack_require__(7);
 
 	  Game.have = {
 	    shovel: null,
@@ -101,17 +101,17 @@
 
 	  Game.using = 0;
 
-	  Game.materialViewList = __webpack_require__(7);
+	  Game.materialViewList = __webpack_require__(8);
 
 	  Game.materialOverworldIgnoreList = [];
 
 	  Game.oreVein = [new OreVein(0, 10)];
 
-	  Game.processorList = __webpack_require__(8);
+	  Game.processorList = __webpack_require__(9);
 
-	  Game.overworldStuffFinder = __webpack_require__(9);
+	  Game.overworldStuffFinder = __webpack_require__(10);
 
-	  Game.oreVeinFinder = __webpack_require__(10);
+	  Game.oreVeinFinder = __webpack_require__(11);
 
 	  Game.MODE_SEARCHING_OVERWORLD = 1;
 
@@ -125,7 +125,7 @@
 
 	  Game.time = 0;
 
-	  Game.view = __webpack_require__(11);
+	  Game.view = __webpack_require__(12);
 
 	  Game.init = function() {
 	    var e, i, _i, _len, _ref;
@@ -306,1948 +306,6 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material;
-
-	Material = (function() {
-	  function Material(_at_fullName, _at_materialName, _at_icon) {
-	    this.fullName = _at_fullName;
-	    this.materialName = _at_materialName;
-	    this.icon = _at_icon;
-	  }
-
-	  return Material;
-
-	})();
-
-	module.exports = Material;
-
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var OreVein;
-
-	OreVein = (function() {
-	  function OreVein(_at_materialId, _at_size) {
-	    this.materialId = _at_materialId;
-	    this.size = _at_size;
-	    this.amount = this.size * 1000;
-	    this.remain = this.amount;
-	  }
-
-	  return OreVein;
-
-	})();
-
-	module.exports = OreVein;
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var $, Logger;
-
-	$ = __webpack_require__(22);
-
-	Logger = (function() {
-	  function Logger() {}
-
-	  Logger.log = function(str) {
-	    console.log("[" + Game.time + "] " + str);
-	    $('#painLog').append("[" + Game.time + "] " + str + "<br />");
-	    return $('#painLog').scrollTop($('#painLog')[0].scrollHeight);
-	  };
-
-	  return Logger;
-
-	})();
-
-	module.exports = Logger;
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw;
-
-	Material = __webpack_require__(2);
-
-	MaterialOre = __webpack_require__(12);
-
-	MaterialRaw = __webpack_require__(13);
-
-	MaterialNormal = __webpack_require__(14);
-
-	MaterialList = (function() {
-	  function MaterialList() {}
-
-	  MaterialList.id = {
-	    oreCoal: 0,
-	    oreIron: 1,
-	    oreCopper: 2,
-	    oreTin: 3,
-	    oreBauxite: 4,
-	    oreNickel: 5,
-	    oreGold: 6,
-	    orePlatinum: 7,
-	    oreDiamond: 8,
-	    rawCoal: 9,
-	    rawIron: 10,
-	    rawCopper: 11,
-	    rawTin: 12,
-	    rawAluminium: 13,
-	    rawNickel: 14,
-	    rawGold: 15,
-	    rawPlatinum: 16,
-	    rawDiamond: 17,
-	    woodStick: 18,
-	    stone: 19,
-	    dirt: 20,
-	    wood: 21
-	  };
-
-	  MaterialList.material = [];
-
-	  MaterialList.init = function() {
-	    this.register(this.id.oreCoal, new MaterialOre('Coal'));
-	    this.register(this.id.oreIron, new MaterialOre('Iron'));
-	    this.register(this.id.oreCopper, new MaterialOre('Copper'));
-	    this.register(this.id.oreTin, new MaterialOre('Tin'));
-	    this.register(this.id.oreBauxite, new MaterialOre('Bauxite'));
-	    this.register(this.id.oreNickel, new MaterialOre('Nickel'));
-	    this.register(this.id.oreGold, new MaterialOre('Gold'));
-	    this.register(this.id.orePlatinum, new MaterialOre('Platinum'));
-	    this.register(this.id.oreDiamond, new MaterialOre('Diamond'));
-	    this.register(this.id.rawCoal, new MaterialRaw('Coal'));
-	    this.register(this.id.rawIron, new MaterialRaw('Iron'));
-	    this.register(this.id.rawCopper, new MaterialRaw('Copper'));
-	    this.register(this.id.rawTin, new MaterialRaw('Tin'));
-	    this.register(this.id.rawAluminium, new MaterialRaw('Aluminium'));
-	    this.register(this.id.rawNickel, new MaterialRaw('Nickel'));
-	    this.register(this.id.rawGold, new MaterialRaw('Gold'));
-	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum'));
-	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond'));
-	    this.register(this.id.woodStick, new MaterialNormal('Wood stick'));
-	    this.register(this.id.stone, new MaterialNormal('Stone'));
-	    this.register(this.id.dirt, new MaterialNormal('Dirt'));
-	    return this.register(this.id.wood, new MaterialNormal('Wood'));
-	  };
-
-	  MaterialList.register = function(id, material) {
-	    return this.material[id] = material;
-	  };
-
-	  return MaterialList;
-
-	})();
-
-	module.exports = MaterialList;
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ItemList, ItemProcessor, ItemTool, ProcessorToolbox;
-
-	ItemTool = __webpack_require__(15);
-
-	ItemProcessor = __webpack_require__(16);
-
-	ProcessorToolbox = __webpack_require__(17);
-
-	ItemList = (function() {
-	  function ItemList() {}
-
-	  ItemList.TYPE_SHOVEL = 1;
-
-	  ItemList.TYPE_AXE = 2;
-
-	  ItemList.TYPE_PICKAXE = 3;
-
-	  ItemList.TYPE_PROCESSOR = 100;
-
-	  ItemList.id = {
-	    stoneShovel: 1,
-	    stoneAxe: 2,
-	    stonePickaxe: 3,
-	    toolBox1: 4,
-	    furnace1: 5
-	  };
-
-	  ItemList.item = [];
-
-	  ItemList.init = function() {
-	    this.register(this.id.stoneShovel, new ItemTool.ItemShovel('Stone Shovel', Game.materialList.id.stone, []));
-	    this.register(this.id.stoneAxe, new ItemTool.ItemAxe('Stone Axe', Game.materialList.id.stone, []));
-	    this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
-	    this.register(this.id.toolBox1, new ItemProcessor('Tool Box', Game.processorList.id.toolBox1));
-	    return this.register(this.id.furnace1, new ItemProcessor('Furnace', Game.processorList.id.furnace1));
-	  };
-
-	  ItemList.register = function(id, item) {
-	    return this.item[id] = item;
-	  };
-
-	  return ItemList;
-
-	})();
-
-	module.exports = ItemList;
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var MaterialViewList;
-
-	MaterialViewList = (function() {
-	  function MaterialViewList() {}
-
-	  MaterialViewList.init = function() {
-	    var _;
-	    _ = Game.materialList.id;
-	    return this.data = [
-	      {
-	        name: 'Overworld',
-	        list: [_.stone, _.woodStick, _.dirt, _.wood]
-	      }, {
-	        name: 'Ore',
-	        list: [_.oreCoal, _.oreIron, _.oreCopper, _.oreTin, _.oreBauxite, _.oreNickel, _.oreGold, _.orePlatinum, _.oreDiamond]
-	      }, {
-	        name: 'Raw Mineral',
-	        list: [_.rawCoal, _.rawIron, _.rawCopper, _.rawTin, _.rawAluminium, _.rawNickel, _.rawGold, _.rawPlatinum, _.rawDiamond]
-	      }
-	    ];
-	  };
-
-	  return MaterialViewList;
-
-	})();
-
-	module.exports = MaterialViewList;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ProcessorFurnace, ProcessorHand, ProcessorList, ProcessorToolbox;
-
-	ProcessorHand = __webpack_require__(18);
-
-	ProcessorToolbox = __webpack_require__(17);
-
-	ProcessorFurnace = __webpack_require__(19);
-
-	ProcessorList = (function() {
-	  function ProcessorList() {}
-
-	  ProcessorList.id = {
-	    hand: 0,
-	    toolBox1: 1,
-	    furnace1: 2
-	  };
-
-	  ProcessorList.processor = [];
-
-	  ProcessorList.init = function() {
-	    this.processor[this.id.hand] = new ProcessorHand();
-	    this.processor[this.id.toolBox1] = new ProcessorToolbox();
-	    return this.processor[this.id.furnace1] = new ProcessorFurnace();
-	  };
-
-	  return ProcessorList;
-
-	})();
-
-	module.exports = ProcessorList;
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var OverworldStuffFinder;
-
-	OverworldStuffFinder = (function() {
-	  function OverworldStuffFinder() {}
-
-	  OverworldStuffFinder.init = function() {
-	    var list;
-	    list = Game.materialList;
-	    return this.data = [[list.id.stone, 0.2], [list.id.woodStick, 0.2]];
-	  };
-
-	  OverworldStuffFinder.tryToPick = function() {
-	    var chance, change, e, id, result, target, _i, _len, _ref;
-	    target = [];
-	    _ref = this.data;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      id = e[0], chance = e[1];
-	      if (Math.random() < chance) {
-	        target.push(e);
-	      }
-	    }
-	    if (target.length > 0) {
-	      result = target[Math.floor(Math.random() * target.length)];
-	      id = result[0], change = result[1];
-	      if (Game.materialOverworldIgnoreList.indexOf(id) === -1) {
-	        Game.logger.log("Picked up " + Game.materialList.material[id].fullName + "!");
-	        return Game.material[id] += 1;
-	      }
-	    }
-	  };
-
-	  OverworldStuffFinder.tryToDig = function() {
-	    return Game.material[Game.materialList.id.dirt] += 1;
-	  };
-
-	  OverworldStuffFinder.tryToCut = function() {
-	    if (Math.random() < 0.1) {
-	      Game.logger.log("Cut down a wood!");
-	      return Game.material[Game.materialList.id.wood] += 20;
-	    }
-	  };
-
-	  return OverworldStuffFinder;
-
-	})();
-
-	module.exports = OverworldStuffFinder;
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var OreVein, OreVeinFinder;
-
-	OreVein = __webpack_require__(3);
-
-	OreVeinFinder = (function() {
-	  function OreVeinFinder() {}
-
-	  OreVeinFinder.init = function() {
-	    var _;
-	    _ = Game.materialList.id;
-	    return this.data = [[_.oreCoal, 0.005, 10, 2], [_.oreIron, 0.002, 10, 2], [_.oreCopper, 0.003, 10, 2], [_.oreTin, 0.002, 10, 2], [_.oreBauxite, 0.004, 10, 2], [_.oreNickel, 0.001, 10, 2], [_.oreGold, 0.0001, 10, 2], [_.orePlatinum, 0.00005, 10, 2], [_.oreDiamond, 0.00005, 10, 2]];
-	  };
-
-	  OreVeinFinder["try"] = function() {
-	    var chance, change, e, id, result, size, size_modifier, target, _i, _len, _ref;
-	    target = [];
-	    _ref = this.data;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      id = e[0], chance = e[1], size = e[2], size_modifier = e[3];
-	      if (Math.random() < chance) {
-	        target.push(e);
-	      }
-	    }
-	    if (target.length > 0) {
-	      result = target[Math.floor(Math.random() * target.length)];
-	      id = result[0], change = result[1];
-	      Game.logger.log("Found " + Game.materialList.material[id].materialName + " vein!");
-	      return Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)));
-	    }
-	  };
-
-	  return OreVeinFinder;
-
-	})();
-
-	module.exports = OreVeinFinder;
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var $, Processor, View;
-
-	Processor = __webpack_require__(20);
-
-	$ = __webpack_require__(22);
-
-	View = (function() {
-	  function View() {}
-
-	  View.refreshStatus = function() {
-	    $('#time').text("Time: " + Game.time);
-	    $('#mode').text("Now you are " + Game.mode);
-	    return $('#money').text("320,000,000,000,000,000.00 Mn");
-	  };
-
-	  View.getIcon = function(config) {
-	    var e, filter, icon, result, _i, _len;
-	    if (config) {
-	      result = "<svg class='materialIcon' viewBox='0 0 8.46667 8.46667'>";
-	      for (_i = 0, _len = config.length; _i < _len; _i++) {
-	        e = config[_i];
-	        icon = e[0], filter = e[1];
-	        result = result + ("<use xlink:href='#" + icon + "' style='filter: url(#" + filter + ")'></use>");
-	      }
-	      result = result + "</svg>";
-	    } else {
-	      result = "<span class='materialIcon'>NO ICON</span>";
-	    }
-	    return result;
-	  };
-
-	  View.refreshMaterialList = function() {
-	    var e, list, _fn, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
-	    $('#materialStock').html('');
-	    _ref = Game.materialViewList.data;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      list = _ref[_i];
-	      $('#materialStock').append("<div class='materialHeader'>" + list.name + "</div>");
-	      _ref1 = list.list;
-	      _fn = (function(_this) {
-	        return function(e) {
-	          var material, num;
-	          material = Game.materialList.material[e];
-	          num = Game.material[e];
-	          return $('#materialStock').append("<div class='material'>" + (_this.getIcon(material.icon)) + "<div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + (Game.formatNumber(num)) + "</div></div>");
-	        };
-	      })(this);
-	      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	        e = _ref1[_j];
-	        _fn(e);
-	      }
-	    }
-	    return;
-	    $('#materialOverworldPick').html('');
-	    _ref2 = Game.materialOverworldPickViewList;
-	    _results = [];
-	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	      e = _ref2[_k];
-	      _results.push(((function(_this) {
-	        return function(e) {
-	          var material, num;
-	          material = Game.materialList.material[e];
-	          num = Game.material[e];
-	          $('#materialOverworldPick').append("<input type=\"checkbox\">" + material.materialName + ": " + num + "<br />");
-	          $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) !== -1);
-	          return $('#materialOverworldPick input:last').change(function() {
-	            return Game.changeIgnoreCheckbox($(this).is(':checked'), e);
-	          });
-	        };
-	      })(this))(e));
-	    }
-	    return _results;
-	  };
-
-	  View.refreshOreVeinList = function() {
-	    var e, i, _i, _len, _ref, _results;
-	    $('#oreVein').html('');
-	    _ref = Game.oreVein;
-	    _results = [];
-	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-	      e = _ref[i];
-	      _results.push(((function(_this) {
-	        return function(e, i) {
-	          $('#oreVein').append("<div><button>Mine this vein</button> " + Game.materialList.material[e.materialId].materialName + ": " + e.remain + " / " + e.amount + "</div>");
-	          return $('#oreVein button:last').click(function() {
-	            return Game.tryToStartMining(i);
-	          });
-	        };
-	      })(this))(e, i));
-	    }
-	    return _results;
-	  };
-
-	  View.refreshRecipeList = function() {
-	    var e, i, processor, _fn, _fn1, _fn2, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
-	    $('#recipe').html('');
-	    _ref = Game.processorList.processor;
-	    _results = [];
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      processor = _ref[_i];
-	      if (processor.num() === 0) {
-	        continue;
-	      }
-	      $('#recipe').append("<div class='processor'><div class='processorName'></div><div class='processorRecipe'></div><div class='processorStateList'></div><div class='processorQueueList'></div></div>");
-	      $('.processorName:last').text(processor.name + " (" + (processor.num()) + ")");
-	      if (processor.itemRecipe.length > 0) {
-	        $('.processorRecipe').append("<div class='processorRecipeItem'></div>");
-	        _ref1 = processor.itemRecipe;
-	        _fn = (function(_this) {
-	          return function(processor, e, i) {
-	            $('.processorRecipeItem:last').append("<div class='buttonItem'>" + e.outputItem[0].name + "</div>");
-	            return $('.processorRecipeItem:last .buttonItem:last').click(function() {
-	              return processor.addQueueItemRecipe(i);
-	            });
-	          };
-	        })(this);
-	        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
-	          e = _ref1[i];
-	          _fn(processor, e, i);
-	        }
-	      }
-	      if (processor.materialRecipe.length > 0) {
-	        $('.processorRecipe').append("<div class='processorRecipeMaterial'></div>");
-	        _ref2 = processor.materialRecipe;
-	        _fn1 = (function(_this) {
-	          return function(processor, e, i) {
-	            var amount, id, _ref3;
-	            _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
-	            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
-	            return $('.processorRecipeMaterial:last .buttonItem:last').click(function() {
-	              return processor.addQueueMaterialRecipe(i, 1);
-	            });
-	          };
-	        })(this);
-	        for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
-	          e = _ref2[i];
-	          _fn1(processor, e, i);
-	        }
-	      }
-	      _ref3 = processor.state;
-	      _fn2 = (function(_this) {
-	        return function(processor, e, i) {
-	          var id;
-	          $('.processorStateList:last').append("<div class='processorState'><div class='processorStateIcon'></div><div class='processorStateRight'><div class='processorStateText'></div><div class='processorStateMeter'></div></div></div>");
-	          $('.processorStateMeter:last').text(i + ": " + e.timeRemain + " / " + e.time);
-	          switch (e.type) {
-	            case Processor.TYPE_ITEM:
-	              return $('.processorStateText:last').text("" + e.recipe.outputItem[0].name);
-	            case Processor.TYPE_MATERIAL:
-	              id = e.recipe.outputMaterial[0][0];
-	              return $('.processorStateText:last').text("" + Game.materialList.material[id].fullName);
-	          }
-	        };
-	      })(this);
-	      for (i = _l = 0, _len3 = _ref3.length; _l < _len3; i = ++_l) {
-	        e = _ref3[i];
-	        _fn2(processor, e, i);
-	      }
-	      _results.push((function() {
-	        var _len4, _m, _ref4, _results1;
-	        _ref4 = processor.queue;
-	        _results1 = [];
-	        for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
-	          e = _ref4[i];
-	          _results1.push(((function(_this) {
-	            return function(processor, e, i) {
-	              var id;
-	              switch (e.type) {
-	                case Processor.TYPE_ITEM:
-	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + e.recipe.outputItem[0].name + "</div>");
-	                case Processor.TYPE_MATERIAL:
-	                  id = e.recipe.outputMaterial[0][0];
-	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
-	              }
-	            };
-	          })(this))(processor, e, i));
-	        }
-	        return _results1;
-	      }).call(this));
-	    }
-	    return _results;
-	  };
-
-	  View.refreshItemList = function() {
-	    var e, i, _i, _len, _ref, _results;
-	    $('#itemHave').html('');
-	    $('#itemHave').append("<button>Pick</button>");
-	    $('#itemHave button:last').click(function() {
-	      return Game.tryToPick();
-	    });
-	    if (Game.have.shovel) {
-	      $('#itemHave').append("Shovel:<button>" + Game.have.shovel.name + "</button>");
-	      $('#itemHave button:last').click(function() {
-	        return Game.tryToDig();
-	      });
-	    }
-	    if (Game.have.axe) {
-	      $('#itemHave').append("Axe:<button>" + Game.have.axe.name + "</button>");
-	      $('#itemHave button:last').click(function() {
-	        return Game.tryToCut();
-	      });
-	    }
-	    if (Game.have.pickaxe) {
-	      $('#itemHave').append("Pickaxe:<button>" + Game.have.pickaxe.name + "</button>");
-	      $('#itemHave button:last').click(function() {
-	        return Game.tryToGoUnderground();
-	      });
-	    }
-	    $('#itemStock').html('');
-	    _ref = Game.item;
-	    _results = [];
-	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-	      e = _ref[i];
-	      _results.push((function(e, i) {
-	        $('#itemStock').append("<div class='buttonItem'>" + e.name + "</div>");
-	        return $('#itemStock .buttonItem:last').click(function() {
-	          return Game.useItem(i);
-	        });
-	      })(e, i));
-	    }
-	    return _results;
-	  };
-
-	  return View;
-
-	})();
-
-	module.exports = View;
-
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialOre,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Material = __webpack_require__(2);
-
-	MaterialOre = (function(_super) {
-	  __extends(MaterialOre, _super);
-
-	  function MaterialOre(materialName) {
-	    MaterialOre.__super__.constructor.call(this, materialName + " Ore", materialName, null);
-	  }
-
-	  return MaterialOre;
-
-	})(Material);
-
-	module.exports = MaterialOre;
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialRaw,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Material = __webpack_require__(2);
-
-	MaterialRaw = (function(_super) {
-	  __extends(MaterialRaw, _super);
-
-	  function MaterialRaw(materialName) {
-	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, [['sIngot', 'sMaterialGold']]);
-	  }
-
-	  return MaterialRaw;
-
-	})(Material);
-
-	module.exports = MaterialRaw;
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Material, MaterialNormal,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Material = __webpack_require__(2);
-
-	MaterialNormal = (function(_super) {
-	  __extends(MaterialNormal, _super);
-
-	  function MaterialNormal(materialName, processing) {
-	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
-	  }
-
-	  return MaterialNormal;
-
-	})(Material);
-
-	module.exports = MaterialNormal;
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Item = __webpack_require__(23);
-
-	ItemTool = (function(_super) {
-	  __extends(ItemTool, _super);
-
-	  function ItemTool(type, name, _at_material, _at_modifier) {
-	    this.material = _at_material;
-	    this.modifier = _at_modifier;
-	    ItemTool.__super__.constructor.call(this, type, name);
-	  }
-
-	  return ItemTool;
-
-	})(Item);
-
-	ItemShovel = (function(_super) {
-	  __extends(ItemShovel, _super);
-
-	  function ItemShovel(name, material, modifier) {
-	    ItemShovel.__super__.constructor.call(this, Game.itemList.TYPE_SHOVEL, name, material, modifier);
-	  }
-
-	  ItemShovel.prototype.use = function() {
-	    Game.have.shovel = this;
-	    return true;
-	  };
-
-	  return ItemShovel;
-
-	})(ItemTool);
-
-	ItemAxe = (function(_super) {
-	  __extends(ItemAxe, _super);
-
-	  function ItemAxe(name, material, modifier) {
-	    ItemAxe.__super__.constructor.call(this, Game.itemList.TYPE_AXE, name, material, modifier);
-	  }
-
-	  ItemAxe.prototype.use = function() {
-	    Game.have.axe = this;
-	    return true;
-	  };
-
-	  return ItemAxe;
-
-	})(ItemTool);
-
-	ItemPickaxe = (function(_super) {
-	  __extends(ItemPickaxe, _super);
-
-	  function ItemPickaxe(name, material, modifier) {
-	    ItemPickaxe.__super__.constructor.call(this, Game.itemList.TYPE_PICKAXE, name, material, modifier);
-	  }
-
-	  ItemPickaxe.prototype.use = function() {
-	    Game.have.pickaxe = this;
-	    return true;
-	  };
-
-	  return ItemPickaxe;
-
-	})(ItemTool);
-
-	module.exports = {
-	  ItemShovel: ItemShovel,
-	  ItemAxe: ItemAxe,
-	  ItemPickaxe: ItemPickaxe
-	};
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Item, ItemProcessor,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Item = __webpack_require__(23);
-
-	ItemProcessor = (function(_super) {
-	  __extends(ItemProcessor, _super);
-
-	  function ItemProcessor(name, _at_processorId) {
-	    this.processorId = _at_processorId;
-	    ItemProcessor.__super__.constructor.call(this, Game.itemList.TYPE_PROCESSOR, name);
-	  }
-
-	  ItemProcessor.prototype.use = function() {
-	    Game.processorList.processor[this.processorId].add();
-	    Game.view.refreshRecipeList();
-	    return true;
-	  };
-
-	  return ItemProcessor;
-
-	})(Item);
-
-	module.exports = ItemProcessor;
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processor, ProcessorToolbox, RecipeItem, RecipeMaterial,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Processor = __webpack_require__(20);
-
-	RecipeMaterial = __webpack_require__(24);
-
-	RecipeItem = __webpack_require__(25);
-
-	ProcessorToolbox = (function(_super) {
-	  __extends(ProcessorToolbox, _super);
-
-	  ProcessorToolbox.prototype.name = 'Tool Box';
-
-	  function ProcessorToolbox() {
-	    var il, ml;
-	    ProcessorToolbox.__super__.constructor.call(this);
-	    this.add();
-	    il = Game.itemList;
-	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)];
-	    this.materialRecipe = [];
-	  }
-
-	  return ProcessorToolbox;
-
-	})(Processor);
-
-	module.exports = ProcessorToolbox;
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processor, ProcessorHand, RecipeItem, RecipeMaterial,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Processor = __webpack_require__(20);
-
-	RecipeMaterial = __webpack_require__(24);
-
-	RecipeItem = __webpack_require__(25);
-
-	ProcessorHand = (function(_super) {
-	  __extends(ProcessorHand, _super);
-
-	  ProcessorHand.prototype.name = 'Hand';
-
-	  function ProcessorHand() {
-	    var il, ml;
-	    ProcessorHand.__super__.constructor.call(this);
-	    this.add();
-	    il = Game.itemList;
-	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null), new RecipeItem([], [[ml.id.woodStick, 50], [ml.id.stone, 50]], 20, null, [il.item[il.id.furnace1]], null)];
-	    this.materialRecipe = [];
-	  }
-
-	  return ProcessorHand;
-
-	})(Processor);
-
-	module.exports = ProcessorHand;
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processor, ProcessorFurnace, RecipeItem, RecipeMaterial,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __hasProp = {}.hasOwnProperty;
-
-	Processor = __webpack_require__(20);
-
-	RecipeMaterial = __webpack_require__(24);
-
-	RecipeItem = __webpack_require__(25);
-
-	ProcessorFurnace = (function(_super) {
-	  __extends(ProcessorFurnace, _super);
-
-	  ProcessorFurnace.prototype.name = 'Furnace';
-
-	  function ProcessorFurnace() {
-	    var il, ml;
-	    ProcessorFurnace.__super__.constructor.call(this);
-	    this.add();
-	    il = Game.itemList;
-	    ml = Game.materialList;
-	    this.itemRecipe = [];
-	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]]), new RecipeMaterial([[ml.id.oreCopper, 1]], 10, null, [[ml.id.rawCopper, 1]])];
-	  }
-
-	  return ProcessorFurnace;
-
-	})(Processor);
-
-	module.exports = ProcessorFurnace;
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Processor;
-
-	Processor = (function() {
-	  Processor.TYPE_NONE = 0;
-
-	  Processor.TYPE_ITEM = 1;
-
-	  Processor.TYPE_MATERIAL = 2;
-
-	  Processor.prototype.name = void 0;
-
-	  Processor.prototype.itemRecipe = [];
-
-	  Processor.prototype.materialRecipe = [];
-
-	  Processor.prototype.num = function() {
-	    return this.state.length;
-	  };
-
-	  Processor.prototype.add = function() {
-	    return this.state.push({
-	      type: Processor.TYPE_NONE,
-	      recipe: null,
-	      time: null,
-	      timeRemain: null
-	    });
-	  };
-
-	  Processor.prototype.remove = function() {
-	    return this.state.splice(this.num - 1, 1);
-	  };
-
-	  function Processor() {
-	    this.state = [];
-	    this.queue = [];
-	  }
-
-	  Processor.prototype.update = function() {
-	    var add, amount, e, i, materialId, output, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
-	    _ref = this.state;
-	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-	      e = _ref[i];
-	      if (e.type !== Processor.TYPE_NONE) {
-	        e.timeRemain -= 1;
-	        if (e.timeRemain === 0) {
-	          switch (e.type) {
-	            case Processor.TYPE_ITEM:
-	              _ref1 = e.recipe.outputItem;
-	              for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	                output = _ref1[_j];
-	                Game.item.push(output);
-	              }
-	              if (e.recipe.outputMaterial) {
-	                _ref2 = e.recipe.outputMaterial;
-	                for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-	                  output = _ref2[_k];
-	                  materialId = output[0], amount = output[1];
-	                  Game.material[materialId] += amount;
-	                }
-	              }
-	              break;
-	            case Processor.TYPE_MATERIAL:
-	              _ref3 = e.recipe.outputMaterial;
-	              for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-	                output = _ref3[_l];
-	                materialId = output[0], amount = output[1];
-	                Game.material[materialId] += amount;
-	              }
-	          }
-	          this.state[i] = {
-	            type: Processor.TYPE_NONE,
-	            recipe: null,
-	            time: null,
-	            timeRemain: null
-	          };
-	          Game.logger.log('Craft complete');
-	          Game.view.refreshRecipeList();
-	          Game.view.refreshItemList();
-	          Game.view.refreshMaterialList();
-	          return true;
-	        }
-	      }
-	      _ref4 = this.state;
-	      for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
-	        e = _ref4[i];
-	        if (this.queue.length > 0) {
-	          if (e.type === Processor.TYPE_NONE) {
-	            add = this.queue[0];
-	            this.state[i].type = add.type;
-	            this.state[i].recipe = add.recipe;
-	            this.state[i].time = add.recipe.time;
-	            this.state[i].timeRemain = add.recipe.time;
-	            if (add.amount) {
-	              add.amount -= 1;
-	              if (add.amount === 0) {
-	                this.queue.splice(0, 1);
-	              }
-	            } else {
-	              this.queue.splice(0, 1);
-	            }
-	          }
-	        }
-	      }
-	    }
-	    return Game.view.refreshRecipeList();
-	  };
-
-	  Processor.prototype.addQueueItemRecipe = function(index) {
-	    var amount, e, materialId, recipe, _i, _j, _len, _len1, _ref, _ref1;
-	    recipe = this.itemRecipe[index];
-	    _ref = recipe.requiredMaterial;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
-	      materialId = e[0], amount = e[1];
-	      if (Game.material[materialId] < amount) {
-	        Game.logger.log('Not enough material');
-	        return false;
-	      }
-	    }
-	    _ref1 = recipe.requiredMaterial;
-	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	      e = _ref1[_j];
-	      materialId = e[0], amount = e[1];
-	      Game.material[materialId] -= amount;
-	    }
-	    this.queue.push({
-	      type: Processor.TYPE_ITEM,
-	      recipe: recipe,
-	      amount: null
-	    });
-	    Game.view.refreshItemList();
-	    Game.view.refreshMaterialList();
-	    Game.view.refreshRecipeList();
-	    return true;
-	  };
-
-	  Processor.prototype.addQueueMaterialRecipe = function(index, times) {
-	    var amount, materialId, recipe, source, _i, _j, _len, _len1, _ref, _ref1;
-	    recipe = this.materialRecipe[index];
-	    _ref = recipe.requiredMaterial;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      source = _ref[_i];
-	      materialId = source[0], amount = source[1];
-	      if (Game.material[materialId] < amount * times) {
-	        Game.logger.log('Not enough material');
-	        return false;
-	      }
-	    }
-	    _ref1 = recipe.requiredMaterial;
-	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-	      source = _ref1[_j];
-	      materialId = source[0], amount = source[1];
-	      Game.material[materialId] -= amount * times;
-	    }
-	    this.queue.push({
-	      type: Processor.TYPE_MATERIAL,
-	      recipe: recipe,
-	      amount: 1
-	    });
-	    Game.view.refreshItemList();
-	    Game.view.refreshMaterialList();
-	    Game.view.refreshRecipeList();
-	    return true;
-	  };
-
-	  return Processor;
-
-	})();
-
-	module.exports = Processor;
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* Copyright (c) 2012, 2014 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	(function (factory) {
-	  'use strict';
-
-	  if (true) {
-	    // AMD. Register as an anonymous module.
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(22)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	  } else if (typeof exports === 'object') {
-	    // Node/CommonJS
-	    factory(require('jquery'));
-	  } else {
-	    // Browser globals
-	    factory(jQuery);
-	  }
-	})(function ($) {
-	  'use strict';
-
-	  function getInt(x) {
-	    if (typeof x === 'string') {
-	      return parseInt(x, 10);
-	    } else {
-	      return ~~x;
-	    }
-	  }
-
-	  var defaultSettings = {
-	    wheelSpeed: 1,
-	    wheelPropagation: false,
-	    swipePropagation: true,
-	    minScrollbarLength: null,
-	    maxScrollbarLength: null,
-	    useBothWheelAxes: false,
-	    useKeyboard: true,
-	    suppressScrollX: false,
-	    suppressScrollY: false,
-	    scrollXMarginOffset: 0,
-	    scrollYMarginOffset: 0,
-	    includePadding: false
-	  };
-
-	  var incrementingId = 0;
-	  var eventClassFactory = function () {
-	    var id = incrementingId++;
-	    return function (eventName) {
-	      var className = '.perfect-scrollbar-' + id;
-	      if (typeof eventName === 'undefined') {
-	        return className;
-	      } else {
-	        return eventName + className;
-	      }
-	    };
-	  };
-
-	  var isWebkit = 'WebkitAppearance' in document.documentElement.style;
-
-	  $.fn.perfectScrollbar = function (suppliedSettings, option) {
-
-	    return this.each(function () {
-	      var settings = $.extend(true, {}, defaultSettings);
-	      var $this = $(this);
-	      var isPluginAlive = function () { return !!$this; };
-
-	      if (typeof suppliedSettings === "object") {
-	        // Override default settings with any supplied
-	        $.extend(true, settings, suppliedSettings);
-	      } else {
-	        // If no setting was supplied, then the first param must be the option
-	        option = suppliedSettings;
-	      }
-
-	      // Catch options
-	      if (option === 'update') {
-	        if ($this.data('perfect-scrollbar-update')) {
-	          $this.data('perfect-scrollbar-update')();
-	        }
-	        return $this;
-	      }
-	      else if (option === 'destroy') {
-	        if ($this.data('perfect-scrollbar-destroy')) {
-	          $this.data('perfect-scrollbar-destroy')();
-	        }
-	        return $this;
-	      }
-
-	      if ($this.data('perfect-scrollbar')) {
-	        // if there's already perfect-scrollbar
-	        return $this.data('perfect-scrollbar');
-	      }
-
-
-	      // Or generate new perfectScrollbar
-
-	      $this.addClass('ps-container');
-
-	      var containerWidth;
-	      var containerHeight;
-	      var contentWidth;
-	      var contentHeight;
-
-	      var isRtl = $this.css('direction') === "rtl";
-	      var eventClass = eventClassFactory();
-	      var ownerDocument = this.ownerDocument || document;
-
-	      var $scrollbarXRail = $("<div class='ps-scrollbar-x-rail'>").appendTo($this);
-	      var $scrollbarX = $("<div class='ps-scrollbar-x'>").appendTo($scrollbarXRail);
-	      var scrollbarXActive;
-	      var scrollbarXWidth;
-	      var scrollbarXLeft;
-	      var scrollbarXBottom = getInt($scrollbarXRail.css('bottom'));
-	      var isScrollbarXUsingBottom = scrollbarXBottom === scrollbarXBottom; // !isNaN
-	      var scrollbarXTop = isScrollbarXUsingBottom ? null : getInt($scrollbarXRail.css('top'));
-	      var railBorderXWidth = getInt($scrollbarXRail.css('borderLeftWidth')) + getInt($scrollbarXRail.css('borderRightWidth'));
-	      var railXMarginWidth = getInt($scrollbarXRail.css('marginLeft')) + getInt($scrollbarXRail.css('marginRight'));
-	      var railXWidth;
-
-	      var $scrollbarYRail = $("<div class='ps-scrollbar-y-rail'>").appendTo($this);
-	      var $scrollbarY = $("<div class='ps-scrollbar-y'>").appendTo($scrollbarYRail);
-	      var scrollbarYActive;
-	      var scrollbarYHeight;
-	      var scrollbarYTop;
-	      var scrollbarYRight = getInt($scrollbarYRail.css('right'));
-	      var isScrollbarYUsingRight = scrollbarYRight === scrollbarYRight; // !isNaN
-	      var scrollbarYLeft = isScrollbarYUsingRight ? null : getInt($scrollbarYRail.css('left'));
-	      var railBorderYWidth = getInt($scrollbarYRail.css('borderTopWidth')) + getInt($scrollbarYRail.css('borderBottomWidth'));
-	      var railYMarginHeight = getInt($scrollbarYRail.css('marginTop')) + getInt($scrollbarYRail.css('marginBottom'));
-	      var railYHeight;
-
-	      function updateScrollTop(currentTop, deltaY) {
-	        var newTop = currentTop + deltaY;
-	        var maxTop = containerHeight - scrollbarYHeight;
-
-	        if (newTop < 0) {
-	          scrollbarYTop = 0;
-	        } else if (newTop > maxTop) {
-	          scrollbarYTop = maxTop;
-	        } else {
-	          scrollbarYTop = newTop;
-	        }
-
-	        var scrollTop = getInt(scrollbarYTop * (contentHeight - containerHeight) / (containerHeight - scrollbarYHeight));
-	        $this.scrollTop(scrollTop);
-	      }
-
-	      function updateScrollLeft(currentLeft, deltaX) {
-	        var newLeft = currentLeft + deltaX;
-	        var maxLeft = containerWidth - scrollbarXWidth;
-
-	        if (newLeft < 0) {
-	          scrollbarXLeft = 0;
-	        } else if (newLeft > maxLeft) {
-	          scrollbarXLeft = maxLeft;
-	        } else {
-	          scrollbarXLeft = newLeft;
-	        }
-
-	        var scrollLeft = getInt(scrollbarXLeft * (contentWidth - containerWidth) / (containerWidth - scrollbarXWidth));
-	        $this.scrollLeft(scrollLeft);
-	      }
-
-	      function getThumbSize(thumbSize) {
-	        if (settings.minScrollbarLength) {
-	          thumbSize = Math.max(thumbSize, settings.minScrollbarLength);
-	        }
-	        if (settings.maxScrollbarLength) {
-	          thumbSize = Math.min(thumbSize, settings.maxScrollbarLength);
-	        }
-	        return thumbSize;
-	      }
-
-	      function updateCss() {
-	        var xRailOffset = {width: railXWidth};
-	        if (isRtl) {
-	          xRailOffset.left = $this.scrollLeft() + containerWidth - contentWidth;
-	        } else {
-	          xRailOffset.left = $this.scrollLeft();
-	        }
-	        if (isScrollbarXUsingBottom) {
-	          xRailOffset.bottom = scrollbarXBottom - $this.scrollTop();
-	        } else {
-	          xRailOffset.top = scrollbarXTop + $this.scrollTop();
-	        }
-	        $scrollbarXRail.css(xRailOffset);
-
-	        var railYOffset = {top: $this.scrollTop(), height: railYHeight};
-
-	        if (isScrollbarYUsingRight) {
-	          if (isRtl) {
-	            railYOffset.right = contentWidth - $this.scrollLeft() - scrollbarYRight - $scrollbarY.outerWidth();
-	          } else {
-	            railYOffset.right = scrollbarYRight - $this.scrollLeft();
-	          }
-	        } else {
-	          if (isRtl) {
-	            railYOffset.left = $this.scrollLeft() + containerWidth * 2 - contentWidth - scrollbarYLeft - $scrollbarY.outerWidth();
-	          } else {
-	            railYOffset.left = scrollbarYLeft + $this.scrollLeft();
-	          }
-	        }
-	        $scrollbarYRail.css(railYOffset);
-
-	        $scrollbarX.css({left: scrollbarXLeft, width: scrollbarXWidth - railBorderXWidth});
-	        $scrollbarY.css({top: scrollbarYTop, height: scrollbarYHeight - railBorderYWidth});
-	      }
-
-	      function updateGeometry() {
-	        // Hide scrollbars not to affect scrollWidth and scrollHeight
-	        $this.removeClass('ps-active-x');
-	        $this.removeClass('ps-active-y');
-
-	        containerWidth = settings.includePadding ? $this.innerWidth() : $this.width();
-	        containerHeight = settings.includePadding ? $this.innerHeight() : $this.height();
-	        contentWidth = $this.prop('scrollWidth');
-	        contentHeight = $this.prop('scrollHeight');
-
-	        if (!settings.suppressScrollX && containerWidth + settings.scrollXMarginOffset < contentWidth) {
-	          scrollbarXActive = true;
-	          railXWidth = containerWidth - railXMarginWidth;
-	          scrollbarXWidth = getThumbSize(getInt(railXWidth * containerWidth / contentWidth));
-	          scrollbarXLeft = getInt($this.scrollLeft() * (railXWidth - scrollbarXWidth) / (contentWidth - containerWidth));
-	        } else {
-	          scrollbarXActive = false;
-	          scrollbarXWidth = 0;
-	          scrollbarXLeft = 0;
-	          $this.scrollLeft(0);
-	        }
-
-	        if (!settings.suppressScrollY && containerHeight + settings.scrollYMarginOffset < contentHeight) {
-	          scrollbarYActive = true;
-	          railYHeight = containerHeight - railYMarginHeight;
-	          scrollbarYHeight = getThumbSize(getInt(railYHeight * containerHeight / contentHeight));
-	          scrollbarYTop = getInt($this.scrollTop() * (railYHeight - scrollbarYHeight) / (contentHeight - containerHeight));
-	        } else {
-	          scrollbarYActive = false;
-	          scrollbarYHeight = 0;
-	          scrollbarYTop = 0;
-	          $this.scrollTop(0);
-	        }
-
-	        if (scrollbarXLeft >= railXWidth - scrollbarXWidth) {
-	          scrollbarXLeft = railXWidth - scrollbarXWidth;
-	        }
-	        if (scrollbarYTop >= railYHeight - scrollbarYHeight) {
-	          scrollbarYTop = railYHeight - scrollbarYHeight;
-	        }
-
-	        updateCss();
-
-	        if (scrollbarXActive) {
-	          $this.addClass('ps-active-x');
-	        }
-	        if (scrollbarYActive) {
-	          $this.addClass('ps-active-y');
-	        }
-	      }
-
-	      function bindMouseScrollXHandler() {
-	        var currentLeft;
-	        var currentPageX;
-
-	        var mouseMoveHandler = function (e) {
-	          updateScrollLeft(currentLeft, e.pageX - currentPageX);
-	          updateGeometry();
-	          e.stopPropagation();
-	          e.preventDefault();
-	        };
-
-	        var mouseUpHandler = function (e) {
-	          $scrollbarXRail.removeClass('in-scrolling');
-	          $(ownerDocument).unbind(eventClass('mousemove'), mouseMoveHandler);
-	        };
-
-	        $scrollbarX.bind(eventClass('mousedown'), function (e) {
-	          currentPageX = e.pageX;
-	          currentLeft = $scrollbarX.position().left;
-	          $scrollbarXRail.addClass('in-scrolling');
-
-	          $(ownerDocument).bind(eventClass('mousemove'), mouseMoveHandler);
-	          $(ownerDocument).one(eventClass('mouseup'), mouseUpHandler);
-
-	          e.stopPropagation();
-	          e.preventDefault();
-	        });
-
-	        currentLeft =
-	        currentPageX = null;
-	      }
-
-	      function bindMouseScrollYHandler() {
-	        var currentTop;
-	        var currentPageY;
-
-	        var mouseMoveHandler = function (e) {
-	          updateScrollTop(currentTop, e.pageY - currentPageY);
-	          updateGeometry();
-	          e.stopPropagation();
-	          e.preventDefault();
-	        };
-
-	        var mouseUpHandler = function (e) {
-	          $scrollbarYRail.removeClass('in-scrolling');
-	          $(ownerDocument).unbind(eventClass('mousemove'), mouseMoveHandler);
-	        };
-
-	        $scrollbarY.bind(eventClass('mousedown'), function (e) {
-	          currentPageY = e.pageY;
-	          currentTop = $scrollbarY.position().top;
-	          $scrollbarYRail.addClass('in-scrolling');
-
-	          $(ownerDocument).bind(eventClass('mousemove'), mouseMoveHandler);
-	          $(ownerDocument).one(eventClass('mouseup'), mouseUpHandler);
-
-	          e.stopPropagation();
-	          e.preventDefault();
-	        });
-
-	        currentTop =
-	        currentPageY = null;
-	      }
-
-	      function shouldPreventWheel(deltaX, deltaY) {
-	        var scrollTop = $this.scrollTop();
-	        if (deltaX === 0) {
-	          if (!scrollbarYActive) {
-	            return false;
-	          }
-	          if ((scrollTop === 0 && deltaY > 0) || (scrollTop >= contentHeight - containerHeight && deltaY < 0)) {
-	            return !settings.wheelPropagation;
-	          }
-	        }
-
-	        var scrollLeft = $this.scrollLeft();
-	        if (deltaY === 0) {
-	          if (!scrollbarXActive) {
-	            return false;
-	          }
-	          if ((scrollLeft === 0 && deltaX < 0) || (scrollLeft >= contentWidth - containerWidth && deltaX > 0)) {
-	            return !settings.wheelPropagation;
-	          }
-	        }
-	        return true;
-	      }
-
-	      function shouldPreventSwipe(deltaX, deltaY) {
-	        var scrollTop = $this.scrollTop();
-	        var scrollLeft = $this.scrollLeft();
-	        var magnitudeX = Math.abs(deltaX);
-	        var magnitudeY = Math.abs(deltaY);
-
-	        if (magnitudeY > magnitudeX) {
-	          // user is perhaps trying to swipe up/down the page
-
-	          if (((deltaY < 0) && (scrollTop === contentHeight - containerHeight)) ||
-	              ((deltaY > 0) && (scrollTop === 0))) {
-	            return !settings.swipePropagation;
-	          }
-	        } else if (magnitudeX > magnitudeY) {
-	          // user is perhaps trying to swipe left/right across the page
-
-	          if (((deltaX < 0) && (scrollLeft === contentWidth - containerWidth)) ||
-	              ((deltaX > 0) && (scrollLeft === 0))) {
-	            return !settings.swipePropagation;
-	          }
-	        }
-
-	        return true;
-	      }
-
-	      function bindMouseWheelHandler() {
-	        var shouldPrevent = false;
-
-	        function getDeltaFromEvent(e) {
-	          var deltaX = e.originalEvent.deltaX;
-	          var deltaY = -1 * e.originalEvent.deltaY;
-
-	          if (typeof deltaX === "undefined" || typeof deltaY === "undefined") {
-	            // OS X Safari
-	            deltaX = -1 * e.originalEvent.wheelDeltaX / 6;
-	            deltaY = e.originalEvent.wheelDeltaY / 6;
-	          }
-
-	          if (e.originalEvent.deltaMode && e.originalEvent.deltaMode === 1) {
-	            // Firefox in deltaMode 1: Line scrolling
-	            deltaX *= 10;
-	            deltaY *= 10;
-	          }
-
-	          if (deltaX !== deltaX && deltaY !== deltaY/* NaN checks */) {
-	            // IE in some mouse drivers
-	            deltaX = 0;
-	            deltaY = e.originalEvent.wheelDelta;
-	          }
-
-	          return [deltaX, deltaY];
-	        }
-
-	        function mousewheelHandler(e) {
-	          // FIXME: this is a quick fix for the select problem in FF and IE.
-	          // If there comes an effective way to deal with the problem,
-	          // this lines should be removed.
-	          if (!isWebkit && $this.find('select:focus').length > 0) {
-	            return;
-	          }
-
-	          var delta = getDeltaFromEvent(e);
-
-	          var deltaX = delta[0];
-	          var deltaY = delta[1];
-
-	          shouldPrevent = false;
-	          if (!settings.useBothWheelAxes) {
-	            // deltaX will only be used for horizontal scrolling and deltaY will
-	            // only be used for vertical scrolling - this is the default
-	            $this.scrollTop($this.scrollTop() - (deltaY * settings.wheelSpeed));
-	            $this.scrollLeft($this.scrollLeft() + (deltaX * settings.wheelSpeed));
-	          } else if (scrollbarYActive && !scrollbarXActive) {
-	            // only vertical scrollbar is active and useBothWheelAxes option is
-	            // active, so let's scroll vertical bar using both mouse wheel axes
-	            if (deltaY) {
-	              $this.scrollTop($this.scrollTop() - (deltaY * settings.wheelSpeed));
-	            } else {
-	              $this.scrollTop($this.scrollTop() + (deltaX * settings.wheelSpeed));
-	            }
-	            shouldPrevent = true;
-	          } else if (scrollbarXActive && !scrollbarYActive) {
-	            // useBothWheelAxes and only horizontal bar is active, so use both
-	            // wheel axes for horizontal bar
-	            if (deltaX) {
-	              $this.scrollLeft($this.scrollLeft() + (deltaX * settings.wheelSpeed));
-	            } else {
-	              $this.scrollLeft($this.scrollLeft() - (deltaY * settings.wheelSpeed));
-	            }
-	            shouldPrevent = true;
-	          }
-
-	          updateGeometry();
-
-	          shouldPrevent = (shouldPrevent || shouldPreventWheel(deltaX, deltaY));
-	          if (shouldPrevent) {
-	            e.stopPropagation();
-	            e.preventDefault();
-	          }
-	        }
-
-	        if (typeof window.onwheel !== "undefined") {
-	          $this.bind(eventClass('wheel'), mousewheelHandler);
-	        } else if (typeof window.onmousewheel !== "undefined") {
-	          $this.bind(eventClass('mousewheel'), mousewheelHandler);
-	        }
-	      }
-
-	      function bindKeyboardHandler() {
-	        var hovered = false;
-	        $this.bind(eventClass('mouseenter'), function (e) {
-	          hovered = true;
-	        });
-	        $this.bind(eventClass('mouseleave'), function (e) {
-	          hovered = false;
-	        });
-
-	        var shouldPrevent = false;
-	        $(ownerDocument).bind(eventClass('keydown'), function (e) {
-	          if (e.isDefaultPrevented && e.isDefaultPrevented()) {
-	            return;
-	          }
-
-	          if (!hovered) {
-	            return;
-	          }
-
-	          var activeElement = document.activeElement ? document.activeElement : ownerDocument.activeElement;
-	          // go deeper if element is a webcomponent
-	          while (activeElement.shadowRoot) {
-	            activeElement = activeElement.shadowRoot.activeElement;
-	          }
-	          if ($(activeElement).is(":input,[contenteditable]")) {
-	            return;
-	          }
-
-	          var deltaX = 0;
-	          var deltaY = 0;
-
-	          switch (e.which) {
-	          case 37: // left
-	            deltaX = -30;
-	            break;
-	          case 38: // up
-	            deltaY = 30;
-	            break;
-	          case 39: // right
-	            deltaX = 30;
-	            break;
-	          case 40: // down
-	            deltaY = -30;
-	            break;
-	          case 33: // page up
-	            deltaY = 90;
-	            break;
-	          case 32: // space bar
-	          case 34: // page down
-	            deltaY = -90;
-	            break;
-	          case 35: // end
-	            if (e.ctrlKey) {
-	              deltaY = -contentHeight;
-	            } else {
-	              deltaY = -containerHeight;
-	            }
-	            break;
-	          case 36: // home
-	            if (e.ctrlKey) {
-	              deltaY = $this.scrollTop();
-	            } else {
-	              deltaY = containerHeight;
-	            }
-	            break;
-	          default:
-	            return;
-	          }
-
-	          $this.scrollTop($this.scrollTop() - deltaY);
-	          $this.scrollLeft($this.scrollLeft() + deltaX);
-
-	          shouldPrevent = shouldPreventWheel(deltaX, deltaY);
-	          if (shouldPrevent) {
-	            e.preventDefault();
-	          }
-	        });
-	      }
-
-	      function bindRailClickHandler() {
-	        function stopPropagation(e) { e.stopPropagation(); }
-
-	        $scrollbarY.bind(eventClass('click'), stopPropagation);
-	        $scrollbarYRail.bind(eventClass('click'), function (e) {
-	          var halfOfScrollbarLength = getInt(scrollbarYHeight / 2);
-	          var positionTop = e.pageY - $scrollbarYRail.offset().top - halfOfScrollbarLength;
-	          var maxPositionTop = containerHeight - scrollbarYHeight;
-	          var positionRatio = positionTop / maxPositionTop;
-
-	          if (positionRatio < 0) {
-	            positionRatio = 0;
-	          } else if (positionRatio > 1) {
-	            positionRatio = 1;
-	          }
-
-	          $this.scrollTop((contentHeight - containerHeight) * positionRatio);
-	        });
-
-	        $scrollbarX.bind(eventClass('click'), stopPropagation);
-	        $scrollbarXRail.bind(eventClass('click'), function (e) {
-	          var halfOfScrollbarLength = getInt(scrollbarXWidth / 2);
-	          var positionLeft = e.pageX - $scrollbarXRail.offset().left - halfOfScrollbarLength;
-	          var maxPositionLeft = containerWidth - scrollbarXWidth;
-	          var positionRatio = positionLeft / maxPositionLeft;
-
-	          if (positionRatio < 0) {
-	            positionRatio = 0;
-	          } else if (positionRatio > 1) {
-	            positionRatio = 1;
-	          }
-
-	          $this.scrollLeft((contentWidth - containerWidth) * positionRatio);
-	        });
-	      }
-
-	      function bindSelectionHandler() {
-	        function getRangeNode() {
-	          var selection = window.getSelection ? window.getSelection() :
-	                          document.getSlection ? document.getSlection() : {rangeCount: 0};
-	          if (selection.rangeCount === 0) {
-	            return null;
-	          } else {
-	            return selection.getRangeAt(0).commonAncestorContainer;
-	          }
-	        }
-
-	        var scrollingLoop = null;
-	        var scrollDiff = {top: 0, left: 0};
-	        function startScrolling() {
-	          if (!scrollingLoop) {
-	            scrollingLoop = setInterval(function () {
-	              if (!isPluginAlive()) {
-	                clearInterval(scrollingLoop);
-	                return;
-	              }
-
-	              $this.scrollTop($this.scrollTop() + scrollDiff.top);
-	              $this.scrollLeft($this.scrollLeft() + scrollDiff.left);
-	              updateGeometry();
-	            }, 50); // every .1 sec
-	          }
-	        }
-	        function stopScrolling() {
-	          if (scrollingLoop) {
-	            clearInterval(scrollingLoop);
-	            scrollingLoop = null;
-	          }
-	          $scrollbarXRail.removeClass('in-scrolling');
-	          $scrollbarYRail.removeClass('in-scrolling');
-	        }
-
-	        var isSelected = false;
-	        $(ownerDocument).bind(eventClass('selectionchange'), function (e) {
-	          if ($.contains($this[0], getRangeNode())) {
-	            isSelected = true;
-	          } else {
-	            isSelected = false;
-	            stopScrolling();
-	          }
-	        });
-	        $(window).bind(eventClass('mouseup'), function (e) {
-	          if (isSelected) {
-	            isSelected = false;
-	            stopScrolling();
-	          }
-	        });
-
-	        $(window).bind(eventClass('mousemove'), function (e) {
-	          if (isSelected) {
-	            var mousePosition = {x: e.pageX, y: e.pageY};
-	            var containerOffset = $this.offset();
-	            var containerGeometry = {
-	              left: containerOffset.left,
-	              right: containerOffset.left + $this.outerWidth(),
-	              top: containerOffset.top,
-	              bottom: containerOffset.top + $this.outerHeight()
-	            };
-
-	            if (mousePosition.x < containerGeometry.left + 3) {
-	              scrollDiff.left = -5;
-	              $scrollbarXRail.addClass('in-scrolling');
-	            } else if (mousePosition.x > containerGeometry.right - 3) {
-	              scrollDiff.left = 5;
-	              $scrollbarXRail.addClass('in-scrolling');
-	            } else {
-	              scrollDiff.left = 0;
-	            }
-
-	            if (mousePosition.y < containerGeometry.top + 3) {
-	              if (containerGeometry.top + 3 - mousePosition.y < 5) {
-	                scrollDiff.top = -5;
-	              } else {
-	                scrollDiff.top = -20;
-	              }
-	              $scrollbarYRail.addClass('in-scrolling');
-	            } else if (mousePosition.y > containerGeometry.bottom - 3) {
-	              if (mousePosition.y - containerGeometry.bottom + 3 < 5) {
-	                scrollDiff.top = 5;
-	              } else {
-	                scrollDiff.top = 20;
-	              }
-	              $scrollbarYRail.addClass('in-scrolling');
-	            } else {
-	              scrollDiff.top = 0;
-	            }
-
-	            if (scrollDiff.top === 0 && scrollDiff.left === 0) {
-	              stopScrolling();
-	            } else {
-	              startScrolling();
-	            }
-	          }
-	        });
-	      }
-
-	      function bindTouchHandler(supportsTouch, supportsIePointer) {
-	        function applyTouchMove(differenceX, differenceY) {
-	          $this.scrollTop($this.scrollTop() - differenceY);
-	          $this.scrollLeft($this.scrollLeft() - differenceX);
-
-	          updateGeometry();
-	        }
-
-	        var startOffset = {};
-	        var startTime = 0;
-	        var speed = {};
-	        var easingLoop = null;
-	        var inGlobalTouch = false;
-	        var inLocalTouch = false;
-
-	        function globalTouchStart(e) {
-	          inGlobalTouch = true;
-	        }
-	        function globalTouchEnd(e) {
-	          inGlobalTouch = false;
-	        }
-
-	        function getTouch(e) {
-	          if (e.originalEvent.targetTouches) {
-	            return e.originalEvent.targetTouches[0];
-	          } else {
-	            // Maybe IE pointer
-	            return e.originalEvent;
-	          }
-	        }
-	        function shouldHandle(e) {
-	          var event = e.originalEvent;
-	          if (event.targetTouches && event.targetTouches.length === 1) {
-	            return true;
-	          }
-	          if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== event.MSPOINTER_TYPE_MOUSE) {
-	            return true;
-	          }
-	          return false;
-	        }
-	        function touchStart(e) {
-	          if (shouldHandle(e)) {
-	            inLocalTouch = true;
-
-	            var touch = getTouch(e);
-
-	            startOffset.pageX = touch.pageX;
-	            startOffset.pageY = touch.pageY;
-
-	            startTime = (new Date()).getTime();
-
-	            if (easingLoop !== null) {
-	              clearInterval(easingLoop);
-	            }
-
-	            e.stopPropagation();
-	          }
-	        }
-	        function touchMove(e) {
-	          if (!inGlobalTouch && inLocalTouch && shouldHandle(e)) {
-	            var touch = getTouch(e);
-
-	            var currentOffset = {pageX: touch.pageX, pageY: touch.pageY};
-
-	            var differenceX = currentOffset.pageX - startOffset.pageX;
-	            var differenceY = currentOffset.pageY - startOffset.pageY;
-
-	            applyTouchMove(differenceX, differenceY);
-	            startOffset = currentOffset;
-
-	            var currentTime = (new Date()).getTime();
-
-	            var timeGap = currentTime - startTime;
-	            if (timeGap > 0) {
-	              speed.x = differenceX / timeGap;
-	              speed.y = differenceY / timeGap;
-	              startTime = currentTime;
-	            }
-
-	            if (shouldPreventSwipe(differenceX, differenceY)) {
-	              e.stopPropagation();
-	              e.preventDefault();
-	            }
-	          }
-	        }
-	        function touchEnd(e) {
-	          if (!inGlobalTouch && inLocalTouch) {
-	            inLocalTouch = false;
-
-	            clearInterval(easingLoop);
-	            easingLoop = setInterval(function () {
-	              if (!isPluginAlive()) {
-	                clearInterval(easingLoop);
-	                return;
-	              }
-
-	              if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
-	                clearInterval(easingLoop);
-	                return;
-	              }
-
-	              applyTouchMove(speed.x * 30, speed.y * 30);
-
-	              speed.x *= 0.8;
-	              speed.y *= 0.8;
-	            }, 10);
-	          }
-	        }
-
-	        if (supportsTouch) {
-	          $(window).bind(eventClass("touchstart"), globalTouchStart);
-	          $(window).bind(eventClass("touchend"), globalTouchEnd);
-	          $this.bind(eventClass("touchstart"), touchStart);
-	          $this.bind(eventClass("touchmove"), touchMove);
-	          $this.bind(eventClass("touchend"), touchEnd);
-	        }
-
-	        if (supportsIePointer) {
-	          if (window.PointerEvent) {
-	            $(window).bind(eventClass("pointerdown"), globalTouchStart);
-	            $(window).bind(eventClass("pointerup"), globalTouchEnd);
-	            $this.bind(eventClass("pointerdown"), touchStart);
-	            $this.bind(eventClass("pointermove"), touchMove);
-	            $this.bind(eventClass("pointerup"), touchEnd);
-	          } else if (window.MSPointerEvent) {
-	            $(window).bind(eventClass("MSPointerDown"), globalTouchStart);
-	            $(window).bind(eventClass("MSPointerUp"), globalTouchEnd);
-	            $this.bind(eventClass("MSPointerDown"), touchStart);
-	            $this.bind(eventClass("MSPointerMove"), touchMove);
-	            $this.bind(eventClass("MSPointerUp"), touchEnd);
-	          }
-	        }
-	      }
-
-	      function bindScrollHandler() {
-	        $this.bind(eventClass('scroll'), function (e) {
-	          updateGeometry();
-	        });
-	      }
-
-	      function destroy() {
-	        $this.unbind(eventClass());
-	        $(window).unbind(eventClass());
-	        $(ownerDocument).unbind(eventClass());
-	        $this.data('perfect-scrollbar', null);
-	        $this.data('perfect-scrollbar-update', null);
-	        $this.data('perfect-scrollbar-destroy', null);
-	        $scrollbarX.remove();
-	        $scrollbarY.remove();
-	        $scrollbarXRail.remove();
-	        $scrollbarYRail.remove();
-
-	        // clean all variables
-	        $this =
-	        $scrollbarXRail =
-	        $scrollbarYRail =
-	        $scrollbarX =
-	        $scrollbarY =
-	        scrollbarXActive =
-	        scrollbarYActive =
-	        containerWidth =
-	        containerHeight =
-	        contentWidth =
-	        contentHeight =
-	        scrollbarXWidth =
-	        scrollbarXLeft =
-	        scrollbarXBottom =
-	        isScrollbarXUsingBottom =
-	        scrollbarXTop =
-	        scrollbarYHeight =
-	        scrollbarYTop =
-	        scrollbarYRight =
-	        isScrollbarYUsingRight =
-	        scrollbarYLeft =
-	        isRtl =
-	        eventClass = null;
-	      }
-
-	      var supportsTouch = (('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch);
-	      var supportsIePointer = window.navigator.msMaxTouchPoints !== null;
-
-	      function initialize() {
-	        updateGeometry();
-	        bindScrollHandler();
-	        bindMouseScrollXHandler();
-	        bindMouseScrollYHandler();
-	        bindRailClickHandler();
-	        bindSelectionHandler();
-	        bindMouseWheelHandler();
-
-	        if (supportsTouch || supportsIePointer) {
-	          bindTouchHandler(supportsTouch, supportsIePointer);
-	        }
-	        if (settings.useKeyboard) {
-	          bindKeyboardHandler();
-	        }
-	        $this.data('perfect-scrollbar', $this);
-	        $this.data('perfect-scrollbar-update', updateGeometry);
-	        $this.data('perfect-scrollbar-destroy', destroy);
-	      }
-
-	      initialize();
-
-	      return $this;
-	    });
-	  };
-	});
-
-
-/***/ },
-/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -11455,6 +9513,1954 @@
 	return jQuery;
 
 	}));
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material;
+
+	Material = (function() {
+	  function Material(_at_fullName, _at_materialName, _at_icon) {
+	    this.fullName = _at_fullName;
+	    this.materialName = _at_materialName;
+	    this.icon = _at_icon;
+	  }
+
+	  return Material;
+
+	})();
+
+	module.exports = Material;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var OreVein;
+
+	OreVein = (function() {
+	  function OreVein(_at_materialId, _at_size) {
+	    this.materialId = _at_materialId;
+	    this.size = _at_size;
+	    this.amount = this.size * 1000;
+	    this.remain = this.amount;
+	  }
+
+	  return OreVein;
+
+	})();
+
+	module.exports = OreVein;
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $, Logger;
+
+	$ = __webpack_require__(2);
+
+	Logger = (function() {
+	  function Logger() {}
+
+	  Logger.log = function(str) {
+	    console.log("[" + Game.time + "] " + str);
+	    $('#painLog').append("[" + Game.time + "] " + str + "<br />");
+	    return $('#painLog').scrollTop($('#painLog')[0].scrollHeight);
+	  };
+
+	  return Logger;
+
+	})();
+
+	module.exports = Logger;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw;
+
+	Material = __webpack_require__(3);
+
+	MaterialOre = __webpack_require__(14);
+
+	MaterialRaw = __webpack_require__(15);
+
+	MaterialNormal = __webpack_require__(16);
+
+	MaterialList = (function() {
+	  function MaterialList() {}
+
+	  MaterialList.id = {
+	    oreCoal: 0,
+	    oreIron: 1,
+	    oreCopper: 2,
+	    oreTin: 3,
+	    oreBauxite: 4,
+	    oreNickel: 5,
+	    oreGold: 6,
+	    orePlatinum: 7,
+	    oreDiamond: 8,
+	    rawCoal: 9,
+	    rawIron: 10,
+	    rawCopper: 11,
+	    rawTin: 12,
+	    rawAluminium: 13,
+	    rawNickel: 14,
+	    rawGold: 15,
+	    rawPlatinum: 16,
+	    rawDiamond: 17,
+	    woodStick: 18,
+	    stone: 19,
+	    dirt: 20,
+	    wood: 21
+	  };
+
+	  MaterialList.material = [];
+
+	  MaterialList.init = function() {
+	    this.register(this.id.oreCoal, new MaterialOre('Coal'));
+	    this.register(this.id.oreIron, new MaterialOre('Iron'));
+	    this.register(this.id.oreCopper, new MaterialOre('Copper'));
+	    this.register(this.id.oreTin, new MaterialOre('Tin'));
+	    this.register(this.id.oreBauxite, new MaterialOre('Bauxite'));
+	    this.register(this.id.oreNickel, new MaterialOre('Nickel'));
+	    this.register(this.id.oreGold, new MaterialOre('Gold'));
+	    this.register(this.id.orePlatinum, new MaterialOre('Platinum'));
+	    this.register(this.id.oreDiamond, new MaterialOre('Diamond'));
+	    this.register(this.id.rawCoal, new MaterialRaw('Coal'));
+	    this.register(this.id.rawIron, new MaterialRaw('Iron'));
+	    this.register(this.id.rawCopper, new MaterialRaw('Copper'));
+	    this.register(this.id.rawTin, new MaterialRaw('Tin'));
+	    this.register(this.id.rawAluminium, new MaterialRaw('Aluminium'));
+	    this.register(this.id.rawNickel, new MaterialRaw('Nickel'));
+	    this.register(this.id.rawGold, new MaterialRaw('Gold'));
+	    this.register(this.id.rawPlatinum, new MaterialRaw('Platinum'));
+	    this.register(this.id.rawDiamond, new MaterialRaw('Diamond'));
+	    this.register(this.id.woodStick, new MaterialNormal('Wood stick'));
+	    this.register(this.id.stone, new MaterialNormal('Stone'));
+	    this.register(this.id.dirt, new MaterialNormal('Dirt'));
+	    return this.register(this.id.wood, new MaterialNormal('Wood'));
+	  };
+
+	  MaterialList.register = function(id, material) {
+	    return this.material[id] = material;
+	  };
+
+	  return MaterialList;
+
+	})();
+
+	module.exports = MaterialList;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ItemList, ItemProcessor, ItemTool, ProcessorToolbox;
+
+	ItemTool = __webpack_require__(17);
+
+	ItemProcessor = __webpack_require__(18);
+
+	ProcessorToolbox = __webpack_require__(19);
+
+	ItemList = (function() {
+	  function ItemList() {}
+
+	  ItemList.TYPE_SHOVEL = 1;
+
+	  ItemList.TYPE_AXE = 2;
+
+	  ItemList.TYPE_PICKAXE = 3;
+
+	  ItemList.TYPE_PROCESSOR = 100;
+
+	  ItemList.id = {
+	    stoneShovel: 1,
+	    stoneAxe: 2,
+	    stonePickaxe: 3,
+	    toolBox1: 4,
+	    furnace1: 5
+	  };
+
+	  ItemList.item = [];
+
+	  ItemList.init = function() {
+	    this.register(this.id.stoneShovel, new ItemTool.ItemShovel('Stone Shovel', Game.materialList.id.stone, []));
+	    this.register(this.id.stoneAxe, new ItemTool.ItemAxe('Stone Axe', Game.materialList.id.stone, []));
+	    this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
+	    this.register(this.id.toolBox1, new ItemProcessor('Tool Box', Game.processorList.id.toolBox1));
+	    return this.register(this.id.furnace1, new ItemProcessor('Furnace', Game.processorList.id.furnace1));
+	  };
+
+	  ItemList.register = function(id, item) {
+	    return this.item[id] = item;
+	  };
+
+	  return ItemList;
+
+	})();
+
+	module.exports = ItemList;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var MaterialViewList;
+
+	MaterialViewList = (function() {
+	  function MaterialViewList() {}
+
+	  MaterialViewList.init = function() {
+	    var _;
+	    _ = Game.materialList.id;
+	    return this.data = [
+	      {
+	        name: 'Overworld',
+	        list: [_.stone, _.woodStick, _.dirt, _.wood]
+	      }, {
+	        name: 'Ore',
+	        list: [_.oreCoal, _.oreIron, _.oreCopper, _.oreTin, _.oreBauxite, _.oreNickel, _.oreGold, _.orePlatinum, _.oreDiamond]
+	      }, {
+	        name: 'Raw Mineral',
+	        list: [_.rawCoal, _.rawIron, _.rawCopper, _.rawTin, _.rawAluminium, _.rawNickel, _.rawGold, _.rawPlatinum, _.rawDiamond]
+	      }
+	    ];
+	  };
+
+	  return MaterialViewList;
+
+	})();
+
+	module.exports = MaterialViewList;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ProcessorFurnace, ProcessorHand, ProcessorList, ProcessorToolbox;
+
+	ProcessorHand = __webpack_require__(20);
+
+	ProcessorToolbox = __webpack_require__(19);
+
+	ProcessorFurnace = __webpack_require__(21);
+
+	ProcessorList = (function() {
+	  function ProcessorList() {}
+
+	  ProcessorList.id = {
+	    hand: 0,
+	    toolBox1: 1,
+	    furnace1: 2
+	  };
+
+	  ProcessorList.processor = [];
+
+	  ProcessorList.init = function() {
+	    this.processor[this.id.hand] = new ProcessorHand();
+	    this.processor[this.id.toolBox1] = new ProcessorToolbox();
+	    return this.processor[this.id.furnace1] = new ProcessorFurnace();
+	  };
+
+	  return ProcessorList;
+
+	})();
+
+	module.exports = ProcessorList;
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var OverworldStuffFinder;
+
+	OverworldStuffFinder = (function() {
+	  function OverworldStuffFinder() {}
+
+	  OverworldStuffFinder.init = function() {
+	    var list;
+	    list = Game.materialList;
+	    return this.data = [[list.id.stone, 0.2], [list.id.woodStick, 0.2]];
+	  };
+
+	  OverworldStuffFinder.tryToPick = function() {
+	    var chance, change, e, id, result, target, _i, _len, _ref;
+	    target = [];
+	    _ref = this.data;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      id = e[0], chance = e[1];
+	      if (Math.random() < chance) {
+	        target.push(e);
+	      }
+	    }
+	    if (target.length > 0) {
+	      result = target[Math.floor(Math.random() * target.length)];
+	      id = result[0], change = result[1];
+	      if (Game.materialOverworldIgnoreList.indexOf(id) === -1) {
+	        Game.logger.log("Picked up " + Game.materialList.material[id].fullName + "!");
+	        return Game.material[id] += 1;
+	      }
+	    }
+	  };
+
+	  OverworldStuffFinder.tryToDig = function() {
+	    return Game.material[Game.materialList.id.dirt] += 1;
+	  };
+
+	  OverworldStuffFinder.tryToCut = function() {
+	    if (Math.random() < 0.1) {
+	      Game.logger.log("Cut down a wood!");
+	      return Game.material[Game.materialList.id.wood] += 20;
+	    }
+	  };
+
+	  return OverworldStuffFinder;
+
+	})();
+
+	module.exports = OverworldStuffFinder;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var OreVein, OreVeinFinder;
+
+	OreVein = __webpack_require__(4);
+
+	OreVeinFinder = (function() {
+	  function OreVeinFinder() {}
+
+	  OreVeinFinder.init = function() {
+	    var _;
+	    _ = Game.materialList.id;
+	    return this.data = [[_.oreCoal, 0.005, 10, 2], [_.oreIron, 0.002, 10, 2], [_.oreCopper, 0.003, 10, 2], [_.oreTin, 0.002, 10, 2], [_.oreBauxite, 0.004, 10, 2], [_.oreNickel, 0.001, 10, 2], [_.oreGold, 0.0001, 10, 2], [_.orePlatinum, 0.00005, 10, 2], [_.oreDiamond, 0.00005, 10, 2]];
+	  };
+
+	  OreVeinFinder["try"] = function() {
+	    var chance, change, e, id, result, size, size_modifier, target, _i, _len, _ref;
+	    target = [];
+	    _ref = this.data;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      id = e[0], chance = e[1], size = e[2], size_modifier = e[3];
+	      if (Math.random() < chance) {
+	        target.push(e);
+	      }
+	    }
+	    if (target.length > 0) {
+	      result = target[Math.floor(Math.random() * target.length)];
+	      id = result[0], change = result[1];
+	      Game.logger.log("Found " + Game.materialList.material[id].materialName + " vein!");
+	      return Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)));
+	    }
+	  };
+
+	  return OreVeinFinder;
+
+	})();
+
+	module.exports = OreVeinFinder;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $, Processor, View;
+
+	Processor = __webpack_require__(22);
+
+	$ = __webpack_require__(2);
+
+	View = (function() {
+	  function View() {}
+
+	  View.refreshStatus = function() {
+	    $('#time').text("Time: " + Game.time);
+	    $('#mode').text("Now you are " + Game.mode);
+	    return $('#money').text("320,000,000,000,000,000.00 Mn");
+	  };
+
+	  View.getIcon = function(config) {
+	    var e, filter, icon, result, _i, _len;
+	    if (config) {
+	      result = "<svg class='materialIcon' viewBox='0 0 8.46667 8.46667'>";
+	      for (_i = 0, _len = config.length; _i < _len; _i++) {
+	        e = config[_i];
+	        icon = e[0], filter = e[1];
+	        result = result + ("<use xlink:href='#" + icon + "' style='filter: url(#" + filter + ")'></use>");
+	      }
+	      result = result + "</svg>";
+	    } else {
+	      result = "<span class='materialIcon'>NO ICON</span>";
+	    }
+	    return result;
+	  };
+
+	  View.newTooltip = function(content) {};
+
+	  View.moveTooltip = function() {};
+
+	  View.hideTooltip = function() {};
+
+	  View.refreshMaterialList = function() {
+	    var e, list, _fn, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+	    $('#materialStock').html('');
+	    _ref = Game.materialViewList.data;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      list = _ref[_i];
+	      $('#materialStock').append("<div class='materialHeader'>" + list.name + "</div>");
+	      _ref1 = list.list;
+	      _fn = (function(_this) {
+	        return function(e) {
+	          var material, num;
+	          material = Game.materialList.material[e];
+	          num = Game.material[e];
+	          return $('#materialStock').append("<div class='material'>" + (_this.getIcon(material.icon)) + "<div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + (Game.formatNumber(num)) + "</div></div>");
+	        };
+	      })(this);
+	      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	        e = _ref1[_j];
+	        _fn(e);
+	      }
+	    }
+	    return;
+	    $('#materialOverworldPick').html('');
+	    _ref2 = Game.materialOverworldPickViewList;
+	    _results = [];
+	    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+	      e = _ref2[_k];
+	      _results.push(((function(_this) {
+	        return function(e) {
+	          var material, num;
+	          material = Game.materialList.material[e];
+	          num = Game.material[e];
+	          $('#materialOverworldPick').append("<input type=\"checkbox\">" + material.materialName + ": " + num + "<br />");
+	          $('#materialOverworldPick input:last').attr('checked', Game.materialOverworldIgnoreList.indexOf(e) !== -1);
+	          return $('#materialOverworldPick input:last').change(function() {
+	            return Game.changeIgnoreCheckbox($(this).is(':checked'), e);
+	          });
+	        };
+	      })(this))(e));
+	    }
+	    return _results;
+	  };
+
+	  View.refreshOreVeinList = function() {
+	    var e, i, _i, _len, _ref, _results;
+	    $('#oreVein').html('');
+	    _ref = Game.oreVein;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push(((function(_this) {
+	        return function(e, i) {
+	          $('#oreVein').append("<div><button>Mine this vein</button> " + Game.materialList.material[e.materialId].materialName + ": " + e.remain + " / " + e.amount + "</div>");
+	          return $('#oreVein button:last').click(function() {
+	            return Game.tryToStartMining(i);
+	          });
+	        };
+	      })(this))(e, i));
+	    }
+	    return _results;
+	  };
+
+	  View.refreshRecipeList = function() {
+	    var e, i, processor, _fn, _fn1, _fn2, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
+	    $('#recipe').html('');
+	    _ref = Game.processorList.processor;
+	    _results = [];
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      processor = _ref[_i];
+	      if (processor.num() === 0) {
+	        continue;
+	      }
+	      $('#recipe').append("<div class='processor'><div class='processorName'></div><div class='processorRecipe'></div><div class='processorStateList'></div><div class='processorQueueList'></div></div>");
+	      $('.processorName:last').text(processor.name + " (" + (processor.num()) + ")");
+	      if (processor.itemRecipe.length > 0) {
+	        $('.processorRecipe').append("<div class='processorRecipeItem'></div>");
+	        _ref1 = processor.itemRecipe;
+	        _fn = (function(_this) {
+	          return function(processor, e, i) {
+	            $('.processorRecipeItem:last').append("<div class='buttonItem'>" + e.outputItem[0].name + "</div>");
+	            return $('.processorRecipeItem:last .buttonItem:last').click(function() {
+	              return processor.addQueueItemRecipe(i);
+	            });
+	          };
+	        })(this);
+	        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
+	          e = _ref1[i];
+	          _fn(processor, e, i);
+	        }
+	      }
+	      if (processor.materialRecipe.length > 0) {
+	        $('.processorRecipe').append("<div class='processorRecipeMaterial'></div>");
+	        _ref2 = processor.materialRecipe;
+	        _fn1 = (function(_this) {
+	          return function(processor, e, i) {
+	            var amount, id, _ref3;
+	            _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
+	            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	            return $('.processorRecipeMaterial:last .buttonItem:last').click(function() {
+	              return processor.addQueueMaterialRecipe(i, 1);
+	            });
+	          };
+	        })(this);
+	        for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
+	          e = _ref2[i];
+	          _fn1(processor, e, i);
+	        }
+	      }
+	      _ref3 = processor.state;
+	      _fn2 = (function(_this) {
+	        return function(processor, e, i) {
+	          var id;
+	          $('.processorStateList:last').append("<div class='processorState'><div class='processorStateIcon'></div><div class='processorStateRight'><div class='processorStateText'></div><div class='processorStateMeter'></div></div></div>");
+	          $('.processorStateMeter:last').text(i + ": " + e.timeRemain + " / " + e.time);
+	          switch (e.type) {
+	            case Processor.TYPE_ITEM:
+	              return $('.processorStateText:last').text("" + e.recipe.outputItem[0].name);
+	            case Processor.TYPE_MATERIAL:
+	              id = e.recipe.outputMaterial[0][0];
+	              return $('.processorStateText:last').text("" + Game.materialList.material[id].fullName);
+	          }
+	        };
+	      })(this);
+	      for (i = _l = 0, _len3 = _ref3.length; _l < _len3; i = ++_l) {
+	        e = _ref3[i];
+	        _fn2(processor, e, i);
+	      }
+	      _results.push((function() {
+	        var _len4, _m, _ref4, _results1;
+	        _ref4 = processor.queue;
+	        _results1 = [];
+	        for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
+	          e = _ref4[i];
+	          _results1.push(((function(_this) {
+	            return function(processor, e, i) {
+	              var id;
+	              switch (e.type) {
+	                case Processor.TYPE_ITEM:
+	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + e.recipe.outputItem[0].name + "</div>");
+	                case Processor.TYPE_MATERIAL:
+	                  id = e.recipe.outputMaterial[0][0];
+	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	              }
+	            };
+	          })(this))(processor, e, i));
+	        }
+	        return _results1;
+	      }).call(this));
+	    }
+	    return _results;
+	  };
+
+	  View.refreshItemList = function() {
+	    var e, i, _i, _len, _ref, _results;
+	    $('#itemHave').html('');
+	    $('#itemHave').append("<button>Pick</button>");
+	    $('#itemHave button:last').click(function() {
+	      return Game.tryToPick();
+	    });
+	    if (Game.have.shovel) {
+	      $('#itemHave').append("Shovel:<button>" + Game.have.shovel.name + "</button>");
+	      $('#itemHave button:last').click(function() {
+	        return Game.tryToDig();
+	      });
+	    }
+	    if (Game.have.axe) {
+	      $('#itemHave').append("Axe:<button>" + Game.have.axe.name + "</button>");
+	      $('#itemHave button:last').click(function() {
+	        return Game.tryToCut();
+	      });
+	    }
+	    if (Game.have.pickaxe) {
+	      $('#itemHave').append("Pickaxe:<button>" + Game.have.pickaxe.name + "</button>");
+	      $('#itemHave button:last').click(function() {
+	        return Game.tryToGoUnderground();
+	      });
+	    }
+	    $('#itemStock').html('');
+	    _ref = Game.item;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push((function(e, i) {
+	        $('#itemStock').append("<div class='buttonItem'>" + e.name + "</div>");
+	        return $('#itemStock .buttonItem:last').click(function() {
+	          return Game.useItem(i);
+	        });
+	      })(e, i));
+	    }
+	    return _results;
+	  };
+
+	  return View;
+
+	})();
+
+	module.exports = View;
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* Copyright (c) 2012, 2014 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	(function (factory) {
+	  'use strict';
+
+	  if (true) {
+	    // AMD. Register as an anonymous module.
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  } else if (typeof exports === 'object') {
+	    // Node/CommonJS
+	    factory(require('jquery'));
+	  } else {
+	    // Browser globals
+	    factory(jQuery);
+	  }
+	})(function ($) {
+	  'use strict';
+
+	  function getInt(x) {
+	    if (typeof x === 'string') {
+	      return parseInt(x, 10);
+	    } else {
+	      return ~~x;
+	    }
+	  }
+
+	  var defaultSettings = {
+	    wheelSpeed: 1,
+	    wheelPropagation: false,
+	    swipePropagation: true,
+	    minScrollbarLength: null,
+	    maxScrollbarLength: null,
+	    useBothWheelAxes: false,
+	    useKeyboard: true,
+	    suppressScrollX: false,
+	    suppressScrollY: false,
+	    scrollXMarginOffset: 0,
+	    scrollYMarginOffset: 0,
+	    includePadding: false
+	  };
+
+	  var incrementingId = 0;
+	  var eventClassFactory = function () {
+	    var id = incrementingId++;
+	    return function (eventName) {
+	      var className = '.perfect-scrollbar-' + id;
+	      if (typeof eventName === 'undefined') {
+	        return className;
+	      } else {
+	        return eventName + className;
+	      }
+	    };
+	  };
+
+	  var isWebkit = 'WebkitAppearance' in document.documentElement.style;
+
+	  $.fn.perfectScrollbar = function (suppliedSettings, option) {
+
+	    return this.each(function () {
+	      var settings = $.extend(true, {}, defaultSettings);
+	      var $this = $(this);
+	      var isPluginAlive = function () { return !!$this; };
+
+	      if (typeof suppliedSettings === "object") {
+	        // Override default settings with any supplied
+	        $.extend(true, settings, suppliedSettings);
+	      } else {
+	        // If no setting was supplied, then the first param must be the option
+	        option = suppliedSettings;
+	      }
+
+	      // Catch options
+	      if (option === 'update') {
+	        if ($this.data('perfect-scrollbar-update')) {
+	          $this.data('perfect-scrollbar-update')();
+	        }
+	        return $this;
+	      }
+	      else if (option === 'destroy') {
+	        if ($this.data('perfect-scrollbar-destroy')) {
+	          $this.data('perfect-scrollbar-destroy')();
+	        }
+	        return $this;
+	      }
+
+	      if ($this.data('perfect-scrollbar')) {
+	        // if there's already perfect-scrollbar
+	        return $this.data('perfect-scrollbar');
+	      }
+
+
+	      // Or generate new perfectScrollbar
+
+	      $this.addClass('ps-container');
+
+	      var containerWidth;
+	      var containerHeight;
+	      var contentWidth;
+	      var contentHeight;
+
+	      var isRtl = $this.css('direction') === "rtl";
+	      var eventClass = eventClassFactory();
+	      var ownerDocument = this.ownerDocument || document;
+
+	      var $scrollbarXRail = $("<div class='ps-scrollbar-x-rail'>").appendTo($this);
+	      var $scrollbarX = $("<div class='ps-scrollbar-x'>").appendTo($scrollbarXRail);
+	      var scrollbarXActive;
+	      var scrollbarXWidth;
+	      var scrollbarXLeft;
+	      var scrollbarXBottom = getInt($scrollbarXRail.css('bottom'));
+	      var isScrollbarXUsingBottom = scrollbarXBottom === scrollbarXBottom; // !isNaN
+	      var scrollbarXTop = isScrollbarXUsingBottom ? null : getInt($scrollbarXRail.css('top'));
+	      var railBorderXWidth = getInt($scrollbarXRail.css('borderLeftWidth')) + getInt($scrollbarXRail.css('borderRightWidth'));
+	      var railXMarginWidth = getInt($scrollbarXRail.css('marginLeft')) + getInt($scrollbarXRail.css('marginRight'));
+	      var railXWidth;
+
+	      var $scrollbarYRail = $("<div class='ps-scrollbar-y-rail'>").appendTo($this);
+	      var $scrollbarY = $("<div class='ps-scrollbar-y'>").appendTo($scrollbarYRail);
+	      var scrollbarYActive;
+	      var scrollbarYHeight;
+	      var scrollbarYTop;
+	      var scrollbarYRight = getInt($scrollbarYRail.css('right'));
+	      var isScrollbarYUsingRight = scrollbarYRight === scrollbarYRight; // !isNaN
+	      var scrollbarYLeft = isScrollbarYUsingRight ? null : getInt($scrollbarYRail.css('left'));
+	      var railBorderYWidth = getInt($scrollbarYRail.css('borderTopWidth')) + getInt($scrollbarYRail.css('borderBottomWidth'));
+	      var railYMarginHeight = getInt($scrollbarYRail.css('marginTop')) + getInt($scrollbarYRail.css('marginBottom'));
+	      var railYHeight;
+
+	      function updateScrollTop(currentTop, deltaY) {
+	        var newTop = currentTop + deltaY;
+	        var maxTop = containerHeight - scrollbarYHeight;
+
+	        if (newTop < 0) {
+	          scrollbarYTop = 0;
+	        } else if (newTop > maxTop) {
+	          scrollbarYTop = maxTop;
+	        } else {
+	          scrollbarYTop = newTop;
+	        }
+
+	        var scrollTop = getInt(scrollbarYTop * (contentHeight - containerHeight) / (containerHeight - scrollbarYHeight));
+	        $this.scrollTop(scrollTop);
+	      }
+
+	      function updateScrollLeft(currentLeft, deltaX) {
+	        var newLeft = currentLeft + deltaX;
+	        var maxLeft = containerWidth - scrollbarXWidth;
+
+	        if (newLeft < 0) {
+	          scrollbarXLeft = 0;
+	        } else if (newLeft > maxLeft) {
+	          scrollbarXLeft = maxLeft;
+	        } else {
+	          scrollbarXLeft = newLeft;
+	        }
+
+	        var scrollLeft = getInt(scrollbarXLeft * (contentWidth - containerWidth) / (containerWidth - scrollbarXWidth));
+	        $this.scrollLeft(scrollLeft);
+	      }
+
+	      function getThumbSize(thumbSize) {
+	        if (settings.minScrollbarLength) {
+	          thumbSize = Math.max(thumbSize, settings.minScrollbarLength);
+	        }
+	        if (settings.maxScrollbarLength) {
+	          thumbSize = Math.min(thumbSize, settings.maxScrollbarLength);
+	        }
+	        return thumbSize;
+	      }
+
+	      function updateCss() {
+	        var xRailOffset = {width: railXWidth};
+	        if (isRtl) {
+	          xRailOffset.left = $this.scrollLeft() + containerWidth - contentWidth;
+	        } else {
+	          xRailOffset.left = $this.scrollLeft();
+	        }
+	        if (isScrollbarXUsingBottom) {
+	          xRailOffset.bottom = scrollbarXBottom - $this.scrollTop();
+	        } else {
+	          xRailOffset.top = scrollbarXTop + $this.scrollTop();
+	        }
+	        $scrollbarXRail.css(xRailOffset);
+
+	        var railYOffset = {top: $this.scrollTop(), height: railYHeight};
+
+	        if (isScrollbarYUsingRight) {
+	          if (isRtl) {
+	            railYOffset.right = contentWidth - $this.scrollLeft() - scrollbarYRight - $scrollbarY.outerWidth();
+	          } else {
+	            railYOffset.right = scrollbarYRight - $this.scrollLeft();
+	          }
+	        } else {
+	          if (isRtl) {
+	            railYOffset.left = $this.scrollLeft() + containerWidth * 2 - contentWidth - scrollbarYLeft - $scrollbarY.outerWidth();
+	          } else {
+	            railYOffset.left = scrollbarYLeft + $this.scrollLeft();
+	          }
+	        }
+	        $scrollbarYRail.css(railYOffset);
+
+	        $scrollbarX.css({left: scrollbarXLeft, width: scrollbarXWidth - railBorderXWidth});
+	        $scrollbarY.css({top: scrollbarYTop, height: scrollbarYHeight - railBorderYWidth});
+	      }
+
+	      function updateGeometry() {
+	        // Hide scrollbars not to affect scrollWidth and scrollHeight
+	        $this.removeClass('ps-active-x');
+	        $this.removeClass('ps-active-y');
+
+	        containerWidth = settings.includePadding ? $this.innerWidth() : $this.width();
+	        containerHeight = settings.includePadding ? $this.innerHeight() : $this.height();
+	        contentWidth = $this.prop('scrollWidth');
+	        contentHeight = $this.prop('scrollHeight');
+
+	        if (!settings.suppressScrollX && containerWidth + settings.scrollXMarginOffset < contentWidth) {
+	          scrollbarXActive = true;
+	          railXWidth = containerWidth - railXMarginWidth;
+	          scrollbarXWidth = getThumbSize(getInt(railXWidth * containerWidth / contentWidth));
+	          scrollbarXLeft = getInt($this.scrollLeft() * (railXWidth - scrollbarXWidth) / (contentWidth - containerWidth));
+	        } else {
+	          scrollbarXActive = false;
+	          scrollbarXWidth = 0;
+	          scrollbarXLeft = 0;
+	          $this.scrollLeft(0);
+	        }
+
+	        if (!settings.suppressScrollY && containerHeight + settings.scrollYMarginOffset < contentHeight) {
+	          scrollbarYActive = true;
+	          railYHeight = containerHeight - railYMarginHeight;
+	          scrollbarYHeight = getThumbSize(getInt(railYHeight * containerHeight / contentHeight));
+	          scrollbarYTop = getInt($this.scrollTop() * (railYHeight - scrollbarYHeight) / (contentHeight - containerHeight));
+	        } else {
+	          scrollbarYActive = false;
+	          scrollbarYHeight = 0;
+	          scrollbarYTop = 0;
+	          $this.scrollTop(0);
+	        }
+
+	        if (scrollbarXLeft >= railXWidth - scrollbarXWidth) {
+	          scrollbarXLeft = railXWidth - scrollbarXWidth;
+	        }
+	        if (scrollbarYTop >= railYHeight - scrollbarYHeight) {
+	          scrollbarYTop = railYHeight - scrollbarYHeight;
+	        }
+
+	        updateCss();
+
+	        if (scrollbarXActive) {
+	          $this.addClass('ps-active-x');
+	        }
+	        if (scrollbarYActive) {
+	          $this.addClass('ps-active-y');
+	        }
+	      }
+
+	      function bindMouseScrollXHandler() {
+	        var currentLeft;
+	        var currentPageX;
+
+	        var mouseMoveHandler = function (e) {
+	          updateScrollLeft(currentLeft, e.pageX - currentPageX);
+	          updateGeometry();
+	          e.stopPropagation();
+	          e.preventDefault();
+	        };
+
+	        var mouseUpHandler = function (e) {
+	          $scrollbarXRail.removeClass('in-scrolling');
+	          $(ownerDocument).unbind(eventClass('mousemove'), mouseMoveHandler);
+	        };
+
+	        $scrollbarX.bind(eventClass('mousedown'), function (e) {
+	          currentPageX = e.pageX;
+	          currentLeft = $scrollbarX.position().left;
+	          $scrollbarXRail.addClass('in-scrolling');
+
+	          $(ownerDocument).bind(eventClass('mousemove'), mouseMoveHandler);
+	          $(ownerDocument).one(eventClass('mouseup'), mouseUpHandler);
+
+	          e.stopPropagation();
+	          e.preventDefault();
+	        });
+
+	        currentLeft =
+	        currentPageX = null;
+	      }
+
+	      function bindMouseScrollYHandler() {
+	        var currentTop;
+	        var currentPageY;
+
+	        var mouseMoveHandler = function (e) {
+	          updateScrollTop(currentTop, e.pageY - currentPageY);
+	          updateGeometry();
+	          e.stopPropagation();
+	          e.preventDefault();
+	        };
+
+	        var mouseUpHandler = function (e) {
+	          $scrollbarYRail.removeClass('in-scrolling');
+	          $(ownerDocument).unbind(eventClass('mousemove'), mouseMoveHandler);
+	        };
+
+	        $scrollbarY.bind(eventClass('mousedown'), function (e) {
+	          currentPageY = e.pageY;
+	          currentTop = $scrollbarY.position().top;
+	          $scrollbarYRail.addClass('in-scrolling');
+
+	          $(ownerDocument).bind(eventClass('mousemove'), mouseMoveHandler);
+	          $(ownerDocument).one(eventClass('mouseup'), mouseUpHandler);
+
+	          e.stopPropagation();
+	          e.preventDefault();
+	        });
+
+	        currentTop =
+	        currentPageY = null;
+	      }
+
+	      function shouldPreventWheel(deltaX, deltaY) {
+	        var scrollTop = $this.scrollTop();
+	        if (deltaX === 0) {
+	          if (!scrollbarYActive) {
+	            return false;
+	          }
+	          if ((scrollTop === 0 && deltaY > 0) || (scrollTop >= contentHeight - containerHeight && deltaY < 0)) {
+	            return !settings.wheelPropagation;
+	          }
+	        }
+
+	        var scrollLeft = $this.scrollLeft();
+	        if (deltaY === 0) {
+	          if (!scrollbarXActive) {
+	            return false;
+	          }
+	          if ((scrollLeft === 0 && deltaX < 0) || (scrollLeft >= contentWidth - containerWidth && deltaX > 0)) {
+	            return !settings.wheelPropagation;
+	          }
+	        }
+	        return true;
+	      }
+
+	      function shouldPreventSwipe(deltaX, deltaY) {
+	        var scrollTop = $this.scrollTop();
+	        var scrollLeft = $this.scrollLeft();
+	        var magnitudeX = Math.abs(deltaX);
+	        var magnitudeY = Math.abs(deltaY);
+
+	        if (magnitudeY > magnitudeX) {
+	          // user is perhaps trying to swipe up/down the page
+
+	          if (((deltaY < 0) && (scrollTop === contentHeight - containerHeight)) ||
+	              ((deltaY > 0) && (scrollTop === 0))) {
+	            return !settings.swipePropagation;
+	          }
+	        } else if (magnitudeX > magnitudeY) {
+	          // user is perhaps trying to swipe left/right across the page
+
+	          if (((deltaX < 0) && (scrollLeft === contentWidth - containerWidth)) ||
+	              ((deltaX > 0) && (scrollLeft === 0))) {
+	            return !settings.swipePropagation;
+	          }
+	        }
+
+	        return true;
+	      }
+
+	      function bindMouseWheelHandler() {
+	        var shouldPrevent = false;
+
+	        function getDeltaFromEvent(e) {
+	          var deltaX = e.originalEvent.deltaX;
+	          var deltaY = -1 * e.originalEvent.deltaY;
+
+	          if (typeof deltaX === "undefined" || typeof deltaY === "undefined") {
+	            // OS X Safari
+	            deltaX = -1 * e.originalEvent.wheelDeltaX / 6;
+	            deltaY = e.originalEvent.wheelDeltaY / 6;
+	          }
+
+	          if (e.originalEvent.deltaMode && e.originalEvent.deltaMode === 1) {
+	            // Firefox in deltaMode 1: Line scrolling
+	            deltaX *= 10;
+	            deltaY *= 10;
+	          }
+
+	          if (deltaX !== deltaX && deltaY !== deltaY/* NaN checks */) {
+	            // IE in some mouse drivers
+	            deltaX = 0;
+	            deltaY = e.originalEvent.wheelDelta;
+	          }
+
+	          return [deltaX, deltaY];
+	        }
+
+	        function mousewheelHandler(e) {
+	          // FIXME: this is a quick fix for the select problem in FF and IE.
+	          // If there comes an effective way to deal with the problem,
+	          // this lines should be removed.
+	          if (!isWebkit && $this.find('select:focus').length > 0) {
+	            return;
+	          }
+
+	          var delta = getDeltaFromEvent(e);
+
+	          var deltaX = delta[0];
+	          var deltaY = delta[1];
+
+	          shouldPrevent = false;
+	          if (!settings.useBothWheelAxes) {
+	            // deltaX will only be used for horizontal scrolling and deltaY will
+	            // only be used for vertical scrolling - this is the default
+	            $this.scrollTop($this.scrollTop() - (deltaY * settings.wheelSpeed));
+	            $this.scrollLeft($this.scrollLeft() + (deltaX * settings.wheelSpeed));
+	          } else if (scrollbarYActive && !scrollbarXActive) {
+	            // only vertical scrollbar is active and useBothWheelAxes option is
+	            // active, so let's scroll vertical bar using both mouse wheel axes
+	            if (deltaY) {
+	              $this.scrollTop($this.scrollTop() - (deltaY * settings.wheelSpeed));
+	            } else {
+	              $this.scrollTop($this.scrollTop() + (deltaX * settings.wheelSpeed));
+	            }
+	            shouldPrevent = true;
+	          } else if (scrollbarXActive && !scrollbarYActive) {
+	            // useBothWheelAxes and only horizontal bar is active, so use both
+	            // wheel axes for horizontal bar
+	            if (deltaX) {
+	              $this.scrollLeft($this.scrollLeft() + (deltaX * settings.wheelSpeed));
+	            } else {
+	              $this.scrollLeft($this.scrollLeft() - (deltaY * settings.wheelSpeed));
+	            }
+	            shouldPrevent = true;
+	          }
+
+	          updateGeometry();
+
+	          shouldPrevent = (shouldPrevent || shouldPreventWheel(deltaX, deltaY));
+	          if (shouldPrevent) {
+	            e.stopPropagation();
+	            e.preventDefault();
+	          }
+	        }
+
+	        if (typeof window.onwheel !== "undefined") {
+	          $this.bind(eventClass('wheel'), mousewheelHandler);
+	        } else if (typeof window.onmousewheel !== "undefined") {
+	          $this.bind(eventClass('mousewheel'), mousewheelHandler);
+	        }
+	      }
+
+	      function bindKeyboardHandler() {
+	        var hovered = false;
+	        $this.bind(eventClass('mouseenter'), function (e) {
+	          hovered = true;
+	        });
+	        $this.bind(eventClass('mouseleave'), function (e) {
+	          hovered = false;
+	        });
+
+	        var shouldPrevent = false;
+	        $(ownerDocument).bind(eventClass('keydown'), function (e) {
+	          if (e.isDefaultPrevented && e.isDefaultPrevented()) {
+	            return;
+	          }
+
+	          if (!hovered) {
+	            return;
+	          }
+
+	          var activeElement = document.activeElement ? document.activeElement : ownerDocument.activeElement;
+	          // go deeper if element is a webcomponent
+	          while (activeElement.shadowRoot) {
+	            activeElement = activeElement.shadowRoot.activeElement;
+	          }
+	          if ($(activeElement).is(":input,[contenteditable]")) {
+	            return;
+	          }
+
+	          var deltaX = 0;
+	          var deltaY = 0;
+
+	          switch (e.which) {
+	          case 37: // left
+	            deltaX = -30;
+	            break;
+	          case 38: // up
+	            deltaY = 30;
+	            break;
+	          case 39: // right
+	            deltaX = 30;
+	            break;
+	          case 40: // down
+	            deltaY = -30;
+	            break;
+	          case 33: // page up
+	            deltaY = 90;
+	            break;
+	          case 32: // space bar
+	          case 34: // page down
+	            deltaY = -90;
+	            break;
+	          case 35: // end
+	            if (e.ctrlKey) {
+	              deltaY = -contentHeight;
+	            } else {
+	              deltaY = -containerHeight;
+	            }
+	            break;
+	          case 36: // home
+	            if (e.ctrlKey) {
+	              deltaY = $this.scrollTop();
+	            } else {
+	              deltaY = containerHeight;
+	            }
+	            break;
+	          default:
+	            return;
+	          }
+
+	          $this.scrollTop($this.scrollTop() - deltaY);
+	          $this.scrollLeft($this.scrollLeft() + deltaX);
+
+	          shouldPrevent = shouldPreventWheel(deltaX, deltaY);
+	          if (shouldPrevent) {
+	            e.preventDefault();
+	          }
+	        });
+	      }
+
+	      function bindRailClickHandler() {
+	        function stopPropagation(e) { e.stopPropagation(); }
+
+	        $scrollbarY.bind(eventClass('click'), stopPropagation);
+	        $scrollbarYRail.bind(eventClass('click'), function (e) {
+	          var halfOfScrollbarLength = getInt(scrollbarYHeight / 2);
+	          var positionTop = e.pageY - $scrollbarYRail.offset().top - halfOfScrollbarLength;
+	          var maxPositionTop = containerHeight - scrollbarYHeight;
+	          var positionRatio = positionTop / maxPositionTop;
+
+	          if (positionRatio < 0) {
+	            positionRatio = 0;
+	          } else if (positionRatio > 1) {
+	            positionRatio = 1;
+	          }
+
+	          $this.scrollTop((contentHeight - containerHeight) * positionRatio);
+	        });
+
+	        $scrollbarX.bind(eventClass('click'), stopPropagation);
+	        $scrollbarXRail.bind(eventClass('click'), function (e) {
+	          var halfOfScrollbarLength = getInt(scrollbarXWidth / 2);
+	          var positionLeft = e.pageX - $scrollbarXRail.offset().left - halfOfScrollbarLength;
+	          var maxPositionLeft = containerWidth - scrollbarXWidth;
+	          var positionRatio = positionLeft / maxPositionLeft;
+
+	          if (positionRatio < 0) {
+	            positionRatio = 0;
+	          } else if (positionRatio > 1) {
+	            positionRatio = 1;
+	          }
+
+	          $this.scrollLeft((contentWidth - containerWidth) * positionRatio);
+	        });
+	      }
+
+	      function bindSelectionHandler() {
+	        function getRangeNode() {
+	          var selection = window.getSelection ? window.getSelection() :
+	                          document.getSlection ? document.getSlection() : {rangeCount: 0};
+	          if (selection.rangeCount === 0) {
+	            return null;
+	          } else {
+	            return selection.getRangeAt(0).commonAncestorContainer;
+	          }
+	        }
+
+	        var scrollingLoop = null;
+	        var scrollDiff = {top: 0, left: 0};
+	        function startScrolling() {
+	          if (!scrollingLoop) {
+	            scrollingLoop = setInterval(function () {
+	              if (!isPluginAlive()) {
+	                clearInterval(scrollingLoop);
+	                return;
+	              }
+
+	              $this.scrollTop($this.scrollTop() + scrollDiff.top);
+	              $this.scrollLeft($this.scrollLeft() + scrollDiff.left);
+	              updateGeometry();
+	            }, 50); // every .1 sec
+	          }
+	        }
+	        function stopScrolling() {
+	          if (scrollingLoop) {
+	            clearInterval(scrollingLoop);
+	            scrollingLoop = null;
+	          }
+	          $scrollbarXRail.removeClass('in-scrolling');
+	          $scrollbarYRail.removeClass('in-scrolling');
+	        }
+
+	        var isSelected = false;
+	        $(ownerDocument).bind(eventClass('selectionchange'), function (e) {
+	          if ($.contains($this[0], getRangeNode())) {
+	            isSelected = true;
+	          } else {
+	            isSelected = false;
+	            stopScrolling();
+	          }
+	        });
+	        $(window).bind(eventClass('mouseup'), function (e) {
+	          if (isSelected) {
+	            isSelected = false;
+	            stopScrolling();
+	          }
+	        });
+
+	        $(window).bind(eventClass('mousemove'), function (e) {
+	          if (isSelected) {
+	            var mousePosition = {x: e.pageX, y: e.pageY};
+	            var containerOffset = $this.offset();
+	            var containerGeometry = {
+	              left: containerOffset.left,
+	              right: containerOffset.left + $this.outerWidth(),
+	              top: containerOffset.top,
+	              bottom: containerOffset.top + $this.outerHeight()
+	            };
+
+	            if (mousePosition.x < containerGeometry.left + 3) {
+	              scrollDiff.left = -5;
+	              $scrollbarXRail.addClass('in-scrolling');
+	            } else if (mousePosition.x > containerGeometry.right - 3) {
+	              scrollDiff.left = 5;
+	              $scrollbarXRail.addClass('in-scrolling');
+	            } else {
+	              scrollDiff.left = 0;
+	            }
+
+	            if (mousePosition.y < containerGeometry.top + 3) {
+	              if (containerGeometry.top + 3 - mousePosition.y < 5) {
+	                scrollDiff.top = -5;
+	              } else {
+	                scrollDiff.top = -20;
+	              }
+	              $scrollbarYRail.addClass('in-scrolling');
+	            } else if (mousePosition.y > containerGeometry.bottom - 3) {
+	              if (mousePosition.y - containerGeometry.bottom + 3 < 5) {
+	                scrollDiff.top = 5;
+	              } else {
+	                scrollDiff.top = 20;
+	              }
+	              $scrollbarYRail.addClass('in-scrolling');
+	            } else {
+	              scrollDiff.top = 0;
+	            }
+
+	            if (scrollDiff.top === 0 && scrollDiff.left === 0) {
+	              stopScrolling();
+	            } else {
+	              startScrolling();
+	            }
+	          }
+	        });
+	      }
+
+	      function bindTouchHandler(supportsTouch, supportsIePointer) {
+	        function applyTouchMove(differenceX, differenceY) {
+	          $this.scrollTop($this.scrollTop() - differenceY);
+	          $this.scrollLeft($this.scrollLeft() - differenceX);
+
+	          updateGeometry();
+	        }
+
+	        var startOffset = {};
+	        var startTime = 0;
+	        var speed = {};
+	        var easingLoop = null;
+	        var inGlobalTouch = false;
+	        var inLocalTouch = false;
+
+	        function globalTouchStart(e) {
+	          inGlobalTouch = true;
+	        }
+	        function globalTouchEnd(e) {
+	          inGlobalTouch = false;
+	        }
+
+	        function getTouch(e) {
+	          if (e.originalEvent.targetTouches) {
+	            return e.originalEvent.targetTouches[0];
+	          } else {
+	            // Maybe IE pointer
+	            return e.originalEvent;
+	          }
+	        }
+	        function shouldHandle(e) {
+	          var event = e.originalEvent;
+	          if (event.targetTouches && event.targetTouches.length === 1) {
+	            return true;
+	          }
+	          if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== event.MSPOINTER_TYPE_MOUSE) {
+	            return true;
+	          }
+	          return false;
+	        }
+	        function touchStart(e) {
+	          if (shouldHandle(e)) {
+	            inLocalTouch = true;
+
+	            var touch = getTouch(e);
+
+	            startOffset.pageX = touch.pageX;
+	            startOffset.pageY = touch.pageY;
+
+	            startTime = (new Date()).getTime();
+
+	            if (easingLoop !== null) {
+	              clearInterval(easingLoop);
+	            }
+
+	            e.stopPropagation();
+	          }
+	        }
+	        function touchMove(e) {
+	          if (!inGlobalTouch && inLocalTouch && shouldHandle(e)) {
+	            var touch = getTouch(e);
+
+	            var currentOffset = {pageX: touch.pageX, pageY: touch.pageY};
+
+	            var differenceX = currentOffset.pageX - startOffset.pageX;
+	            var differenceY = currentOffset.pageY - startOffset.pageY;
+
+	            applyTouchMove(differenceX, differenceY);
+	            startOffset = currentOffset;
+
+	            var currentTime = (new Date()).getTime();
+
+	            var timeGap = currentTime - startTime;
+	            if (timeGap > 0) {
+	              speed.x = differenceX / timeGap;
+	              speed.y = differenceY / timeGap;
+	              startTime = currentTime;
+	            }
+
+	            if (shouldPreventSwipe(differenceX, differenceY)) {
+	              e.stopPropagation();
+	              e.preventDefault();
+	            }
+	          }
+	        }
+	        function touchEnd(e) {
+	          if (!inGlobalTouch && inLocalTouch) {
+	            inLocalTouch = false;
+
+	            clearInterval(easingLoop);
+	            easingLoop = setInterval(function () {
+	              if (!isPluginAlive()) {
+	                clearInterval(easingLoop);
+	                return;
+	              }
+
+	              if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
+	                clearInterval(easingLoop);
+	                return;
+	              }
+
+	              applyTouchMove(speed.x * 30, speed.y * 30);
+
+	              speed.x *= 0.8;
+	              speed.y *= 0.8;
+	            }, 10);
+	          }
+	        }
+
+	        if (supportsTouch) {
+	          $(window).bind(eventClass("touchstart"), globalTouchStart);
+	          $(window).bind(eventClass("touchend"), globalTouchEnd);
+	          $this.bind(eventClass("touchstart"), touchStart);
+	          $this.bind(eventClass("touchmove"), touchMove);
+	          $this.bind(eventClass("touchend"), touchEnd);
+	        }
+
+	        if (supportsIePointer) {
+	          if (window.PointerEvent) {
+	            $(window).bind(eventClass("pointerdown"), globalTouchStart);
+	            $(window).bind(eventClass("pointerup"), globalTouchEnd);
+	            $this.bind(eventClass("pointerdown"), touchStart);
+	            $this.bind(eventClass("pointermove"), touchMove);
+	            $this.bind(eventClass("pointerup"), touchEnd);
+	          } else if (window.MSPointerEvent) {
+	            $(window).bind(eventClass("MSPointerDown"), globalTouchStart);
+	            $(window).bind(eventClass("MSPointerUp"), globalTouchEnd);
+	            $this.bind(eventClass("MSPointerDown"), touchStart);
+	            $this.bind(eventClass("MSPointerMove"), touchMove);
+	            $this.bind(eventClass("MSPointerUp"), touchEnd);
+	          }
+	        }
+	      }
+
+	      function bindScrollHandler() {
+	        $this.bind(eventClass('scroll'), function (e) {
+	          updateGeometry();
+	        });
+	      }
+
+	      function destroy() {
+	        $this.unbind(eventClass());
+	        $(window).unbind(eventClass());
+	        $(ownerDocument).unbind(eventClass());
+	        $this.data('perfect-scrollbar', null);
+	        $this.data('perfect-scrollbar-update', null);
+	        $this.data('perfect-scrollbar-destroy', null);
+	        $scrollbarX.remove();
+	        $scrollbarY.remove();
+	        $scrollbarXRail.remove();
+	        $scrollbarYRail.remove();
+
+	        // clean all variables
+	        $this =
+	        $scrollbarXRail =
+	        $scrollbarYRail =
+	        $scrollbarX =
+	        $scrollbarY =
+	        scrollbarXActive =
+	        scrollbarYActive =
+	        containerWidth =
+	        containerHeight =
+	        contentWidth =
+	        contentHeight =
+	        scrollbarXWidth =
+	        scrollbarXLeft =
+	        scrollbarXBottom =
+	        isScrollbarXUsingBottom =
+	        scrollbarXTop =
+	        scrollbarYHeight =
+	        scrollbarYTop =
+	        scrollbarYRight =
+	        isScrollbarYUsingRight =
+	        scrollbarYLeft =
+	        isRtl =
+	        eventClass = null;
+	      }
+
+	      var supportsTouch = (('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch);
+	      var supportsIePointer = window.navigator.msMaxTouchPoints !== null;
+
+	      function initialize() {
+	        updateGeometry();
+	        bindScrollHandler();
+	        bindMouseScrollXHandler();
+	        bindMouseScrollYHandler();
+	        bindRailClickHandler();
+	        bindSelectionHandler();
+	        bindMouseWheelHandler();
+
+	        if (supportsTouch || supportsIePointer) {
+	          bindTouchHandler(supportsTouch, supportsIePointer);
+	        }
+	        if (settings.useKeyboard) {
+	          bindKeyboardHandler();
+	        }
+	        $this.data('perfect-scrollbar', $this);
+	        $this.data('perfect-scrollbar-update', updateGeometry);
+	        $this.data('perfect-scrollbar-destroy', destroy);
+	      }
+
+	      initialize();
+
+	      return $this;
+	    });
+	  };
+	});
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialOre,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Material = __webpack_require__(3);
+
+	MaterialOre = (function(_super) {
+	  __extends(MaterialOre, _super);
+
+	  function MaterialOre(materialName) {
+	    MaterialOre.__super__.constructor.call(this, materialName + " Ore", materialName, null);
+	  }
+
+	  return MaterialOre;
+
+	})(Material);
+
+	module.exports = MaterialOre;
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialRaw,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Material = __webpack_require__(3);
+
+	MaterialRaw = (function(_super) {
+	  __extends(MaterialRaw, _super);
+
+	  function MaterialRaw(materialName) {
+	    MaterialRaw.__super__.constructor.call(this, "Raw " + materialName, materialName, [['sIngot', 'sMaterialGold']]);
+	  }
+
+	  return MaterialRaw;
+
+	})(Material);
+
+	module.exports = MaterialRaw;
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Material, MaterialNormal,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Material = __webpack_require__(3);
+
+	MaterialNormal = (function(_super) {
+	  __extends(MaterialNormal, _super);
+
+	  function MaterialNormal(materialName, processing) {
+	    MaterialNormal.__super__.constructor.call(this, materialName, materialName, processing);
+	  }
+
+	  return MaterialNormal;
+
+	})(Material);
+
+	module.exports = MaterialNormal;
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Item = __webpack_require__(23);
+
+	ItemTool = (function(_super) {
+	  __extends(ItemTool, _super);
+
+	  function ItemTool(type, name, _at_material, _at_modifier) {
+	    this.material = _at_material;
+	    this.modifier = _at_modifier;
+	    ItemTool.__super__.constructor.call(this, type, name);
+	  }
+
+	  return ItemTool;
+
+	})(Item);
+
+	ItemShovel = (function(_super) {
+	  __extends(ItemShovel, _super);
+
+	  function ItemShovel(name, material, modifier) {
+	    ItemShovel.__super__.constructor.call(this, Game.itemList.TYPE_SHOVEL, name, material, modifier);
+	  }
+
+	  ItemShovel.prototype.use = function() {
+	    Game.have.shovel = this;
+	    return true;
+	  };
+
+	  return ItemShovel;
+
+	})(ItemTool);
+
+	ItemAxe = (function(_super) {
+	  __extends(ItemAxe, _super);
+
+	  function ItemAxe(name, material, modifier) {
+	    ItemAxe.__super__.constructor.call(this, Game.itemList.TYPE_AXE, name, material, modifier);
+	  }
+
+	  ItemAxe.prototype.use = function() {
+	    Game.have.axe = this;
+	    return true;
+	  };
+
+	  return ItemAxe;
+
+	})(ItemTool);
+
+	ItemPickaxe = (function(_super) {
+	  __extends(ItemPickaxe, _super);
+
+	  function ItemPickaxe(name, material, modifier) {
+	    ItemPickaxe.__super__.constructor.call(this, Game.itemList.TYPE_PICKAXE, name, material, modifier);
+	  }
+
+	  ItemPickaxe.prototype.use = function() {
+	    Game.have.pickaxe = this;
+	    return true;
+	  };
+
+	  return ItemPickaxe;
+
+	})(ItemTool);
+
+	module.exports = {
+	  ItemShovel: ItemShovel,
+	  ItemAxe: ItemAxe,
+	  ItemPickaxe: ItemPickaxe
+	};
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Item, ItemProcessor,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Item = __webpack_require__(23);
+
+	ItemProcessor = (function(_super) {
+	  __extends(ItemProcessor, _super);
+
+	  function ItemProcessor(name, _at_processorId) {
+	    this.processorId = _at_processorId;
+	    ItemProcessor.__super__.constructor.call(this, Game.itemList.TYPE_PROCESSOR, name);
+	  }
+
+	  ItemProcessor.prototype.use = function() {
+	    Game.processorList.processor[this.processorId].add();
+	    Game.view.refreshRecipeList();
+	    return true;
+	  };
+
+	  return ItemProcessor;
+
+	})(Item);
+
+	module.exports = ItemProcessor;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor, ProcessorToolbox, RecipeItem, RecipeMaterial,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Processor = __webpack_require__(22);
+
+	RecipeMaterial = __webpack_require__(24);
+
+	RecipeItem = __webpack_require__(25);
+
+	ProcessorToolbox = (function(_super) {
+	  __extends(ProcessorToolbox, _super);
+
+	  ProcessorToolbox.prototype.name = 'Tool Box';
+
+	  function ProcessorToolbox() {
+	    var il, ml;
+	    ProcessorToolbox.__super__.constructor.call(this);
+	    this.add();
+	    il = Game.itemList;
+	    ml = Game.materialList;
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)];
+	    this.materialRecipe = [];
+	  }
+
+	  return ProcessorToolbox;
+
+	})(Processor);
+
+	module.exports = ProcessorToolbox;
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor, ProcessorHand, RecipeItem, RecipeMaterial,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Processor = __webpack_require__(22);
+
+	RecipeMaterial = __webpack_require__(24);
+
+	RecipeItem = __webpack_require__(25);
+
+	ProcessorHand = (function(_super) {
+	  __extends(ProcessorHand, _super);
+
+	  ProcessorHand.prototype.name = 'Hand';
+
+	  function ProcessorHand() {
+	    var il, ml;
+	    ProcessorHand.__super__.constructor.call(this);
+	    this.add();
+	    il = Game.itemList;
+	    ml = Game.materialList;
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null), new RecipeItem([], [[ml.id.woodStick, 50], [ml.id.stone, 50]], 20, null, [il.item[il.id.furnace1]], null)];
+	    this.materialRecipe = [];
+	  }
+
+	  return ProcessorHand;
+
+	})(Processor);
+
+	module.exports = ProcessorHand;
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor, ProcessorFurnace, RecipeItem, RecipeMaterial,
+	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  __hasProp = {}.hasOwnProperty;
+
+	Processor = __webpack_require__(22);
+
+	RecipeMaterial = __webpack_require__(24);
+
+	RecipeItem = __webpack_require__(25);
+
+	ProcessorFurnace = (function(_super) {
+	  __extends(ProcessorFurnace, _super);
+
+	  ProcessorFurnace.prototype.name = 'Furnace';
+
+	  function ProcessorFurnace() {
+	    var il, ml;
+	    ProcessorFurnace.__super__.constructor.call(this);
+	    this.add();
+	    il = Game.itemList;
+	    ml = Game.materialList;
+	    this.itemRecipe = [];
+	    this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]]), new RecipeMaterial([[ml.id.oreCopper, 1]], 10, null, [[ml.id.rawCopper, 1]])];
+	  }
+
+	  return ProcessorFurnace;
+
+	})(Processor);
+
+	module.exports = ProcessorFurnace;
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Processor;
+
+	Processor = (function() {
+	  Processor.TYPE_NONE = 0;
+
+	  Processor.TYPE_ITEM = 1;
+
+	  Processor.TYPE_MATERIAL = 2;
+
+	  Processor.prototype.name = void 0;
+
+	  Processor.prototype.itemRecipe = [];
+
+	  Processor.prototype.materialRecipe = [];
+
+	  Processor.prototype.num = function() {
+	    return this.state.length;
+	  };
+
+	  Processor.prototype.add = function() {
+	    return this.state.push({
+	      type: Processor.TYPE_NONE,
+	      recipe: null,
+	      time: null,
+	      timeRemain: null
+	    });
+	  };
+
+	  Processor.prototype.remove = function() {
+	    return this.state.splice(this.num - 1, 1);
+	  };
+
+	  function Processor() {
+	    this.state = [];
+	    this.queue = [];
+	  }
+
+	  Processor.prototype.update = function() {
+	    var add, amount, e, i, materialId, output, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
+	    _ref = this.state;
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      if (e.type !== Processor.TYPE_NONE) {
+	        e.timeRemain -= 1;
+	        if (e.timeRemain === 0) {
+	          switch (e.type) {
+	            case Processor.TYPE_ITEM:
+	              _ref1 = e.recipe.outputItem;
+	              for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	                output = _ref1[_j];
+	                Game.item.push(output);
+	              }
+	              if (e.recipe.outputMaterial) {
+	                _ref2 = e.recipe.outputMaterial;
+	                for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+	                  output = _ref2[_k];
+	                  materialId = output[0], amount = output[1];
+	                  Game.material[materialId] += amount;
+	                }
+	              }
+	              break;
+	            case Processor.TYPE_MATERIAL:
+	              _ref3 = e.recipe.outputMaterial;
+	              for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+	                output = _ref3[_l];
+	                materialId = output[0], amount = output[1];
+	                Game.material[materialId] += amount;
+	              }
+	          }
+	          this.state[i] = {
+	            type: Processor.TYPE_NONE,
+	            recipe: null,
+	            time: null,
+	            timeRemain: null
+	          };
+	          Game.logger.log('Craft complete');
+	          Game.view.refreshRecipeList();
+	          Game.view.refreshItemList();
+	          Game.view.refreshMaterialList();
+	          return true;
+	        }
+	      }
+	      _ref4 = this.state;
+	      for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
+	        e = _ref4[i];
+	        if (this.queue.length > 0) {
+	          if (e.type === Processor.TYPE_NONE) {
+	            add = this.queue[0];
+	            this.state[i].type = add.type;
+	            this.state[i].recipe = add.recipe;
+	            this.state[i].time = add.recipe.time;
+	            this.state[i].timeRemain = add.recipe.time;
+	            if (add.amount) {
+	              add.amount -= 1;
+	              if (add.amount === 0) {
+	                this.queue.splice(0, 1);
+	              }
+	            } else {
+	              this.queue.splice(0, 1);
+	            }
+	          }
+	        }
+	      }
+	    }
+	    return Game.view.refreshRecipeList();
+	  };
+
+	  Processor.prototype.addQueueItemRecipe = function(index) {
+	    var amount, e, materialId, recipe, _i, _j, _len, _len1, _ref, _ref1;
+	    recipe = this.itemRecipe[index];
+	    _ref = recipe.requiredMaterial;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      e = _ref[_i];
+	      materialId = e[0], amount = e[1];
+	      if (Game.material[materialId] < amount) {
+	        Game.logger.log('Not enough material');
+	        return false;
+	      }
+	    }
+	    _ref1 = recipe.requiredMaterial;
+	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	      e = _ref1[_j];
+	      materialId = e[0], amount = e[1];
+	      Game.material[materialId] -= amount;
+	    }
+	    this.queue.push({
+	      type: Processor.TYPE_ITEM,
+	      recipe: recipe,
+	      amount: null
+	    });
+	    Game.view.refreshItemList();
+	    Game.view.refreshMaterialList();
+	    Game.view.refreshRecipeList();
+	    return true;
+	  };
+
+	  Processor.prototype.addQueueMaterialRecipe = function(index, times) {
+	    var amount, materialId, recipe, source, _i, _j, _len, _len1, _ref, _ref1;
+	    recipe = this.materialRecipe[index];
+	    _ref = recipe.requiredMaterial;
+	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	      source = _ref[_i];
+	      materialId = source[0], amount = source[1];
+	      if (Game.material[materialId] < amount * times) {
+	        Game.logger.log('Not enough material');
+	        return false;
+	      }
+	    }
+	    _ref1 = recipe.requiredMaterial;
+	    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+	      source = _ref1[_j];
+	      materialId = source[0], amount = source[1];
+	      Game.material[materialId] -= amount * times;
+	    }
+	    this.queue.push({
+	      type: Processor.TYPE_MATERIAL,
+	      recipe: recipe,
+	      amount: 1
+	    });
+	    Game.view.refreshItemList();
+	    Game.view.refreshMaterialList();
+	    Game.view.refreshRecipeList();
+	    return true;
+	  };
+
+	  return Processor;
+
+	})();
+
+	module.exports = Processor;
 
 
 /***/ },
