@@ -16,7 +16,7 @@
    id="svg8850"
    version="1.1"
    inkscape:version="0.91+devel r13869 custom"
-   sodipodi:docname="新規ドキュメント 3.2015_01_24_21_43_51.0.svg">
+   sodipodi:docname="icon.svg">
   <defs
      id="defs8852">
     <linearGradient
@@ -57,7 +57,7 @@
     </linearGradient>
     <filter
        style="color-interpolation-filters:sRGB"
-       id="materialGold"
+       id="sMaterialGold"
        inkscape:label="フィルター2"
        x="0"
        y="0"
@@ -96,7 +96,7 @@
        y2="5.0885043"
        gradientUnits="userSpaceOnUse" />
     <symbol
-       id="ingot">
+       id="sIngot">
       <path
          style="fill:url(#linearGradient8245);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m 2.6458334,4.2333334 0,2.1166668 4.7625001,-1.0583334 0,-2.1166667 -4.7625001,1.0583333 z"
@@ -156,10 +156,10 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497474"
-     inkscape:cx="-39.996579"
-     inkscape:cy="-81.174261"
-     inkscape:document-units="mm"
+     inkscape:zoom="8.6156541"
+     inkscape:cx="15.897788"
+     inkscape:cy="8.4269661"
+     inkscape:document-units="px"
      inkscape:current-layer="svg8850"
      showgrid="true"
      inkscape:window-width="1280"
@@ -173,7 +173,7 @@
      inkscape:snap-grids="true"
      inkscape:object-nodes="true"
      inkscape:snap-smooth-nodes="true"
-     inkscape:snap-midpoints="true"
+     inkscape:snap-midpoints="false"
      inkscape:snap-intersection-paths="true"
      inkscape:snap-global="true">
     <inkscape:grid
@@ -192,7 +192,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -201,12 +201,4 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-288.53334)" />
-  <use
-     id="use12532"
-     xlink:href="#symbol12187"
-     x="0"
-     y="0"
-     width="100%"
-     height="100%"
-     style="filter:url(#filter9681)" />
 </svg>

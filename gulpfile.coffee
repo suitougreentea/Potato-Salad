@@ -27,7 +27,7 @@ g.task('watch', ->
   g.watch('app/**/*.jade', ['html'])
   g.watch('app/**/*.sass', ['css'])
   g.watch('app/**/*.coffee', ['js'])
-  g.watch('app/assets/**/*.svg', ['svg'])
+  g.watch('app/assets/**/*.svg', ['svg', 'html'])
 )
 
 # Only for travis ci

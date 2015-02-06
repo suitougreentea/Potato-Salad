@@ -7,6 +7,16 @@ class View
     $('#mode').text("Now you are #{Game.mode}")
     $('#money').text("320,000,000,000,000,000.00 Mn")
     
+  @getIcon: (config) ->
+    if config
+      result = "<svg class='materialIcon' viewBox='0 0 8.46667 8.46667'>"
+      for e in config
+        [icon, filter] = e
+        result = result + "<use xlink:href='##{icon}' style='filter: url(##{filter})'></use>"
+      result = result + "</svg>"
+    else result = "<span class='materialIcon'>NO ICON</span>"
+    return result
+    
   @refreshMaterialList: ->
     $('#materialStock').html('')
     for list in Game.materialViewList.data
@@ -15,7 +25,7 @@ class View
         ((e) =>
           material = Game.materialList.material[e]
           num = Game.material[e]
-          $('#materialStock').append("<div class='material'><svg class='materialIcon'></svg><div class='materialName'>#{material.fullName}</div><div class='materialAmount'>#{Game.formatNumber(num)}</div></div>")
+          $('#materialStock').append("<div class='material'>#{@getIcon(material.icon)}<div class='materialName'>#{material.fullName}</div><div class='materialAmount'>#{Game.formatNumber(num)}</div></div>")
         )(e)
     return
     $('#materialOverworldPick').html('')
