@@ -15,8 +15,11 @@ g.task('css', ->
 g.task('js', ->
   return g.src('app/scripts/script.coffee').pipe($.webpack(require('./webpack.config.coffee'))).pipe(g.dest('deploy/scripts/')).pipe($.livereload())
 )
+g.task('svg', ->
+  return g.src('app/assets/**/*.svg').pipe(g.dest('deploy/assets/'))
+)
 g.task('all', ['clean'], (cb) ->
-  return runSequence(['html', 'css', 'js'], cb)
+  return runSequence(['html', 'css', 'js', 'svg'], cb)
 )
 
 g.task('watch', ->
@@ -24,6 +27,7 @@ g.task('watch', ->
   g.watch('app/**/*.jade', ['html'])
   g.watch('app/**/*.sass', ['css'])
   g.watch('app/**/*.coffee', ['js'])
+  g.watch('app/assets/**/*.svg', ['svg'])
 )
 
 # Only for travis ci
