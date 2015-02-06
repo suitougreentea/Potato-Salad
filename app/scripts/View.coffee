@@ -16,6 +16,12 @@ class View
       result = result + "</svg>"
     else result = "<span class='materialIcon'>NO ICON</span>"
     return result
+  
+  @newTooltip: (content) ->
+
+  @moveTooltip: () ->
+
+  @hideTooltip: () ->
     
   @refreshMaterialList: ->
     $('#materialStock').html('')
