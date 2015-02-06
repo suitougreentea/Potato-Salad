@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="styles/style.css">
-    <script type="text/javascript" src="scripts/script.js"></script>
-    <title>Potato-Salad</title>
-  </head>
-  <body>
-    <div style="position: absolute; left: -32px"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
@@ -211,29 +202,3 @@
      id="layer1"
      transform="translate(0,-288.53334)" />
 </svg>
-
-    </div>
-    <div id="painLeft">
-      <div class="headerPainLeft">Items</div>
-      <div id="itemStock"></div>
-      <div class="headerPainLeft">Materials</div>
-      <div id="materialStock"></div>
-    </div>
-    <div id="painMain">
-      <div id="time"></div>
-      <div id="mode"></div>
-      <div id="money"></div>
-      <div id="menu">
-        <div class="menuItem">Craft</div>
-        <div class="menuItem">Pick</div>
-        <div class="menuItem">Cut</div>
-        <div class="menuItem">Dig</div>
-        <div class="menuItem">Mine</div>
-      </div>
-      <!--div#itemHave-->
-      <div id="recipe"></div>
-      <div id="oreVein"></div>
-    </div>
-    <div id="painLog"></div>
-  </body>
-</html>
