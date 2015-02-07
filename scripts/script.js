@@ -66,7 +66,7 @@
 
 	$ = __webpack_require__(2);
 
-	__webpack_require__(13);
+	__webpack_require__(14);
 
 	Material = __webpack_require__(3);
 
@@ -77,13 +77,15 @@
 
 	  Game.logger = __webpack_require__(5);
 
+	  Game.save = __webpack_require__(6);
+
 	  Game.material = [];
 
-	  Game.materialList = __webpack_require__(6);
+	  Game.materialList = __webpack_require__(7);
 
 	  Game.item = [];
 
-	  Game.itemList = __webpack_require__(7);
+	  Game.itemList = __webpack_require__(8);
 
 	  Game.have = {
 	    shovel: null,
@@ -101,17 +103,17 @@
 
 	  Game.using = 0;
 
-	  Game.materialViewList = __webpack_require__(8);
+	  Game.materialViewList = __webpack_require__(9);
 
 	  Game.materialOverworldIgnoreList = [];
 
 	  Game.oreVein = [new OreVein(0, 10)];
 
-	  Game.processorList = __webpack_require__(9);
+	  Game.processorList = __webpack_require__(10);
 
-	  Game.overworldStuffFinder = __webpack_require__(10);
+	  Game.overworldStuffFinder = __webpack_require__(11);
 
-	  Game.oreVeinFinder = __webpack_require__(11);
+	  Game.oreVeinFinder = __webpack_require__(12);
 
 	  Game.MODE_SEARCHING_OVERWORLD = 1;
 
@@ -125,7 +127,7 @@
 
 	  Game.time = 0;
 
-	  Game.view = __webpack_require__(12);
+	  Game.view = __webpack_require__(13);
 
 	  Game.init = function() {
 	    var e, i, _i, _len, _ref;
@@ -9584,15 +9586,69 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Save, base64;
+
+	base64 = __webpack_require__(24);
+
+	Save = (function() {
+	  function Save() {}
+
+	  Save.save = function() {
+	    var data;
+	    data = this.getData();
+	    Game.logger.log('Start saving');
+	    console.log(data);
+	    localStorage.setItem('PSDevSave', base64.encode(JSON.stringify(data)));
+	    Game.logger.log('Finish saving');
+	  };
+
+	  Save.load = function() {
+	    var data, encode;
+	    Game.logger.log('Start loading');
+	    encode = localStorage.getItem('PSDevSave');
+	    data = JSON.parse(base64.decode(encode));
+	    console.log(data);
+	    this.setData(data);
+	    Game.logger.log('Finish loading');
+	  };
+
+	  Save.getData = function() {
+	    var result;
+	    result = {};
+	    result.material = Game.material;
+	    result.item = Game.item;
+	    return result;
+	  };
+
+	  Save.setData = function(data) {
+	    if (data.material) {
+	      Game.material = data.material;
+	    }
+	    if (data.item) {
+	      return Game.item = data.item;
+	    }
+	  };
+
+	  return Save;
+
+	})();
+
+	module.exports = Save;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var Material, MaterialList, MaterialNormal, MaterialOre, MaterialRaw;
 
 	Material = __webpack_require__(3);
 
-	MaterialOre = __webpack_require__(14);
+	MaterialOre = __webpack_require__(15);
 
-	MaterialRaw = __webpack_require__(15);
+	MaterialRaw = __webpack_require__(16);
 
-	MaterialNormal = __webpack_require__(16);
+	MaterialNormal = __webpack_require__(17);
 
 	MaterialList = (function() {
 	  function MaterialList() {}
@@ -9661,16 +9717,16 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ItemList, ItemProcessor, ItemTool, ProcessorToolbox;
 
-	ItemTool = __webpack_require__(17);
+	ItemTool = __webpack_require__(18);
 
-	ItemProcessor = __webpack_require__(18);
+	ItemProcessor = __webpack_require__(19);
 
-	ProcessorToolbox = __webpack_require__(19);
+	ProcessorToolbox = __webpack_require__(20);
 
 	ItemList = (function() {
 	  function ItemList() {}
@@ -9713,7 +9769,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var MaterialViewList;
@@ -9746,16 +9802,16 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ProcessorFurnace, ProcessorHand, ProcessorList, ProcessorToolbox;
 
-	ProcessorHand = __webpack_require__(20);
+	ProcessorHand = __webpack_require__(21);
 
-	ProcessorToolbox = __webpack_require__(19);
+	ProcessorToolbox = __webpack_require__(20);
 
-	ProcessorFurnace = __webpack_require__(21);
+	ProcessorFurnace = __webpack_require__(22);
 
 	ProcessorList = (function() {
 	  function ProcessorList() {}
@@ -9782,7 +9838,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var OverworldStuffFinder;
@@ -9836,7 +9892,7 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var OreVein, OreVeinFinder;
@@ -9879,12 +9935,12 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $, Processor, View;
 
-	Processor = __webpack_require__(22);
+	Processor = __webpack_require__(23);
 
 	$ = __webpack_require__(2);
 
@@ -10136,12 +10192,15 @@
 	    _results = [];
 	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
 	      e = _ref[i];
-	      _results.push((function(e, i) {
-	        $('#itemStock').append("<div class='buttonItem'>" + e.name + "</div>");
-	        return $('#itemStock .buttonItem:last').click(function() {
-	          return Game.useItem(i);
-	        });
-	      })(e, i));
+	      _results.push(((function(_this) {
+	        return function(e, i) {
+	          $('#itemStock').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', 'sMaterialGold']])) + "</div>");
+	          _this.registerTooltip($('#itemStock .buttonItem:last'), e.name);
+	          return $('#itemStock .buttonItem:last').click(function() {
+	            return Game.useItem(i);
+	          });
+	        };
+	      })(this))(e, i));
 	    }
 	    return _results;
 	  };
@@ -10154,7 +10213,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* Copyright (c) 2012, 2014 Hyunje Alex Jun and other contributors
@@ -11034,7 +11093,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Material, MaterialOre,
@@ -11058,7 +11117,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Material, MaterialRaw,
@@ -11082,7 +11141,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Material, MaterialNormal,
@@ -11106,14 +11165,14 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Item, ItemAxe, ItemPickaxe, ItemShovel, ItemTool,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Item = __webpack_require__(23);
+	Item = __webpack_require__(25);
 
 	ItemTool = (function(_super) {
 	  __extends(ItemTool, _super);
@@ -11184,14 +11243,14 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Item, ItemProcessor,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Item = __webpack_require__(23);
+	Item = __webpack_require__(25);
 
 	ItemProcessor = (function(_super) {
 	  __extends(ItemProcessor, _super);
@@ -11215,18 +11274,18 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Processor, ProcessorToolbox, RecipeItem, RecipeMaterial,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(22);
+	Processor = __webpack_require__(23);
 
-	RecipeMaterial = __webpack_require__(24);
+	RecipeMaterial = __webpack_require__(26);
 
-	RecipeItem = __webpack_require__(25);
+	RecipeItem = __webpack_require__(27);
 
 	ProcessorToolbox = (function(_super) {
 	  __extends(ProcessorToolbox, _super);
@@ -11251,18 +11310,18 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Processor, ProcessorHand, RecipeItem, RecipeMaterial,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(22);
+	Processor = __webpack_require__(23);
 
-	RecipeMaterial = __webpack_require__(24);
+	RecipeMaterial = __webpack_require__(26);
 
-	RecipeItem = __webpack_require__(25);
+	RecipeItem = __webpack_require__(27);
 
 	ProcessorHand = (function(_super) {
 	  __extends(ProcessorHand, _super);
@@ -11287,18 +11346,18 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Processor, ProcessorFurnace, RecipeItem, RecipeMaterial,
 	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  __hasProp = {}.hasOwnProperty;
 
-	Processor = __webpack_require__(22);
+	Processor = __webpack_require__(23);
 
-	RecipeMaterial = __webpack_require__(24);
+	RecipeMaterial = __webpack_require__(26);
 
-	RecipeItem = __webpack_require__(25);
+	RecipeItem = __webpack_require__(27);
 
 	ProcessorFurnace = (function(_super) {
 	  __extends(ProcessorFurnace, _super);
@@ -11323,7 +11382,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Processor;
@@ -11499,7 +11558,177 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! http://mths.be/base64 v0.1.0 by @mathias | MIT license */
+	;(function(root) {
+
+		// Detect free variables `exports`.
+		var freeExports = typeof exports == 'object' && exports;
+
+		// Detect free variable `module`.
+		var freeModule = typeof module == 'object' && module &&
+			module.exports == freeExports && module;
+
+		// Detect free variable `global`, from Node.js or Browserified code, and use
+		// it as `root`.
+		var freeGlobal = typeof global == 'object' && global;
+		if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
+			root = freeGlobal;
+		}
+
+		/*--------------------------------------------------------------------------*/
+
+		var InvalidCharacterError = function(message) {
+			this.message = message;
+		};
+		InvalidCharacterError.prototype = new Error;
+		InvalidCharacterError.prototype.name = 'InvalidCharacterError';
+
+		var error = function(message) {
+			// Note: the error messages used throughout this file match those used by
+			// the native `atob`/`btoa` implementation in Chromium.
+			throw new InvalidCharacterError(message);
+		};
+
+		var TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+		// http://whatwg.org/html/common-microsyntaxes.html#space-character
+		var REGEX_SPACE_CHARACTERS = /[\t\n\f\r ]/g;
+
+		// `decode` is designed to be fully compatible with `atob` as described in the
+		// HTML Standard. http://whatwg.org/html/webappapis.html#dom-windowbase64-atob
+		// The optimized base64-decoding algorithm used is based on @atk’s excellent
+		// implementation. https://gist.github.com/atk/1020396
+		var decode = function(input) {
+			input = String(input)
+				.replace(REGEX_SPACE_CHARACTERS, '');
+			var length = input.length;
+			if (length % 4 == 0) {
+				input = input.replace(/==?$/, '');
+				length = input.length;
+			}
+			if (
+				length % 4 == 1 ||
+				// http://whatwg.org/C#alphanumeric-ascii-characters
+				/[^+a-zA-Z0-9/]/.test(input)
+			) {
+				error(
+					'Invalid character: the string to be decoded is not correctly encoded.'
+				);
+			}
+			var bitCounter = 0;
+			var bitStorage;
+			var buffer;
+			var output = '';
+			var position = -1;
+			while (++position < length) {
+				buffer = TABLE.indexOf(input.charAt(position));
+				bitStorage = bitCounter % 4 ? bitStorage * 64 + buffer : buffer;
+				// Unless this is the first of a group of 4 characters…
+				if (bitCounter++ % 4) {
+					// …convert the first 8 bits to a single ASCII character.
+					output += String.fromCharCode(
+						0xFF & bitStorage >> (-2 * bitCounter & 6)
+					);
+				}
+			}
+			return output;
+		};
+
+		// `encode` is designed to be fully compatible with `btoa` as described in the
+		// HTML Standard: http://whatwg.org/html/webappapis.html#dom-windowbase64-btoa
+		var encode = function(input) {
+			input = String(input);
+			if (/[^\0-\xFF]/.test(input)) {
+				// Note: no need to special-case astral symbols here, as surrogates are
+				// matched, and the input is supposed to only contain ASCII anyway.
+				error(
+					'The string to be encoded contains characters outside of the ' +
+					'Latin1 range.'
+				);
+			}
+			var padding = input.length % 3;
+			var output = '';
+			var position = -1;
+			var a;
+			var b;
+			var c;
+			var d;
+			var buffer;
+			// Make sure any padding is handled outside of the loop.
+			var length = input.length - padding;
+
+			while (++position < length) {
+				// Read three bytes, i.e. 24 bits.
+				a = input.charCodeAt(position) << 16;
+				b = input.charCodeAt(++position) << 8;
+				c = input.charCodeAt(++position);
+				buffer = a + b + c;
+				// Turn the 24 bits into four chunks of 6 bits each, and append the
+				// matching character for each of them to the output.
+				output += (
+					TABLE.charAt(buffer >> 18 & 0x3F) +
+					TABLE.charAt(buffer >> 12 & 0x3F) +
+					TABLE.charAt(buffer >> 6 & 0x3F) +
+					TABLE.charAt(buffer & 0x3F)
+				);
+			}
+
+			if (padding == 2) {
+				a = input.charCodeAt(position) << 8;
+				b = input.charCodeAt(++position);
+				buffer = a + b;
+				output += (
+					TABLE.charAt(buffer >> 10) +
+					TABLE.charAt((buffer >> 4) & 0x3F) +
+					TABLE.charAt((buffer << 2) & 0x3F) +
+					'='
+				);
+			} else if (padding == 1) {
+				buffer = input.charCodeAt(position);
+				output += (
+					TABLE.charAt(buffer >> 2) +
+					TABLE.charAt((buffer << 4) & 0x3F) +
+					'=='
+				);
+			}
+
+			return output;
+		};
+
+		var base64 = {
+			'encode': encode,
+			'decode': decode,
+			'version': '0.1.0'
+		};
+
+		// Some AMD build optimizers, like r.js, check for specific condition patterns
+		// like the following:
+		if (
+			true
+		) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+				return base64;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		}	else if (freeExports && !freeExports.nodeType) {
+			if (freeModule) { // in Node.js or RingoJS v0.8.0+
+				freeModule.exports = base64;
+			} else { // in Narwhal or RingoJS v0.7.0-
+				for (var key in base64) {
+					base64.hasOwnProperty(key) && (freeExports[key] = base64[key]);
+				}
+			}
+		} else { // in Rhino or a web browser
+			root.base64 = base64;
+		}
+
+	}(this));
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)(module), (function() { return this; }())))
+
+/***/ },
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Item;
@@ -11522,7 +11751,7 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeMaterial;
@@ -11543,7 +11772,7 @@
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RecipeItem;
@@ -11563,6 +11792,22 @@
 	})();
 
 	module.exports = RecipeItem;
+
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
 
 
 /***/ }
