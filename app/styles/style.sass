@@ -3,15 +3,18 @@ body
   padding: 0px
   overflow: hidden
 
-#painLeft, #painMain, #painLog
+#painLeft, #painHeader, #painMain, #painLog
   position: absolute
   box-sizing: border-box
 
 #painLeft
   background-color: #EEE
 
+#painHeader
+  background-color: #CCC
+
 #painMain
-  background-color: #FFF
+  overflow-y: scroll
 
 #painLog
   background-color: #DDD
@@ -29,20 +32,28 @@ body
 #time
   float: left
   text-align: left
+  height: 16px
+  line-height: 16px
 
 #mode
   float: right
   text-align: right
+  height: 16px
+  line-height: 16px
 
 #money
   clear: both
+  height: 32px
+  line-height: 32px
   font-size: 24px
   text-align: right
 
 #menu
   background-color: #333
-  height: 24px
-  line-height: 24px
+  box-sizing: border-box
+  height: 32px
+  line-height: 28px
+  font-size: 20px
   border-top: 2px solid #111
   border-bottom: 2px solid #111
 

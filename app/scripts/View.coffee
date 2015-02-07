@@ -4,7 +4,7 @@ $ = require('jquery')
 class View
   @refreshStatus: ->
     $('#time').text("Time: #{Game.time}")
-    $('#mode').text("Now you are #{Game.mode}")
+    $('#mode').text("Now you are #{Game.modeString[Game.mode]}")
     $('#money').text("320,000,000,000,000,000.00 Mn")
     
   @getIcon: (config) ->
