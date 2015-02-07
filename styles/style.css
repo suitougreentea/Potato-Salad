@@ -21,6 +21,9 @@ body {
   font-family: monospace;
   overflow-y: scroll; }
 
+#itemHave {
+  height: 48px; }
+
 #itemStock {
   overflow-x: hidden;
   overflow-y: scroll; }
@@ -72,6 +75,9 @@ body {
   color: #FFF;
   padding-left: 5px;
   padding-right: 5px; }
+
+.menuItemRight {
+  float: right; }
 
 .menuItem:hover {
   background-color: #888; }
@@ -153,6 +159,7 @@ body {
   color: #FFF; }
 
 .processorState {
+  width: 100%;
   height: 48px;
   box-sizing: border-box;
   background-color: #CCC;
@@ -173,5 +180,6 @@ body {
   line-height: 24px; }
 
 .processorQueueList {
+  width: 100%;
   white-space: nowrap;
   overflow-x: scroll; }
