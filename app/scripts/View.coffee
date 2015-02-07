@@ -9,19 +9,27 @@ class View
     
   @getIcon: (config) ->
     if config
-      result = "<svg class='materialIcon' viewBox='0 0 8.46667 8.46667'>"
+      result = "<svg class='icon' viewBox='0 0 8.46667 8.46667'>"
       for e in config
         [icon, filter] = e
         result = result + "<use xlink:href='##{icon}' style='filter: url(##{filter})'></use>"
       result = result + "</svg>"
-    else result = "<span class='materialIcon'>NO ICON</span>"
+    else result = "<span class='icon'>NO ICON</span>"
     return result
   
-  @newTooltip: (content) ->
+  @newTooltip: (content, e) ->
+    $('#tooltip').html(content)
+    $('#tooltip').show()
+    $('#tooltip').css(left: e.pageX, top: e.pageY)
 
-  @moveTooltip: () ->
+  @moveTooltip: (e) ->
+    $('#tooltip').css(left: e.pageX, top: e.pageY)
 
   @hideTooltip: () ->
+    $('#tooltip').hide()
+
+  @registerTooltip: (jq, content) ->
+    jq.mouseover((e) => @newTooltip(content, e)).mousemove((e) => @moveTooltip(e)).mouseout(=> @hideTooltip())
     
   @refreshMaterialList: ->
     $('#materialStock').html('')
@@ -32,8 +40,10 @@ class View
           material = Game.materialList.material[e]
           num = Game.material[e]
           $('#materialStock').append("<div class='material'>#{@getIcon(material.icon)}<div class='materialName'>#{material.fullName}</div><div class='materialAmount'>#{Game.formatNumber(num)}</div></div>")
+          @registerTooltip($('.material:last'), material.fullName)
         )(e)
     return
+
     $('#materialOverworldPick').html('')
     for e in Game.materialOverworldPickViewList
       ((e) =>
@@ -66,7 +76,8 @@ class View
         $('.processorRecipe').append("<div class='processorRecipeItem'></div>")
         for e, i in processor.itemRecipe
           ((processor, e, i) =>
-            $('.processorRecipeItem:last').append("<div class='buttonItem'>#{e.outputItem[0].name}</div>")
+            $('.processorRecipeItem:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
+            @registerTooltip($('.buttonItem:last'), e.outputItem[0].name)
             $('.processorRecipeItem:last .buttonItem:last').click(-> processor.addQueueItemRecipe(i))
           )(processor, e, i)
           
@@ -75,7 +86,8 @@ class View
         for e, i in processor.materialRecipe
           ((processor, e, i) =>
             [id, amount] = e.outputMaterial[0]
-            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
+            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
+            @registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName)
             $('.processorRecipeMaterial:last .buttonItem:last').click(-> processor.addQueueMaterialRecipe(i, 1))
           )(processor, e, i)
 
@@ -95,10 +107,12 @@ class View
         ((processor, e, i) =>
           switch e.type
             when Processor.TYPE_ITEM
-              $('.processorQueueList:last').append("<div class='buttonItem'>#{e.recipe.outputItem[0].name}</div>")
+              $('.processorQueueList:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
+              @registerTooltip($('.buttonItem:last'), e.recipe.outputItem[0].name)
             when Processor.TYPE_MATERIAL
               id = e.recipe.outputMaterial[0][0]
-              $('.processorQueueList:last').append("<div class='buttonItem'>#{Game.materialList.material[id].fullName}</div>")
+              $('.processorQueueList:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
+              @registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName)
         )(processor, e, i)
 
   @refreshItemList: ->
