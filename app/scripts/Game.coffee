@@ -66,6 +66,7 @@ class Game
 
     $(window).resize => @onResizeWindow()
 
+    @save.load()
     @view.refreshStatus()
     @view.refreshRecipeList()
     @view.refreshMaterialList()
