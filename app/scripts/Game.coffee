@@ -163,13 +163,13 @@ class Game
     console.log "Window resized: (#{width}, #{height})"
     leftWidth = 270
     logHeight = 120
-    headerHeight = 80
+    headerHeight = 128
     itemHeight = 48 * 3
     $('#painLeft').css(top: 0, left: 0).width(leftWidth).height(height)
     $('#itemStock').height(itemHeight)
     $('#materialStock').height(height - itemHeight - 32 * 2)
     $('#painHeader').css(top: 0, left: leftWidth).width(width - leftWidth).height(headerHeight)
-    $('#painMain').css(top: headerHeight, left: leftWidth).width(width - leftWidth).height(height - logHeight)
+    $('#painMain').css(top: headerHeight, left: leftWidth).width(width - leftWidth).height(height - logHeight - headerHeight)
     $('#painLog').css(top: height - logHeight, left: leftWidth).width(width - leftWidth).height(logHeight)
 
 module.exports = Game

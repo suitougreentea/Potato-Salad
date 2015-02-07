@@ -2,34 +2,13 @@ Processor = require('./Processor.coffee')
 $ = require('jquery')
 
 class View
+  @factory: require('./ViewFactory.coffee')
+  @mine: require('./ViewMine.coffee')
+
   @refreshStatus: ->
     $('#time').text("Time: #{Game.time}")
     $('#mode').text("Now you are #{Game.modeString[Game.mode]}")
     $('#money').text("320,000,000,000,000,000.00 Mn")
-    
-  @getIcon: (config) ->
-    if config
-      result = "<svg class='icon' viewBox='0 0 8.46667 8.46667'>"
-      for e in config
-        [icon, filter] = e
-        result = result + "<use xlink:href='##{icon}' style='filter: url(##{filter})'></use>"
-      result = result + "</svg>"
-    else result = "<span class='icon'>NO ICON</span>"
-    return result
-  
-  @newTooltip: (content, e) ->
-    $('#tooltip').html(content)
-    $('#tooltip').show()
-    $('#tooltip').css(left: e.pageX, top: e.pageY)
-
-  @moveTooltip: (e) ->
-    $('#tooltip').css(left: e.pageX, top: e.pageY)
-
-  @hideTooltip: () ->
-    $('#tooltip').hide()
-
-  @registerTooltip: (jq, content) ->
-    jq.mouseover((e) => @newTooltip(content, e)).mousemove((e) => @moveTooltip(e)).mouseout(=> @hideTooltip())
     
   @refreshMaterialList: ->
     $('#materialStock').html('')
@@ -65,6 +44,7 @@ class View
       )(e, i)
 
   @refreshRecipeList: ->
+    console.log 'DEPRECATED'
     $('#recipe').html('')
     for processor in Game.processorList.processor
       if processor.num() == 0 then continue
@@ -136,5 +116,30 @@ class View
         @registerTooltip($('#itemStock .buttonItem:last'), e.name)
         $('#itemStock .buttonItem:last').click(-> Game.useItem(i))
       )(e, i)
+
+  @getIcon: (config) ->
+    if config
+      result = "<svg class='icon' viewBox='0 0 8.46667 8.46667'>"
+      for e in config
+        [icon, filter] = e
+        result = result + "<use xlink:href='##{icon}' style='filter: url(##{filter})'></use>"
+      result = result + "</svg>"
+    else result = "<span class='icon'>NO ICON</span>"
+    return result
+  
+  @newTooltip: (content, e) ->
+    $('#tooltip').html(content)
+    $('#tooltip').show()
+    $('#tooltip').css(left: e.pageX, top: e.pageY)
+
+  @moveTooltip: (e) ->
+    $('#tooltip').css(left: e.pageX, top: e.pageY)
+
+  @hideTooltip: () ->
+    $('#tooltip').hide()
+
+  @registerTooltip: (jq, content) ->
+    jq.mouseover((e) => @newTooltip(content, e)).mousemove((e) => @moveTooltip(e)).mouseout(=> @hideTooltip())
+    
 
 module.exports = View
