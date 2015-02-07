@@ -9900,7 +9900,7 @@
 	  View.getIcon = function(config) {
 	    var e, filter, icon, result, _i, _len;
 	    if (config) {
-	      result = "<svg class='materialIcon' viewBox='0 0 8.46667 8.46667'>";
+	      result = "<svg class='icon' viewBox='0 0 8.46667 8.46667'>";
 	      for (_i = 0, _len = config.length; _i < _len; _i++) {
 	        e = config[_i];
 	        icon = e[0], filter = e[1];
@@ -9908,16 +9908,46 @@
 	      }
 	      result = result + "</svg>";
 	    } else {
-	      result = "<span class='materialIcon'>NO ICON</span>";
+	      result = "<span class='icon'>NO ICON</span>";
 	    }
 	    return result;
 	  };
 
-	  View.newTooltip = function(content) {};
+	  View.newTooltip = function(content, e) {
+	    $('#tooltip').html(content);
+	    $('#tooltip').show();
+	    return $('#tooltip').css({
+	      left: e.pageX,
+	      top: e.pageY
+	    });
+	  };
 
-	  View.moveTooltip = function() {};
+	  View.moveTooltip = function(e) {
+	    return $('#tooltip').css({
+	      left: e.pageX,
+	      top: e.pageY
+	    });
+	  };
 
-	  View.hideTooltip = function() {};
+	  View.hideTooltip = function() {
+	    return $('#tooltip').hide();
+	  };
+
+	  View.registerTooltip = function(jq, content) {
+	    return jq.mouseover((function(_this) {
+	      return function(e) {
+	        return _this.newTooltip(content, e);
+	      };
+	    })(this)).mousemove((function(_this) {
+	      return function(e) {
+	        return _this.moveTooltip(e);
+	      };
+	    })(this)).mouseout((function(_this) {
+	      return function() {
+	        return _this.hideTooltip();
+	      };
+	    })(this));
+	  };
 
 	  View.refreshMaterialList = function() {
 	    var e, list, _fn, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
@@ -9932,7 +9962,8 @@
 	          var material, num;
 	          material = Game.materialList.material[e];
 	          num = Game.material[e];
-	          return $('#materialStock').append("<div class='material'>" + (_this.getIcon(material.icon)) + "<div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + (Game.formatNumber(num)) + "</div></div>");
+	          $('#materialStock').append("<div class='material'>" + (_this.getIcon(material.icon)) + "<div class='materialName'>" + material.fullName + "</div><div class='materialAmount'>" + (Game.formatNumber(num)) + "</div></div>");
+	          return _this.registerTooltip($('.material:last'), material.fullName);
 	        };
 	      })(this);
 	      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -9998,7 +10029,8 @@
 	        _ref1 = processor.itemRecipe;
 	        _fn = (function(_this) {
 	          return function(processor, e, i) {
-	            $('.processorRecipeItem:last').append("<div class='buttonItem'>" + e.outputItem[0].name + "</div>");
+	            $('.processorRecipeItem:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
+	            _this.registerTooltip($('.buttonItem:last'), e.outputItem[0].name);
 	            return $('.processorRecipeItem:last .buttonItem:last').click(function() {
 	              return processor.addQueueItemRecipe(i);
 	            });
@@ -10016,7 +10048,8 @@
 	          return function(processor, e, i) {
 	            var amount, id, _ref3;
 	            _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
-	            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
+	            _this.registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName);
 	            return $('.processorRecipeMaterial:last .buttonItem:last').click(function() {
 	              return processor.addQueueMaterialRecipe(i, 1);
 	            });
@@ -10057,10 +10090,12 @@
 	              var id;
 	              switch (e.type) {
 	                case Processor.TYPE_ITEM:
-	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + e.recipe.outputItem[0].name + "</div>");
+	                  $('.processorQueueList:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
+	                  return _this.registerTooltip($('.buttonItem:last'), e.recipe.outputItem[0].name);
 	                case Processor.TYPE_MATERIAL:
 	                  id = e.recipe.outputMaterial[0][0];
-	                  return $('.processorQueueList:last').append("<div class='buttonItem'>" + Game.materialList.material[id].fullName + "</div>");
+	                  $('.processorQueueList:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
+	                  return _this.registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName);
 	              }
 	            };
 	          })(this))(processor, e, i));
