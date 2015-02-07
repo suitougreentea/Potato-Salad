@@ -6,6 +6,7 @@ OreVein = require('./OreVein.coffee')
 
 class Game
   @logger: require('./Logger.coffee')
+  @save: require('./Save.coffee')
 
   @material = []
   @materialList = require('./MaterialList.coffee')
