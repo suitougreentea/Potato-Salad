@@ -131,8 +131,9 @@ class View
 
     $('#itemStock').html('')
     for e, i in Game.item
-      ((e, i) ->
-        $('#itemStock').append("<div class='buttonItem'>#{e.name}</div>")
+      ((e, i) =>
+        $('#itemStock').append("<div class='buttonItem'>#{@getIcon([['sIngot', 'sMaterialGold']])}</div>")
+        @registerTooltip($('#itemStock .buttonItem:last'), e.name)
         $('#itemStock .buttonItem:last').click(-> Game.useItem(i))
       )(e, i)
 
