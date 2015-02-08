@@ -125,8 +125,9 @@ body {
   width: 100%;
   height: 48px; }
 
-.materialHeader {
+.header {
   background-color: #333;
+  width: 100%;
   height: 24px;
   line-height: 24px;
   text-align: center;
@@ -153,48 +154,6 @@ body {
   height: 16px;
   line-height: 16px;
   font-size: 12px; }
-
-.processorName {
-  background-color: #333;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  font-weight: bold;
-  color: #FFF; }
-
-.processorState {
-  width: 100%;
-  height: 48px;
-  box-sizing: border-box;
-  background-color: #CCC;
-  border: 2px solid #888; }
-
-.processorStateIcon {
-  width: 32px;
-  height: 32px;
-  margin: 6px;
-  float: left; }
-
-.processorStateRight {
-  height: 48px;
-  float: right; }
-
-.processorStateText, .processorStateMeter {
-  height: 24px;
-  line-height: 24px; }
-
-.processorQueueList {
-  width: 100%;
-  white-space: nowrap;
-  overflow-x: scroll; }
-
-#toolBox > .header {
-  width: 100%;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  background-color: #333;
-  color: #FFF; }
 
 #toolBox > .state > .noWork {
   text-align: center;
@@ -236,15 +195,6 @@ body {
 #toolBox > .state > .text > .progress {
   float: right;
   margin-right: 4px; }
-
-#processorList > .processor > .header {
-  width: 100%;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  background-color: #333;
-  color: #FFF;
-  font-weight: bold; }
 
 #processorList > .processor > .settings {
   background-color: #DDD; }
@@ -305,3 +255,44 @@ body {
 
 #processorList > .processor > .queue > .iconBox {
   display: inline-block; }
+
+#oreVein > .list > div > .buttonItem {
+  float: left; }
+
+#oreVein > .list > div > .text {
+  height: 24px; }
+
+#oreVein > .list > div > .text > .name {
+  height: 24px;
+  line-height: 24px;
+  margin-left: 4px;
+  float: left; }
+
+#oreVein > .list > div > .text > .size {
+  height: 24px;
+  line-height: 24px;
+  margin-right: 4px;
+  float: right; }
+
+#oreVein > .list > div > .meter {
+  height: 16px;
+  margin-left: 52px;
+  margin-right: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px; }
+
+#oreVein > .list > div > .meter > .meterbg {
+  height: 16px;
+  background-color: #777; }
+
+#oreVein > .list > div > .meter > .meterbg > .meterFill {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+  background-color: #222; }
+
+#oreVein > .list > div.active {
+  background-color: #DDD; }
+
+#oreVein > .list > div.active > .buttonItem {
+  background-color: #666; }

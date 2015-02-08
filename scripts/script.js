@@ -105,9 +105,9 @@
 
 	  Game.materialViewList = __webpack_require__(9);
 
-	  Game.materialOverworldIgnoreList = [];
+	  Game.pickNotifyList = [];
 
-	  Game.oreVein = [new OreVein(0, 10)];
+	  Game.oreVein = [new OreVein(0, 10), new OreVein(2, 0.01)];
 
 	  Game.craft = __webpack_require__(10);
 
@@ -117,15 +117,23 @@
 
 	  Game.oreVeinFinder = __webpack_require__(13);
 
-	  Game.MODE_SEARCHING_OVERWORLD = 1;
+	  Game.MODE_CRAFT = 0;
 
-	  Game.MODE_SEARCHING_UNDERGROUND = 2;
+	  Game.MODE_FACTORY = 1;
 
-	  Game.MODE_MINING = 3;
+	  Game.MODE_PICK = 2;
+
+	  Game.MODE_DIG = 3;
+
+	  Game.MODE_CUT = 4;
+
+	  Game.MODE_MINE = 5;
+
+	  Game.MODE_VEIN = 6;
 
 	  Game.mode = 0;
 
-	  Game.modeString = ['working in your factory', 'searching overground', 'searching underground', 'mining ore vein'];
+	  Game.modeString = ['crafting', 'working in your factory', 'searching overground', 'digging soil', 'cutting tree', 'searching underground', 'mining ore vein'];
 
 	  Game.miningTarget = 0;
 
@@ -134,7 +142,7 @@
 	  Game.view = __webpack_require__(14);
 
 	  Game.init = function() {
-	    var e, i, _fn, _i, _j, _len, _ref;
+	    var e, i, _fn, _i, _j, _k, _len, _len1, _ref, _ref1;
 	    this.materialList.init();
 	    this.materialViewList.init();
 	    _ref = this.materialList.material;
@@ -147,6 +155,11 @@
 	    this.overworldStuffFinder.init();
 	    this.oreVeinFinder.init();
 	    this.craft.init();
+	    _ref1 = this.overworldStuffFinder.data;
+	    for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
+	      e = _ref1[i];
+	      this.pickNotifyList[i] = false;
+	    }
 	    this.material[this.materialList.id.oreCoal] = 1000;
 	    this.material[this.materialList.id.woodStick] = 1000;
 	    this.material[this.materialList.id.stone] = 1000;
@@ -163,20 +176,38 @@
 	        return $(".menuItem:nth-child(" + (i + 1) + ")").click(function() {
 	          $('.menuItem').removeClass('menuItemActive');
 	          $(this).addClass('menuItemActive');
-	          return that.view.toggleTab(i);
+	          that.view.toggleTab(i);
+	          switch (i) {
+	            case that.view.PAGE_CRAFT:
+	              that.mode = that.MODE_CRAFT;
+	              break;
+	            case that.view.PAGE_FACTORY:
+	              that.mode = that.MODE_FACTORY;
+	              break;
+	            case that.view.PAGE_PICK:
+	              that.mode = that.MODE_PICK;
+	              break;
+	            case that.view.PAGE_CUT:
+	              that.mode = that.MODE_CUT;
+	              break;
+	            case that.view.PAGE_DIG:
+	              that.mode = that.MODE_DIG;
+	              break;
+	            case that.view.PAGE_MINE:
+	              that.mode = that.MODE_MINE;
+	          }
+	          return that.view.refresh(that.view.STATUS);
 	        });
 	      };
 	    })(this);
-	    for (i = _j = 0; _j <= 6; i = ++_j) {
+	    for (i = _k = 0; _k <= 6; i = ++_k) {
 	      _fn(i);
 	    }
 	    $('.menuItem:first').addClass('menuItemActive');
 	    this.view.toggleTab(0);
 	    this.save.load();
 	    this.view.refreshStatus();
-	    this.view.refreshRecipeList();
 	    this.view.refreshMaterialList();
-	    this.view.refreshOreVeinList();
 	    return this.view.refreshItemList();
 	  };
 
@@ -189,79 +220,33 @@
 	      e = _ref[_i];
 	      e.update();
 	    }
-	    Game.craft.update();
 	    switch (Game.mode) {
-	      case Game.MODE_SEARCHING_OVERWORLD:
-	        switch (Game.using) {
-	          case Game.USING_NONE:
-	            Game.overworldStuffFinder.tryToPick();
-	            break;
-	          case Game.USING_SHOVEL:
-	            Game.overworldStuffFinder.tryToDig();
-	            break;
-	          case Game.USING_AXE:
-	            Game.overworldStuffFinder.tryToCut();
-	        }
-	        return Game.view.refreshMaterialList();
-	      case Game.MODE_SEARCHING_UNDERGROUND:
-	        Game.oreVeinFinder["try"]();
-	        return Game.view.refreshOreVeinList();
-	      case Game.MODE_MINING:
+	      case Game.MODE_CRAFT:
+	        return Game.craft.update();
+	      case Game.MODE_PICK:
+	        return Game.overworldStuffFinder.tryToPick();
+	      case Game.MODE_DIG:
+	        return Game.overworldStuffFinder.tryToDig();
+	      case Game.MODE_CUT:
+	        return Game.overworldStuffFinder.tryToCut();
+	      case Game.MODE_MINE:
+	        return Game.oreVeinFinder["try"]();
+	      case Game.MODE_VEIN:
 	        e = Game.oreVein[Game.miningTarget];
 	        mineAmount = 1;
 	        e.remain -= mineAmount;
+	        if (e.remain === 0) {
+	          Game.logger.log('Finish mining vein');
+	          Game.oreVein.splice(Game.miningTarget, 1);
+	          Game.mode = Game.MODE_MINE;
+	          Game.view.refresh(Game.view.OREVEIN);
+	          Game.view.refresh(Game.view.STATUS);
+	        }
 	        Game.material[e.materialId] += mineAmount;
-	        Game.view.refreshMaterialList();
-	        Game.view.refreshOreVeinList();
-	        return Game.view.refreshItemList();
+	        Game.view.refresh(Game.view.ITEM);
+	        Game.view.refresh(Game.view.MATERIAL);
+	        return Game.view.refresh(Game.view.OREVEIN);
 	    }
-	  };
-
-	  Game.tryToStartMining = function(target) {
-	    if (!this.have.pickaxe) {
-	      this.logger.log('No pickaxe');
-	      return;
-	    }
-	    this.using = this.USING_PICKAXE;
-	    this.miningTarget = target;
-	    this.mode = Game.MODE_MINING;
-	    return this.view.refreshStatus();
-	  };
-
-	  Game.tryToGoUnderground = function() {
-	    if (!this.have.pickaxe) {
-	      this.logger.log('No pickaxe');
-	      return;
-	    }
-	    this.using = this.USING_PICKAXE;
-	    this.mode = Game.MODE_SEARCHING_UNDERGROUND;
-	    return this.view.refreshStatus();
-	  };
-
-	  Game.tryToPick = function() {
-	    this.using = this.USING_NONE;
-	    this.mode = Game.MODE_SEARCHING_OVERWORLD;
-	    return this.view.refreshStatus();
-	  };
-
-	  Game.tryToDig = function() {
-	    if (!this.have.shovel) {
-	      this.logger.log('No shovel');
-	      return;
-	    }
-	    this.using = this.USING_SHOVEL;
-	    this.mode = Game.MODE_SEARCHING_OVERWORLD;
-	    return this.view.refreshStatus();
-	  };
-
-	  Game.tryToCut = function() {
-	    if (!this.have.axe) {
-	      this.logger.log('No axe');
-	      return;
-	    }
-	    this.using = this.USING_AXE;
-	    this.mode = Game.MODE_SEARCHING_OVERWORLD;
-	    return this.view.refreshStatus();
 	  };
 
 	  Game.changeIgnoreCheckbox = function(checked, materialId) {
@@ -10040,34 +10025,37 @@
 	  };
 
 	  OverworldStuffFinder.tryToPick = function() {
-	    var chance, change, e, id, result, target, _i, _len, _ref;
+	    var chance, change, e, i, id, index, target, _i, _len, _ref, _ref1;
 	    target = [];
 	    _ref = this.data;
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      e = _ref[_i];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
 	      id = e[0], chance = e[1];
 	      if (Math.random() < chance) {
-	        target.push(e);
+	        target.push(i);
 	      }
 	    }
 	    if (target.length > 0) {
-	      result = target[Math.floor(Math.random() * target.length)];
-	      id = result[0], change = result[1];
-	      if (Game.materialOverworldIgnoreList.indexOf(id) === -1) {
+	      index = target[Math.floor(Math.random() * target.length)];
+	      _ref1 = this.data[index], id = _ref1[0], change = _ref1[1];
+	      Game.material[id] += 1;
+	      if (Game.pickNotifyList[index]) {
 	        Game.logger.log("Picked up " + Game.materialList.material[id].fullName + "!");
-	        return Game.material[id] += 1;
 	      }
+	      return Game.view.refresh(Game.view.MATERIAL);
 	    }
 	  };
 
 	  OverworldStuffFinder.tryToDig = function() {
-	    return Game.material[Game.materialList.id.dirt] += 1;
+	    Game.material[Game.materialList.id.dirt] += 1;
+	    return Game.view.refresh(Game.view.MATERIAL);
 	  };
 
 	  OverworldStuffFinder.tryToCut = function() {
 	    if (Math.random() < 0.1) {
 	      Game.logger.log("Cut down a wood!");
-	      return Game.material[Game.materialList.id.wood] += 20;
+	      Game.material[Game.materialList.id.wood] += 20;
+	      return Game.view.refresh(Game.view.MATERIAL);
 	    }
 	  };
 
@@ -10110,7 +10098,8 @@
 	      result = target[Math.floor(Math.random() * target.length)];
 	      id = result[0], change = result[1];
 	      Game.logger.log("Found " + Game.materialList.material[id].materialName + " vein!");
-	      return Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)));
+	      Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)));
+	      return Game.view.refresh(Game.view.OREVEIN);
 	    }
 	  };
 
@@ -10175,6 +10164,10 @@
 
 	  View.PROCESSOR_QUEUE = 4;
 
+	  View.STATUS = 5;
+
+	  View.OREVEIN = 6;
+
 	  View.refresh = function() {
 	    var args, id;
 	    id = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
@@ -10183,6 +10176,8 @@
 	        return this.refreshItemList();
 	      case this.MATERIAL:
 	        return this.refreshMaterialList();
+	      case this.STATUS:
+	        return this.refreshStatus();
 	      case this.TOOLBOX_STATE:
 	        if (this.activePage === this.PAGE_CRAFT) {
 	          return this.craft.refreshToolBoxState();
@@ -10196,6 +10191,11 @@
 	      case this.PROCESSOR_QUEUE:
 	        if (this.activePage === this.PAGE_FACTORY) {
 	          return this.factory.refreshProcessorQueue(args[0]);
+	        }
+	        break;
+	      case this.OREVEIN:
+	        if (this.activePage === this.PAGE_MINE) {
+	          return this.mine.refreshOreVeinList();
 	        }
 	    }
 	  };
@@ -10238,7 +10238,7 @@
 	    _ref = Game.materialViewList.data;
 	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
 	      list = _ref[_i];
-	      $('#materialStock').append("<div class='materialHeader'>" + list.name + "</div>");
+	      $('#materialStock').append("<div class='header'>" + list.name + "</div>");
 	      _ref1 = list.list;
 	      _fn = (function(_this) {
 	        return function(e) {
@@ -10295,126 +10295,9 @@
 	    return _results;
 	  };
 
-	  View.refreshRecipeList = function() {
-	    var e, i, processor, _fn, _fn1, _fn2, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
-	    console.log('DEPRECATED');
-	    $('#recipe').html('');
-	    _ref = Game.processorList.processor;
-	    _results = [];
-	    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	      processor = _ref[_i];
-	      if (processor.num() === 0) {
-	        continue;
-	      }
-	      $('#recipe').append("<div class='processor'><div class='processorName'></div><div class='processorRecipe'></div><div class='processorStateList'></div><div class='processorQueueList'></div></div>");
-	      $('.processorName:last').text(processor.name + " (" + (processor.num()) + ")");
-	      if (processor.itemRecipe.length > 0) {
-	        $('.processorRecipe').append("<div class='processorRecipeItem'></div>");
-	        _ref1 = processor.itemRecipe;
-	        _fn = (function(_this) {
-	          return function(processor, e, i) {
-	            $('.processorRecipeItem:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
-	            _this.registerTooltip($('.buttonItem:last'), e.outputItem[0].name);
-	            return $('.processorRecipeItem:last .buttonItem:last').click(function() {
-	              return processor.addQueueItemRecipe(i);
-	            });
-	          };
-	        })(this);
-	        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
-	          e = _ref1[i];
-	          _fn(processor, e, i);
-	        }
-	      }
-	      if (processor.materialRecipe.length > 0) {
-	        $('.processorRecipe').append("<div class='processorRecipeMaterial'></div>");
-	        _ref2 = processor.materialRecipe;
-	        _fn1 = (function(_this) {
-	          return function(processor, e, i) {
-	            var amount, id, _ref3;
-	            _ref3 = e.outputMaterial[0], id = _ref3[0], amount = _ref3[1];
-	            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
-	            _this.registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName);
-	            return $('.processorRecipeMaterial:last .buttonItem:last').click(function() {
-	              return processor.addQueueMaterialRecipe(i, 1);
-	            });
-	          };
-	        })(this);
-	        for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
-	          e = _ref2[i];
-	          _fn1(processor, e, i);
-	        }
-	      }
-	      _ref3 = processor.state;
-	      _fn2 = (function(_this) {
-	        return function(processor, e, i) {
-	          var id;
-	          $('.processorStateList:last').append("<div class='processorState'><div class='processorStateIcon'></div><div class='processorStateRight'><div class='processorStateText'></div><div class='processorStateMeter'></div></div></div>");
-	          $('.processorStateMeter:last').text(i + ": " + e.timeRemain + " / " + e.time);
-	          switch (e.type) {
-	            case Processor.TYPE_ITEM:
-	              return $('.processorStateText:last').text("" + e.recipe.outputItem[0].name);
-	            case Processor.TYPE_MATERIAL:
-	              id = e.recipe.outputMaterial[0][0];
-	              return $('.processorStateText:last').text("" + Game.materialList.material[id].fullName);
-	          }
-	        };
-	      })(this);
-	      for (i = _l = 0, _len3 = _ref3.length; _l < _len3; i = ++_l) {
-	        e = _ref3[i];
-	        _fn2(processor, e, i);
-	      }
-	      _results.push((function() {
-	        var _len4, _m, _ref4, _results1;
-	        _ref4 = processor.queue;
-	        _results1 = [];
-	        for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
-	          e = _ref4[i];
-	          _results1.push(((function(_this) {
-	            return function(processor, e, i) {
-	              var id;
-	              switch (e.type) {
-	                case Processor.TYPE_ITEM:
-	                  $('.processorQueueList:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
-	                  return _this.registerTooltip($('.buttonItem:last'), e.recipe.outputItem[0].name);
-	                case Processor.TYPE_MATERIAL:
-	                  id = e.recipe.outputMaterial[0][0];
-	                  $('.processorQueueList:last').append("<div class='buttonItem'>" + (_this.getIcon([['sIngot', '']])) + "</div>");
-	                  return _this.registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName);
-	              }
-	            };
-	          })(this))(processor, e, i));
-	        }
-	        return _results1;
-	      }).call(this));
-	    }
-	    return _results;
-	  };
-
 	  View.refreshItemList = function() {
 	    var e, i, _i, _len, _ref, _results;
 	    $('#itemHave').html('');
-	    $('#itemHave').append("<button>Pick</button>");
-	    $('#itemHave button:last').click(function() {
-	      return Game.tryToPick();
-	    });
-	    if (Game.have.shovel) {
-	      $('#itemHave').append("Shovel:<button>" + Game.have.shovel.name + "</button>");
-	      $('#itemHave button:last').click(function() {
-	        return Game.tryToDig();
-	      });
-	    }
-	    if (Game.have.axe) {
-	      $('#itemHave').append("Axe:<button>" + Game.have.axe.name + "</button>");
-	      $('#itemHave button:last').click(function() {
-	        return Game.tryToCut();
-	      });
-	    }
-	    if (Game.have.pickaxe) {
-	      $('#itemHave').append("Pickaxe:<button>" + Game.have.pickaxe.name + "</button>");
-	      $('#itemHave button:last').click(function() {
-	        return Game.tryToGoUnderground();
-	      });
-	    }
 	    $('#itemStock').html('');
 	    _ref = Game.item;
 	    _results = [];
@@ -12145,7 +12028,27 @@
 	  function ViewPick() {}
 
 	  ViewPick.refreshAll = function() {
-	    return $('#painMain').html('Pick');
+	    $('#painMain').html("<div id='pickNotifyList'></div>");
+	    return this.refreshNotifyList();
+	  };
+
+	  ViewPick.refreshNotifyList = function() {
+	    var e, i, _i, _len, _ref, _results;
+	    $('#pickNotifyList').html("<div class='header'>Notify settings</div><div class='list'></div>");
+	    _ref = Game.overworldStuffFinder.data;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push((function(e, i) {
+	        $('#pickNotifyList>.list').append("<div><input type='checkbox' />" + Game.materialList.material[e[0]].fullName + "</div>");
+	        $('#pickNotifyList>.list>div:last>input').attr('checked', Game.pickNotifyList[i]);
+	        return $('#pickNotifyList>.list>div:last>input').click(function() {
+	          Game.pickNotifyList[i] = $(this).prop('checked');
+	          return true;
+	        });
+	      })(e, i));
+	    }
+	    return _results;
 	  };
 
 	  return ViewPick;
@@ -12211,7 +12114,43 @@
 	  function ViewMine() {}
 
 	  ViewMine.refreshAll = function() {
-	    return $('#painMain').html('Mine');
+	    $('#painMain').html("<div id='oreVein'></div>");
+	    return this.refreshOreVeinList();
+	  };
+
+	  ViewMine.refreshOreVeinList = function() {
+	    var e, i, _fn, _i, _len, _ref;
+	    $('#oreVein').html("<div class='header'></div><button id='searchVein'>Search vein</button><div class='list'></div>");
+	    $('#oreVein>button').click(function() {
+	      Game.mode = Game.MODE_MINE;
+	      Game.view.refresh(Game.view.STATUS);
+	      return Game.view.refresh(Game.view.OREVEIN);
+	    });
+	    _ref = Game.oreVein;
+	    _fn = (function(_this) {
+	      return function(e, i) {
+	        $('#oreVein>.list').append("<div><div class='buttonItem'></div><div class='text'><div class='name'></div><div class='size'></div></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div></div>");
+	        $('#oreVein>.list>div:last>.buttonItem').html(Game.view.getIcon([['sIngot', '']]));
+	        $('#oreVein>.list>div:last>.text>.name').text(Game.materialList.material[e.materialId].materialName);
+	        $('#oreVein>.list>div:last>.text>.size').text('Large');
+	        $('#oreVein>.list>div:last>.meter>.meterbg>.meterFill').css({
+	          width: (e.remain / e.amount * 100) + "%"
+	        });
+	        return $('#oreVein>.list>div:last>.buttonItem').click(function() {
+	          Game.mode = Game.MODE_VEIN;
+	          Game.miningTarget = i;
+	          Game.view.refresh(Game.view.STATUS);
+	          return Game.view.refresh(Game.view.OREVEIN);
+	        });
+	      };
+	    })(this);
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _fn(e, i);
+	    }
+	    if (Game.mode === Game.MODE_VEIN) {
+	      return $("#oreVein>.list>div:nth-child(" + (Game.miningTarget + 1) + ")").addClass('active');
+	    }
 	  };
 
 	  return ViewMine;
