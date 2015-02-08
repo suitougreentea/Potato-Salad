@@ -24,11 +24,13 @@ class View
   @TOOLBOX_STATE: 2
   @PROCESSOR_STATE: 3
   @PROCESSOR_QUEUE: 4
+  @STATUS: 5
 
   @refresh: (id, args...) ->
     switch id
       when @ITEM then @refreshItemList()
       when @MATERIAL then @refreshMaterialList()
+      when @HEADER then @refreshStatus()
       when @TOOLBOX_STATE then if @activePage == @PAGE_CRAFT then @craft.refreshToolBoxState()
       when @PROCESSOR_STATE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorState(args[0])
       when @PROCESSOR_QUEUE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorQueue(args[0])
@@ -82,71 +84,8 @@ class View
         $('#oreVein button:last').click(-> Game.tryToStartMining(i))
       )(e, i)
 
-  @refreshRecipeList: ->
-    console.log 'DEPRECATED'
-    $('#recipe').html('')
-    for processor in Game.processorList.processor
-      if processor.num() == 0 then continue
-      $('#recipe').append("<div class='processor'><div class='processorName'></div><div class='processorRecipe'></div><div class='processorStateList'></div><div class='processorQueueList'></div></div>")
-
-      $('.processorName:last').text("#{processor.name} (#{processor.num()})")
-
-      if processor.itemRecipe.length > 0
-        $('.processorRecipe').append("<div class='processorRecipeItem'></div>")
-        for e, i in processor.itemRecipe
-          ((processor, e, i) =>
-            $('.processorRecipeItem:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
-            @registerTooltip($('.buttonItem:last'), e.outputItem[0].name)
-            $('.processorRecipeItem:last .buttonItem:last').click(-> processor.addQueueItemRecipe(i))
-          )(processor, e, i)
-          
-      if processor.materialRecipe.length > 0
-        $('.processorRecipe').append("<div class='processorRecipeMaterial'></div>")
-        for e, i in processor.materialRecipe
-          ((processor, e, i) =>
-            [id, amount] = e.outputMaterial[0]
-            $('.processorRecipeMaterial:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
-            @registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName)
-            $('.processorRecipeMaterial:last .buttonItem:last').click(-> processor.addQueueMaterialRecipe(i, 1))
-          )(processor, e, i)
-
-      for e, i in processor.state
-        ((processor, e, i) =>
-          $('.processorStateList:last').append("<div class='processorState'><div class='processorStateIcon'></div><div class='processorStateRight'><div class='processorStateText'></div><div class='processorStateMeter'></div></div></div>")
-          $('.processorStateMeter:last').text("#{i}: #{e.timeRemain} / #{e.time}")
-          switch e.type
-            when Processor.TYPE_ITEM
-              $('.processorStateText:last').text("#{e.recipe.outputItem[0].name}")
-            when Processor.TYPE_MATERIAL
-              id = e.recipe.outputMaterial[0][0]
-              $('.processorStateText:last').text("#{Game.materialList.material[id].fullName}")
-        )(processor, e, i)
-
-      for e, i in processor.queue
-        ((processor, e, i) =>
-          switch e.type
-            when Processor.TYPE_ITEM
-              $('.processorQueueList:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
-              @registerTooltip($('.buttonItem:last'), e.recipe.outputItem[0].name)
-            when Processor.TYPE_MATERIAL
-              id = e.recipe.outputMaterial[0][0]
-              $('.processorQueueList:last').append("<div class='buttonItem'>#{@getIcon([['sIngot', '']])}</div>")
-              @registerTooltip($('.buttonItem:last'), Game.materialList.material[id].fullName)
-        )(processor, e, i)
-
   @refreshItemList: ->
     $('#itemHave').html('')
-    $('#itemHave').append("<button>Pick</button>")
-    $('#itemHave button:last').click(-> Game.tryToPick())
-    if Game.have.shovel
-      $('#itemHave').append("Shovel:<button>#{Game.have.shovel.name}</button>")
-      $('#itemHave button:last').click(-> Game.tryToDig())
-    if Game.have.axe
-      $('#itemHave').append("Axe:<button>#{Game.have.axe.name}</button>")
-      $('#itemHave button:last').click(-> Game.tryToCut())
-    if Game.have.pickaxe
-      $('#itemHave').append("Pickaxe:<button>#{Game.have.pickaxe.name}</button>")
-      $('#itemHave button:last').click(-> Game.tryToGoUnderground())
 
     $('#itemStock').html('')
     for e, i in Game.item
