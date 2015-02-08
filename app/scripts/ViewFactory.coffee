@@ -1,3 +1,7 @@
-class ViewCraft
+$ = require('jquery')
 
-module.exports = ViewCraft
+class ViewFactory
+  @refreshAll: () ->
+    $('#painMain').html('Factory')
+
+module.exports = ViewFactory

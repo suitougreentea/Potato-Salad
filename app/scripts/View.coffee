@@ -2,8 +2,23 @@ Processor = require('./Processor.coffee')
 $ = require('jquery')
 
 class View
+  @craft: require('./ViewCraft.coffee')
   @factory: require('./ViewFactory.coffee')
+  @pick: require('./ViewPick.coffee')
+  @dig: require('./ViewDig.coffee')
+  @cut: require('./ViewCut.coffee')
   @mine: require('./ViewMine.coffee')
+  @settings: require('./ViewSettings.coffee')
+
+  @toggleTab: (page) ->
+    switch page
+      when 0 then @craft.refreshAll()
+      when 1 then @factory.refreshAll()
+      when 2 then @pick.refreshAll()
+      when 3 then @dig.refreshAll()
+      when 4 then @cut.refreshAll()
+      when 5 then @mine.refreshAll()
+      when 6 then @settings.refreshAll()
 
   @refreshStatus: ->
     $('#time').text("Time: #{Game.time}")

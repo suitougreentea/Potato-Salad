@@ -67,6 +67,18 @@ class Game
 
     $(window).resize => @onResizeWindow()
 
+    for i in [0..6]
+      ((i) =>
+        that = @
+        $(".menuItem:nth-child(#{i + 1})").click( ->
+          $('.menuItem').removeClass('menuItemActive')
+          $(@).addClass('menuItemActive')
+          that.view.toggleTab(i)
+        )
+      )(i)
+    $('.menuItem:first').addClass('menuItemActive')
+    @view.toggleTab(0)
+
     @save.load()
     @view.refreshStatus()
     @view.refreshRecipeList()
