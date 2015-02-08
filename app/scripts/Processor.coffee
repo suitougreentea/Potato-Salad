@@ -37,23 +37,22 @@ class Processor
           Game.view.refresh(Game.view.ITEM)
           Game.view.refresh(Game.view.MATERIAL)
           Game.view.refresh(Game.view.PROCESSOR_STATE, @viewId)
-          return true
 
-      for e, i in @state
-        if @queue.length > 0
-          if e.type == Processor.TYPE_NONE
-            add = @queue[0]
-            @state[i].type = add.type
-            @state[i].recipe = add.recipe
-            @state[i].time = add.recipe.time
-            @state[i].timeRemain = add.recipe.time
-            if add.amount
-              add.amount -= 1
-              if add.amount == 0
-                @queue.splice(0, 1)
-            else
-              @queue.splice(0, 1)
-            Game.view.refresh(Game.view.PROCESSOR_QUEUE, @viewId)
+    for e, i in @state
+      if @queue.length == 0 then break
+      if e.type == Processor.TYPE_NONE
+        add = @queue[0]
+        @state[i].type = add.type
+        @state[i].recipe = add.recipe
+        @state[i].time = add.recipe.time
+        @state[i].timeRemain = add.recipe.time
+        if add.amount
+          add.amount -= 1
+          if add.amount == 0
+            @queue.splice(0, 1)
+        else
+          @queue.splice(0, 1)
+        Game.view.refresh(Game.view.PROCESSOR_QUEUE, @viewId)
 
     Game.view.refresh(Game.view.PROCESSOR_STATE, @viewId)
 
