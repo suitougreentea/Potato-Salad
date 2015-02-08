@@ -9771,8 +9771,7 @@
 	    stoneShovel: 1,
 	    stoneAxe: 2,
 	    stonePickaxe: 3,
-	    toolBox1: 4,
-	    furnace1: 5
+	    furnace1: 4
 	  };
 
 	  ItemList.item = [];
@@ -9781,7 +9780,6 @@
 	    this.register(this.id.stoneShovel, new ItemTool.ItemShovel('Stone Shovel', Game.materialList.id.stone, []));
 	    this.register(this.id.stoneAxe, new ItemTool.ItemAxe('Stone Axe', Game.materialList.id.stone, []));
 	    this.register(this.id.stonePickaxe, new ItemTool.ItemPickaxe('Stone Pickaxe', Game.materialList.id.stone, []));
-	    this.register(this.id.toolBox1, new ItemProcessor('Tool Box', Game.processorList.id.toolBox1));
 	    return this.register(this.id.furnace1, new ItemProcessor('Furnace', Game.processorList.id.furnace1));
 	  };
 
@@ -9859,7 +9857,7 @@
 	    var il, ml;
 	    il = Game.itemList;
 	    ml = Game.materialList;
-	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 25], [ml.id.stone, 50]], 20, null, [il.item[il.id.toolBox1]], null), new RecipeItem([], [[ml.id.woodStick, 50], [ml.id.stone, 50]], 20, null, [il.item[il.id.furnace1]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)];
+	    this.itemRecipe = [new RecipeItem([], [[ml.id.woodStick, 50], [ml.id.stone, 50]], 20, null, [il.item[il.id.furnace1]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneShovel]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stoneAxe]], null), new RecipeItem([], [[ml.id.woodStick, 1], [ml.id.stone, 2]], 5, null, [il.item[il.id.stonePickaxe]], null)];
 	    return this.materialRecipe = [new RecipeMaterial([[ml.id.oreCoal, 1]], 10, null, [[ml.id.rawCoal, 1]]), new RecipeMaterial([[ml.id.oreCopper, 1]], 10, null, [[ml.id.rawCopper, 1]])];
 	  };
 
@@ -10010,15 +10008,13 @@
 	  function ProcessorList() {}
 
 	  ProcessorList.id = {
-	    hand: 0,
-	    furnace1: 1
+	    furnace1: 0
 	  };
 
 	  ProcessorList.processor = [];
 
 	  ProcessorList.init = function() {
-	    this.processor[this.id.hand] = new ProcessorHand();
-	    return this.processor[this.id.furnace1] = new ProcessorFurnace();
+	    return this.processor[this.id.furnace1] = new ProcessorFurnace(this.id.furnace1);
 	  };
 
 	  return ProcessorList;
@@ -10129,7 +10125,8 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $, Processor, View;
+	var $, Processor, View,
+	  __slice = [].slice;
 
 	Processor = __webpack_require__(26);
 
@@ -10174,7 +10171,13 @@
 
 	  View.TOOLBOX_STATE = 2;
 
-	  View.refresh = function(id) {
+	  View.PROCESSOR_STATE = 3;
+
+	  View.PROCESSOR_QUEUE = 4;
+
+	  View.refresh = function() {
+	    var args, id;
+	    id = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
 	    switch (id) {
 	      case this.ITEM:
 	        return this.refreshItemList();
@@ -10183,6 +10186,16 @@
 	      case this.TOOLBOX_STATE:
 	        if (this.activePage === this.PAGE_CRAFT) {
 	          return this.craft.refreshToolBoxState();
+	        }
+	        break;
+	      case this.PROCESSOR_STATE:
+	        if (this.activePage === this.PAGE_FACTORY) {
+	          return this.factory.refreshProcessorState(args[0]);
+	        }
+	        break;
+	      case this.PROCESSOR_QUEUE:
+	        if (this.activePage === this.PAGE_FACTORY) {
+	          return this.factory.refreshProcessorQueue(args[0]);
 	        }
 	    }
 	  };
@@ -11667,9 +11680,13 @@
 
 	  ProcessorFurnace.prototype.name = 'Furnace';
 
-	  function ProcessorFurnace() {
+	  function ProcessorFurnace(viewId) {
 	    var il, ml;
-	    ProcessorFurnace.__super__.constructor.call(this);
+	    ProcessorFurnace.__super__.constructor.call(this, viewId);
+	    this.add();
+	    this.add();
+	    this.add();
+	    this.add();
 	    this.add();
 	    il = Game.itemList;
 	    ml = Game.materialList;
@@ -11720,7 +11737,8 @@
 	    return this.state.splice(this.num - 1, 1);
 	  };
 
-	  function Processor() {
+	  function Processor(_at_viewId) {
+	    this.viewId = _at_viewId;
 	    this.state = [];
 	    this.queue = [];
 	  }
@@ -11764,9 +11782,9 @@
 	            timeRemain: null
 	          };
 	          Game.logger.log('Craft complete');
-	          Game.view.refreshRecipeList();
-	          Game.view.refreshItemList();
-	          Game.view.refreshMaterialList();
+	          Game.view.refresh(Game.view.ITEM);
+	          Game.view.refresh(Game.view.MATERIAL);
+	          Game.view.refresh(Game.view.PROCESSOR_STATE, this.viewId);
 	          return true;
 	        }
 	      }
@@ -11788,11 +11806,12 @@
 	            } else {
 	              this.queue.splice(0, 1);
 	            }
+	            Game.view.refresh(Game.view.PROCESSOR_QUEUE, this.viewId);
 	          }
 	        }
 	      }
 	    }
-	    return Game.view.refreshRecipeList();
+	    return Game.view.refresh(Game.view.PROCESSOR_STATE, this.viewId);
 	  };
 
 	  Processor.prototype.addQueueItemRecipe = function(index) {
@@ -11818,9 +11837,9 @@
 	      recipe: recipe,
 	      amount: null
 	    });
-	    Game.view.refreshItemList();
-	    Game.view.refreshMaterialList();
-	    Game.view.refreshRecipeList();
+	    Game.view.refresh(Game.view.ITEM);
+	    Game.view.refresh(Game.view.MATERIAL);
+	    Game.view.refresh(Game.view.PROCESSOR_QUEUE, this.viewId);
 	    return true;
 	  };
 
@@ -11847,9 +11866,9 @@
 	      recipe: recipe,
 	      amount: 1
 	    });
-	    Game.view.refreshItemList();
-	    Game.view.refreshMaterialList();
-	    Game.view.refreshRecipeList();
+	    Game.view.refresh(Game.view.ITEM);
+	    Game.view.refresh(Game.view.MATERIAL);
+	    Game.view.refresh(Game.view.PROCESSOR_QUEUE, this.viewId);
 	    return true;
 	  };
 
@@ -11886,8 +11905,8 @@
 	    if (Game.craft.state.type === Game.craft.TYPE_NONE) {
 	      return $('#toolBox>.state').html('');
 	    } else {
-	      $('#toolBox>.state').html("<div class='icon'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='text'><div class='name'></div><div class='progress'></div></div>");
-	      $('#toolBox>.state>.icon').html(Game.view.getIcon([['sIngot', '']]));
+	      $('#toolBox>.state').html("<div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='text'><div class='name'></div><div class='progress'></div></div>");
+	      $('#toolBox>.state>.iconBox').html(Game.view.getIcon([['sIngot', '']]));
 	      $('#toolBox>.state>.meter>.meterbg>.meterFill').css({
 	        width: ((Game.craft.state.time - Game.craft.state.timeRemain) / Game.craft.state.time * 100) + "%"
 	      });
@@ -11954,15 +11973,157 @@
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $, ViewFactory;
+	var $, Processor, ViewFactory;
 
 	$ = __webpack_require__(2);
+
+	Processor = __webpack_require__(26);
 
 	ViewFactory = (function() {
 	  function ViewFactory() {}
 
 	  ViewFactory.refreshAll = function() {
-	    return $('#painMain').html('Factory');
+	    var e, i, _i, _len, _ref, _results;
+	    $('#painMain').html("<div id='processorList'></div>");
+	    _ref = Game.processorList.processor;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      $('#processorList').append("<div class='processor'><div class='header'></div><div class='settings'></div><div class='state'></div><div class='queue'></div><div class='recipeItem'></div><div class='recipeMaterial'></div></div>");
+	      _results.push(this.refreshProcessor(i));
+	    }
+	    return _results;
+	  };
+
+	  ViewFactory.refreshProcessor = function(id) {
+	    var jq, processor;
+	    processor = Game.processorList.processor[id];
+	    jq = $("#processorList>.processor:nth-child(" + (id + 1) + ")");
+	    if (processor.num() === 0) {
+	      return jq.hide();
+	    } else {
+	      jq.show();
+	      this.refreshProcessorHeader(id);
+	      this.refreshProcessorSettings(id);
+	      this.refreshProcessorState(id);
+	      this.refreshProcessorQueue(id);
+	      return this.refreshProcessorRecipeList(id);
+	    }
+	  };
+
+	  ViewFactory.refreshProcessorHeader = function(id) {
+	    var jq, processor;
+	    processor = Game.processorList.processor[id];
+	    jq = $("#processorList>.processor:nth-child(" + (id + 1) + ")");
+	    return jq.find('.header').text(processor.name + " (" + (processor.num()) + ")");
+	  };
+
+	  ViewFactory.refreshProcessorSettings = function(id) {
+	    var jq;
+	    jq = $("#processorList>.processor:nth-child(" + (id + 1) + ")");
+	    return jq.find('.settings').text('SETTINGS');
+	  };
+
+	  ViewFactory.refreshProcessorState = function(id) {
+	    var e, i, jq, processor, _i, _len, _ref, _results;
+	    processor = Game.processorList.processor[id];
+	    jq = $("#processorList>.processor:nth-child(" + (id + 1) + ")");
+	    jq.find('.state').html('');
+	    _ref = processor.state;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push(((function(_this) {
+	        return function(e, i) {
+	          if (e.type === Processor.TYPE_NONE) {
+	            return jq.find('.state').append('<div>No work</div>');
+	          } else {
+	            jq.find('.state').append("<div><div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='progress'></div></div>");
+	            switch (e.type) {
+	              case Processor.TYPE_ITEM:
+	                Game.view.registerTooltip(jq.find('.state>div:last>.iconBox'), e.recipe.outputItem[0].name);
+	                break;
+	              case Processor.TYPE_MATERIAL:
+	                Game.view.registerTooltip(jq.find('.state>div:last>.iconBox'), Game.materialList.material[e.recipe.outputMaterial[0][0]].fullName);
+	            }
+	            jq.find('.state>div:last>.iconBox').html(Game.view.getIcon([['sIngot', '']]));
+	            jq.find('.state>div:last>.meter>.meterbg>.meterFill').css({
+	              width: ((e.time - e.timeRemain) / e.time * 100) + "%"
+	            });
+	            return jq.find('.state>div:last>.progress').text(e.timeRemain + " / " + e.time);
+	          }
+	        };
+	      })(this))(e, i));
+	    }
+	    return _results;
+	  };
+
+	  ViewFactory.refreshProcessorQueue = function(id) {
+	    var e, i, jq, processor, _i, _len, _ref, _results;
+	    processor = Game.processorList.processor[id];
+	    jq = $("#processorList>.processor:nth-child(" + (id + 1) + ")");
+	    jq.find('.queue').html('');
+	    _ref = processor.queue;
+	    _results = [];
+	    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+	      e = _ref[i];
+	      _results.push(((function(_this) {
+	        return function(e, i) {
+	          jq.find('.queue').append("<div class='iconBox'></div>");
+	          jq.find('.queue>.iconBox:last').html(Game.view.getIcon([['sIngot', '']]));
+	          switch (e.type) {
+	            case Processor.TYPE_ITEM:
+	              return Game.view.registerTooltip(jq.find('.queue>.iconBox:last'), e.recipe.outputItem[0].name);
+	            case Processor.TYPE_MATERIAL:
+	              return Game.view.registerTooltip(jq.find('.queue>.iconBox:last'), Game.materialList.material[e.recipe.outputMaterial[0][0]].fullName);
+	          }
+	        };
+	      })(this))(e, i));
+	    }
+	    return _results;
+	  };
+
+	  ViewFactory.refreshProcessorRecipeList = function(id) {
+	    var e, i, itemRecipe, jq, materialRecipe, processor, _fn, _i, _j, _len, _len1, _results;
+	    processor = Game.processorList.processor[id];
+	    jq = $("#processorList>.processor:nth-child(" + (id + 1) + ")");
+	    itemRecipe = processor.itemRecipe;
+	    materialRecipe = processor.materialRecipe;
+	    if (itemRecipe.length > 0) {
+	      _fn = (function(_this) {
+	        return function(e, i) {
+	          var item;
+	          item = e.outputItem[0];
+	          jq.find('.recipeItem').append("<div class='buttonItem'>" + (Game.view.getIcon([['sIngot', '']])) + "</div>");
+	          Game.view.registerTooltip(jq.find('.recipeItem>.buttonItem:last'), item.name);
+	          return jq.find('.recipeItem>.buttonItem:last').click(function() {
+	            return processor.addQueueItemRecipe(i);
+	          });
+	        };
+	      })(this);
+	      for (i = _i = 0, _len = itemRecipe.length; _i < _len; i = ++_i) {
+	        e = itemRecipe[i];
+	        _fn(e, i);
+	      }
+	    }
+	    if (materialRecipe.length > 0) {
+	      _results = [];
+	      for (i = _j = 0, _len1 = materialRecipe.length; _j < _len1; i = ++_j) {
+	        e = materialRecipe[i];
+	        _results.push(((function(_this) {
+	          return function(e, i) {
+	            var amount, _ref;
+	            _ref = e.outputMaterial[0], id = _ref[0], amount = _ref[1];
+	            jq.find('.recipeMaterial').append("<div class='buttonItem'>" + (Game.view.getIcon([['sIngot', '']])) + "</div>");
+	            Game.view.registerTooltip(jq.find('.recipeMaterial>.buttonItem:last'), Game.materialList.material[id].fullName);
+	            return jq.find('.recipeMaterial>.buttonItem:last').click(function() {
+	              return processor.addQueueMaterialRecipe(i, 1);
+	            });
+	          };
+	        })(this))(e, i));
+	      }
+	      return _results;
+	    }
 	  };
 
 	  return ViewFactory;
