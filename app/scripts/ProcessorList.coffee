@@ -4,12 +4,10 @@ ProcessorFurnace = require('./ProcessorFurnace.coffee')
 
 class ProcessorList
   @id:
-    hand: 0
-    furnace1: 1
+    furnace1: 0
     
   @processor: []
   @init: () ->
-    @processor[@id.hand] = new ProcessorHand()
-    @processor[@id.furnace1] = new ProcessorFurnace()
+    @processor[@id.furnace1] = new ProcessorFurnace(@id.furnace1)
 
 module.exports = ProcessorList

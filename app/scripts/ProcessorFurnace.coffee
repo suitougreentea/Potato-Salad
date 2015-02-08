@@ -4,8 +4,12 @@ RecipeItem = require('./RecipeItem.coffee')
 
 class ProcessorFurnace extends Processor
   name: 'Furnace'
-  constructor: () ->
-    super()
+  constructor: (viewId) ->
+    super(viewId)
+    @add() # TODO: debug
+    @add() # TODO: debug
+    @add() # TODO: debug
+    @add() # TODO: debug
     @add() # TODO: debug
     il = Game.itemList
     ml = Game.materialList

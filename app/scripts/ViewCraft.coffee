@@ -14,8 +14,8 @@ class ViewCraft
     if Game.craft.state.type == Game.craft.TYPE_NONE
       $('#toolBox>.state').html('')
     else
-      $('#toolBox>.state').html("<div class='icon'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='text'><div class='name'></div><div class='progress'></div></div>")
-      $('#toolBox>.state>.icon').html(Game.view.getIcon([['sIngot', '']]))
+      $('#toolBox>.state').html("<div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='text'><div class='name'></div><div class='progress'></div></div>")
+      $('#toolBox>.state>.iconBox').html(Game.view.getIcon([['sIngot', '']]))
       $('#toolBox>.state>.meter>.meterbg>.meterFill').css(width: "#{(Game.craft.state.time - Game.craft.state.timeRemain) / Game.craft.state.time * 100}%")
       switch Game.craft.state.type
         when Game.craft.TYPE_ITEM

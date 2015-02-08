@@ -22,12 +22,16 @@ class View
   @ITEM: 0
   @MATERIAL: 1
   @TOOLBOX_STATE: 2
+  @PROCESSOR_STATE: 3
+  @PROCESSOR_QUEUE: 4
 
-  @refresh: (id) ->
+  @refresh: (id, args...) ->
     switch id
       when @ITEM then @refreshItemList()
       when @MATERIAL then @refreshMaterialList()
       when @TOOLBOX_STATE then if @activePage == @PAGE_CRAFT then @craft.refreshToolBoxState()
+      when @PROCESSOR_STATE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorState(args[0])
+      when @PROCESSOR_QUEUE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorQueue(args[0])
 
   @toggleTab: (page) ->
     switch page

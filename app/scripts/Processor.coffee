@@ -11,7 +11,7 @@ class Processor
   add: -> @state.push {type: Processor.TYPE_NONE, recipe: null, time: null, timeRemain: null}
   remove: -> @state.splice(@num - 1, 1)
   
-  constructor: () ->
+  constructor: (@viewId) ->
     @state = []
     @queue = []
 
@@ -34,9 +34,9 @@ class Processor
                 Game.material[materialId] += amount
           @state[i] = {type: Processor.TYPE_NONE, recipe: null, time: null, timeRemain: null}
           Game.logger.log('Craft complete')
-          Game.view.refreshRecipeList()
-          Game.view.refreshItemList()
-          Game.view.refreshMaterialList()
+          Game.view.refresh(Game.view.ITEM)
+          Game.view.refresh(Game.view.MATERIAL)
+          Game.view.refresh(Game.view.PROCESSOR_STATE, @viewId)
           return true
 
       for e, i in @state
@@ -53,8 +53,9 @@ class Processor
                 @queue.splice(0, 1)
             else
               @queue.splice(0, 1)
-      
-    Game.view.refreshRecipeList()
+            Game.view.refresh(Game.view.PROCESSOR_QUEUE, @viewId)
+
+    Game.view.refresh(Game.view.PROCESSOR_STATE, @viewId)
 
   addQueueItemRecipe: (index) ->
     recipe = @itemRecipe[index]
@@ -69,9 +70,9 @@ class Processor
       Game.material[materialId] -= amount
 
     @queue.push {type: Processor.TYPE_ITEM, recipe: recipe, amount: null}
-    Game.view.refreshItemList()
-    Game.view.refreshMaterialList()
-    Game.view.refreshRecipeList()
+    Game.view.refresh(Game.view.ITEM)
+    Game.view.refresh(Game.view.MATERIAL)
+    Game.view.refresh(Game.view.PROCESSOR_QUEUE, @viewId)
     return true
 
   addQueueMaterialRecipe: (index, times) ->
@@ -87,9 +88,9 @@ class Processor
       Game.material[materialId] -= amount * times
 
     @queue.push {type: Processor.TYPE_MATERIAL, recipe: recipe, amount: 1}
-    Game.view.refreshItemList()
-    Game.view.refreshMaterialList()
-    Game.view.refreshRecipeList()
+    Game.view.refresh(Game.view.ITEM)
+    Game.view.refresh(Game.view.MATERIAL)
+    Game.view.refresh(Game.view.PROCESSOR_QUEUE, @viewId)
     return true
 
 module.exports = Processor
