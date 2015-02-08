@@ -2,6 +2,15 @@ Processor = require('./Processor.coffee')
 $ = require('jquery')
 
 class View
+  @activePage: undefined
+  @PAGE_CRAFT: 0
+  @PAGE_FACTORY: 1
+  @PAGE_PICK: 2
+  @PAGE_DIG: 3
+  @PAGE_CUT: 4
+  @PAGE_MINE: 5
+  @PAGE_SETTINGS: 6
+
   @craft: require('./ViewCraft.coffee')
   @factory: require('./ViewFactory.coffee')
   @pick: require('./ViewPick.coffee')
@@ -10,15 +19,26 @@ class View
   @mine: require('./ViewMine.coffee')
   @settings: require('./ViewSettings.coffee')
 
+  @ITEM: 0
+  @MATERIAL: 1
+  @TOOLBOX_STATE: 2
+
+  @refresh: (id) ->
+    switch id
+      when @ITEM then @refreshItemList()
+      when @MATERIAL then @refreshMaterialList()
+      when @TOOLBOX_STATE then if @activePage == @PAGE_CRAFT then @craft.refreshToolBoxState()
+
   @toggleTab: (page) ->
     switch page
-      when 0 then @craft.refreshAll()
-      when 1 then @factory.refreshAll()
-      when 2 then @pick.refreshAll()
-      when 3 then @dig.refreshAll()
-      when 4 then @cut.refreshAll()
-      when 5 then @mine.refreshAll()
-      when 6 then @settings.refreshAll()
+      when @PAGE_CRAFT then @craft.refreshAll()
+      when @PAGE_FACTORY then @factory.refreshAll()
+      when @PAGE_PICK then @pick.refreshAll()
+      when @PAGE_DIG then @dig.refreshAll()
+      when @PAGE_CUT then @cut.refreshAll()
+      when @PAGE_MINE then @mine.refreshAll()
+      when @PAGE_SETTINGS then @settings.refreshAll()
+    @activePage = page
 
   @refreshStatus: ->
     $('#time').text("Time: #{Game.time}")

@@ -32,6 +32,7 @@ class Game
     new OreVein(0, 10)
   ]
 
+  @craft = require('./Craft.coffee')
   @processorList = require('./ProcessorList.coffee')
 
   @overworldStuffFinder = require('./OverworldStuffFinder.coffee')
@@ -58,6 +59,7 @@ class Game
     @processorList.init()
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
+    @craft.init()
 
     @material[@materialList.id.oreCoal] = 1000
     @material[@materialList.id.woodStick] = 1000
@@ -91,6 +93,7 @@ class Game
     @view.refreshStatus()
     for e in @processorList.processor
       e.update()
+    @craft.update()
     
     switch @mode
       when @MODE_SEARCHING_OVERWORLD
