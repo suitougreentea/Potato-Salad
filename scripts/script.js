@@ -11785,30 +11785,30 @@
 	          Game.view.refresh(Game.view.ITEM);
 	          Game.view.refresh(Game.view.MATERIAL);
 	          Game.view.refresh(Game.view.PROCESSOR_STATE, this.viewId);
-	          return true;
 	        }
 	      }
-	      _ref4 = this.state;
-	      for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
-	        e = _ref4[i];
-	        if (this.queue.length > 0) {
-	          if (e.type === Processor.TYPE_NONE) {
-	            add = this.queue[0];
-	            this.state[i].type = add.type;
-	            this.state[i].recipe = add.recipe;
-	            this.state[i].time = add.recipe.time;
-	            this.state[i].timeRemain = add.recipe.time;
-	            if (add.amount) {
-	              add.amount -= 1;
-	              if (add.amount === 0) {
-	                this.queue.splice(0, 1);
-	              }
-	            } else {
-	              this.queue.splice(0, 1);
-	            }
-	            Game.view.refresh(Game.view.PROCESSOR_QUEUE, this.viewId);
+	    }
+	    _ref4 = this.state;
+	    for (i = _m = 0, _len4 = _ref4.length; _m < _len4; i = ++_m) {
+	      e = _ref4[i];
+	      if (this.queue.length === 0) {
+	        break;
+	      }
+	      if (e.type === Processor.TYPE_NONE) {
+	        add = this.queue[0];
+	        this.state[i].type = add.type;
+	        this.state[i].recipe = add.recipe;
+	        this.state[i].time = add.recipe.time;
+	        this.state[i].timeRemain = add.recipe.time;
+	        if (add.amount) {
+	          add.amount -= 1;
+	          if (add.amount === 0) {
+	            this.queue.splice(0, 1);
 	          }
+	        } else {
+	          this.queue.splice(0, 1);
 	        }
+	        Game.view.refresh(Game.view.PROCESSOR_QUEUE, this.viewId);
 	      }
 	    }
 	    return Game.view.refresh(Game.view.PROCESSOR_STATE, this.viewId);
@@ -11903,7 +11903,7 @@
 
 	  ViewCraft.refreshToolBoxState = function() {
 	    if (Game.craft.state.type === Game.craft.TYPE_NONE) {
-	      return $('#toolBox>.state').html('');
+	      return $('#toolBox>.state').html("<div class='noWork'>No work</div>");
 	    } else {
 	      $('#toolBox>.state').html("<div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='text'><div class='name'></div><div class='progress'></div></div>");
 	      $('#toolBox>.state>.iconBox').html(Game.view.getIcon([['sIngot', '']]));
@@ -12036,7 +12036,7 @@
 	      _results.push(((function(_this) {
 	        return function(e, i) {
 	          if (e.type === Processor.TYPE_NONE) {
-	            return jq.find('.state').append('<div>No work</div>');
+	            return jq.find('.state').append("<div class='noWork'>No work</div>");
 	          } else {
 	            jq.find('.state').append("<div><div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='progress'></div></div>");
 	            switch (e.type) {
