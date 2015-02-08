@@ -26,7 +26,7 @@ class Game
 
   @materialViewList = require('./MaterialViewList.coffee')
 
-  @materialOverworldIgnoreList = []
+  @pickNotifyList = []
 
   @oreVein = [
     new OreVein(0, 10)
@@ -38,11 +38,15 @@ class Game
   @overworldStuffFinder = require('./OverworldStuffFinder.coffee')
   @oreVeinFinder = require('./OreVeinFinder.coffee')
   
-  @MODE_SEARCHING_OVERWORLD = 1
-  @MODE_SEARCHING_UNDERGROUND = 2
-  @MODE_MINING = 3
+  @MODE_CRAFT = 0
+  @MODE_FACTORY = 1
+  @MODE_PICK = 2
+  @MODE_DIG = 3
+  @MODE_CUT = 4
+  @MODE_MINE = 5
+  @MODE_VEIN = 6
   @mode: 0
-  @modeString: ['working in your factory', 'searching overground', 'searching underground', 'mining ore vein']
+  @modeString: ['crafting', 'working in your factory', 'searching overground', 'digging soil', 'cutting tree', 'searching underground', 'mining ore vein']
 
   @miningTarget: 0
 
@@ -60,6 +64,8 @@ class Game
     @overworldStuffFinder.init()
     @oreVeinFinder.init()
     @craft.init()
+    for e, i in @overworldStuffFinder.data
+      @pickNotifyList[i] = false
 
     @material[@materialList.id.oreCoal] = 1000
     @material[@materialList.id.woodStick] = 1000
@@ -76,6 +82,13 @@ class Game
           $('.menuItem').removeClass('menuItemActive')
           $(@).addClass('menuItemActive')
           that.view.toggleTab(i)
+          switch i
+            when that.view.PAGE_CRAFT then that.mode = that.MODE_CRAFT
+            when that.view.PAGE_FACTORY then that.mode = that.MODE_FACTORY
+            when that.view.PAGE_PICK then that.mode = that.MODE_PICK
+            when that.view.PAGE_CUT then that.mode = that.MODE_CUT
+            when that.view.PAGE_DIG then that.mode = that.MODE_DIG
+            when that.view.PAGE_MINE then that.mode = that.MODE_MINE
         )
       )(i)
     $('.menuItem:first').addClass('menuItemActive')
@@ -93,22 +106,19 @@ class Game
     @view.refreshStatus()
     for e in @processorList.processor
       e.update()
-    @craft.update()
     
     switch @mode
-      when @MODE_SEARCHING_OVERWORLD
-        switch @using
-          when @USING_NONE
-            @overworldStuffFinder.tryToPick()
-          when @USING_SHOVEL
-            @overworldStuffFinder.tryToDig()
-          when @USING_AXE
-            @overworldStuffFinder.tryToCut()
-        @view.refreshMaterialList()
-      when @MODE_SEARCHING_UNDERGROUND
+      when @MODE_CRAFT
+        @craft.update()
+      when @MODE_PICK
+        @overworldStuffFinder.tryToPick()
+      when @MODE_DIG
+        @overworldStuffFinder.tryToDig()
+      when @MODE_CUT
+        @overworldStuffFinder.tryToCut()
+      when @MODE_MINE
         @oreVeinFinder.try()
-        @view.refreshOreVeinList()
-      when @MODE_MINING
+      when @MODE_VEIN
         e = @oreVein[@miningTarget]
         mineAmount = 1
         e.remain -= mineAmount

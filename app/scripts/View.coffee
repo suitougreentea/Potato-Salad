@@ -52,7 +52,7 @@ class View
   @refreshMaterialList: ->
     $('#materialStock').html('')
     for list in Game.materialViewList.data
-      $('#materialStock').append("<div class='materialHeader'>#{list.name}</div>")
+      $('#materialStock').append("<div class='header'>#{list.name}</div>")
       for e in list.list
         ((e) =>
           material = Game.materialList.material[e]
