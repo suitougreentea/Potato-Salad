@@ -26,6 +26,7 @@ class View
   @PROCESSOR_QUEUE: 4
   @STATUS: 5
   @OREVEIN: 6
+  @PROCESSOR: 7
 
   @refresh: (id, args...) ->
     switch id
@@ -36,6 +37,7 @@ class View
       when @PROCESSOR_STATE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorState(args[0])
       when @PROCESSOR_QUEUE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorQueue(args[0])
       when @OREVEIN then if @activePage == @PAGE_MINE then @mine.refreshOreVeinList()
+      when @PROCESSOR then if @activePage == @PAGE_FACTORY then @factory.refreshProcessor(args[0])
 
   @toggleTab: (page) ->
     switch page

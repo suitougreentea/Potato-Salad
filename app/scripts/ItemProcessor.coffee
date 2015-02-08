@@ -6,7 +6,7 @@ class ItemProcessor extends Item
     
   use: ->
     Game.processorList.processor[@processorId].add()
-    Game.view.refreshRecipeList()
+    Game.view.refresh(Game.view.PROCESSOR, @processorId)
     return true
 
 module.exports = ItemProcessor
