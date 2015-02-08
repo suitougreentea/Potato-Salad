@@ -27,6 +27,6 @@ class OreVeinFinder
       [id, change] = result
       Game.logger.log("Found #{Game.materialList.material[id].materialName} vein!")
       Game.oreVein.push(new OreVein(id, Math.round(size + Math.random() * (size_modifier * 2) - size_modifier)))
-
+      Game.view.refresh(Game.view.OREVEIN)
 
 module.exports = OreVeinFinder

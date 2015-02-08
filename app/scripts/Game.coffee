@@ -30,6 +30,7 @@ class Game
 
   @oreVein = [
     new OreVein(0, 10)
+    new OreVein(2, 0.01)
   ]
 
   @craft = require('./Craft.coffee')
@@ -98,7 +99,6 @@ class Game
     @save.load()
     @view.refreshStatus()
     @view.refreshMaterialList()
-    @view.refreshOreVeinList()
     @view.refreshItemList()
 
   @action: =>
@@ -122,48 +122,16 @@ class Game
         e = @oreVein[@miningTarget]
         mineAmount = 1
         e.remain -= mineAmount
+        if e.remain == 0
+          @logger.log('Finish mining vein')
+          @oreVein.splice(@miningTarget, 1)
+          @mode = @MODE_MINE
+          @view.refresh(@view.OREVEIN)
+          @view.refresh(@view.STATUS)
         @material[e.materialId] += mineAmount
-        @view.refreshMaterialList()
-        @view.refreshOreVeinList()
-        @view.refreshItemList()
-
-  @tryToStartMining: (target) ->
-    if !@have.pickaxe
-      @logger.log('No pickaxe')
-      return
-    @using = @USING_PICKAXE
-    @miningTarget = target
-    @mode = Game.MODE_MINING
-    @view.refreshStatus()
-
-  @tryToGoUnderground: ->
-    if !@have.pickaxe
-      @logger.log('No pickaxe')
-      return
-    @using = @USING_PICKAXE
-    @mode = Game.MODE_SEARCHING_UNDERGROUND
-    @view.refreshStatus()
-
-  @tryToPick: ->
-    @using = @USING_NONE
-    @mode = Game.MODE_SEARCHING_OVERWORLD
-    @view.refreshStatus()
-
-  @tryToDig: ->
-    if !@have.shovel
-      @logger.log('No shovel')
-      return
-    @using = @USING_SHOVEL
-    @mode = Game.MODE_SEARCHING_OVERWORLD
-    @view.refreshStatus()
-
-  @tryToCut: ->
-    if !@have.axe
-      @logger.log('No axe')
-      return
-    @using = @USING_AXE
-    @mode = Game.MODE_SEARCHING_OVERWORLD
-    @view.refreshStatus()
+        @view.refresh(@view.ITEM)
+        @view.refresh(@view.MATERIAL)
+        @view.refresh(@view.OREVEIN)
 
   @changeIgnoreCheckbox: (checked, materialId) ->
     if checked
