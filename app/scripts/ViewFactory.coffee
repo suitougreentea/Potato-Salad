@@ -37,7 +37,7 @@ class ViewFactory
     for e, i in processor.state
       ((e, i) =>
         if e.type == Processor.TYPE_NONE
-          jq.find('.state').append('<div>No work</div>')
+          jq.find('.state').append("<div class='noWork'>No work</div>")
         else
           jq.find('.state').append("<div><div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='progress'></div></div>")
           switch e.type

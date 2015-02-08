@@ -12,7 +12,7 @@ class ViewCraft
 
   @refreshToolBoxState: ->
     if Game.craft.state.type == Game.craft.TYPE_NONE
-      $('#toolBox>.state').html('')
+      $('#toolBox>.state').html("<div class='noWork'>No work</div>")
     else
       $('#toolBox>.state').html("<div class='iconBox'></div><div class='meter'><div class='meterbg'><span class='meterFill'></span></div></div><div class='text'><div class='name'></div><div class='progress'></div></div>")
       $('#toolBox>.state>.iconBox').html(Game.view.getIcon([['sIngot', '']]))
