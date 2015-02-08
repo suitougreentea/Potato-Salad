@@ -10168,6 +10168,8 @@
 
 	  View.OREVEIN = 6;
 
+	  View.PROCESSOR = 7;
+
 	  View.refresh = function() {
 	    var args, id;
 	    id = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
@@ -10196,6 +10198,11 @@
 	      case this.OREVEIN:
 	        if (this.activePage === this.PAGE_MINE) {
 	          return this.mine.refreshOreVeinList();
+	        }
+	        break;
+	      case this.PROCESSOR:
+	        if (this.activePage === this.PAGE_FACTORY) {
+	          return this.factory.refreshProcessor(args[0]);
 	        }
 	    }
 	  };
@@ -11425,7 +11432,7 @@
 
 	  ItemProcessor.prototype.use = function() {
 	    Game.processorList.processor[this.processorId].add();
-	    Game.view.refreshRecipeList();
+	    Game.view.refresh(Game.view.PROCESSOR, this.processorId);
 	    return true;
 	  };
 
