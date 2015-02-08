@@ -89,7 +89,7 @@ class Game
             when that.view.PAGE_CUT then that.mode = that.MODE_CUT
             when that.view.PAGE_DIG then that.mode = that.MODE_DIG
             when that.view.PAGE_MINE then that.mode = that.MODE_MINE
-          @view.refresh(@view.STATUS)
+          that.view.refresh(that.view.STATUS)
         )
       )(i)
     $('.menuItem:first').addClass('menuItemActive')

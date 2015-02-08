@@ -30,7 +30,7 @@ class View
     switch id
       when @ITEM then @refreshItemList()
       when @MATERIAL then @refreshMaterialList()
-      when @HEADER then @refreshStatus()
+      when @STATUS then @refreshStatus()
       when @TOOLBOX_STATE then if @activePage == @PAGE_CRAFT then @craft.refreshToolBoxState()
       when @PROCESSOR_STATE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorState(args[0])
       when @PROCESSOR_QUEUE then if @activePage == @PAGE_FACTORY then @factory.refreshProcessorQueue(args[0])
